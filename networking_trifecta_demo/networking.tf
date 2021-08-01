@@ -4,7 +4,7 @@ locals {
       azs = {
         a = {
           private = ["10.0.8.0/24", "10.0.9.0/24"]
-          public  = ["10.0.0.0/24"]
+          public  = ["10.0.0.0/28"]
         },
         b = {
           #enable_natgw = true
@@ -51,7 +51,7 @@ locals {
 }
 
 module "usw2_vpcs" {
-  source = "../modules/networking/tiered_vpc_ng"
+  source = "../../yoloform/modules/networking/tiered_vpc_ng"
 
   for_each = { for t in local.vpc_tiers : t.name => t }
 
@@ -65,7 +65,7 @@ module "usw2_vpcs" {
 #}
 
 locals {
-  intra_vpcs_security_group_rules = [
+  intra_vpc_security_group_rules = [
     {
       label     = "ssh"
       from_port = 22
@@ -82,23 +82,22 @@ locals {
 }
 
 # This will create a sg rule for each vpc allowing inbound-only ports from
-# all other vpcs (excluding itself)
-module "intra_vpcs_security_group_rules" {
-  source = "../modules/networking/security_group_rules_intra_vpc_for_tiered_vpc_ng"
+# all other vpc networks (excluding itself)
+module "intra_vpc_security_group_rules" {
+  source = "../../yoloform/modules/networking/intra_vpc_security_group_rules_for_tiered_vpc_ng"
 
-  for_each = { for r in local.intra_vpcs_security_group_rules : r.label => r }
+  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 
   env_prefix = var.env_prefix
   rule       = each.value
   vpcs       = module.usw2_vpcs
 }
 
-
 # This TGW Central router module will attach all vpcs (attachment for each AZ) to one TGW
 # associate and propagate to a single route table
 # add routes in each VPC to all other networks.
 module "tgw" {
-  source = "../modules/networking/transit_gateway_central_router_for_tiered_vpc_ng"
+  source = "../../yoloform/modules/networking/transit_gateway_centralized_router_for_tiered_vpc_ng"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels

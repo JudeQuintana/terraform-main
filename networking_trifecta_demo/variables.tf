@@ -19,12 +19,8 @@ variable "region_az_labels" {
   }
 }
 
-variable "ec2_key_name" {
-  description = "EC2 key pair name to use when launching an instance"
-  default     = "test-jude"
-}
-
 variable "base_ec2_instance_attributes" {
+  description = "base attributes for building in us-west-2"
   type = object({
     ami           = string
     key_name      = string
@@ -32,7 +28,7 @@ variable "base_ec2_instance_attributes" {
   })
   default = {
     ami           = "ami-0518bb0e75d3619ca" # AWS Linux 2 us-west-2
-    key_name      = "test-jude"
+    key_name      = "test-jude"             # EC2 key pair name to use when launching an instance
     instance_type = "t2.micro"
   }
 }
