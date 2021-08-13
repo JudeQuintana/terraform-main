@@ -14,8 +14,8 @@ variable "base_ec2_instance_attributes" {
     instance_type = string
   })
   default = {
+    key_name      = "my-ec2-key"            # EC2 key pair name to use when launching an instance
     ami           = "ami-0518bb0e75d3619ca" # AWS Linux 2 us-west-2
-    key_name      = "test-jude"             # EC2 key pair name to use when launching an instance
     instance_type = "t2.micro"
   }
 }

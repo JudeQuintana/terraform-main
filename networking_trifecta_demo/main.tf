@@ -1,10 +1,8 @@
 provider "aws" {
-  region = var.base_region
+  # currently not using default_tags in the AWS provider
+  # because the behavior has been inconsistent for me.
+  # Which is  why I still use a default tags merging
+  # pattern in each module.
 
-  #https://github.com/hashicorp/terraform-provider-aws/issues/19583
-  #default_tags {
-  #tags = {
-  #Environment = var.env_prefix
-  #}
-  #}
+  region = var.base_region
 }

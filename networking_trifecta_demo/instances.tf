@@ -6,25 +6,28 @@ locals {
 
   instances = [
     {
-      name = format("%s-public", local.tiered_vpc_names.app) # app-public
-      # lookup the public subnet id that belongs to AZ 'b' in the 'app' VPC
-      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.app).az_to_public_subnet_ids, "b")[0]
+      # app-public
+      name = format("%s-public", local.tiered_vpc_names.app)
+      # lookup the public subnet id that belongs to AZ 'a' in the 'app' VPC
+      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.app).az_to_public_subnet_ids, "a")[0]
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.app).default_security_group_id,
         lookup(module.vpcs, local.tiered_vpc_names.app).intra_vpc_security_group_id
       ]
     },
     {
-      name = format("%s-private", local.tiered_vpc_names.cicd) # cicd-private
-      # lookup the private subnet id that belongs to AZ 'a' in the 'cicd' VPC
-      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.cicd).az_to_private_subnet_ids, "a")[0]
+      # cicd-private
+      name = format("%s-private", local.tiered_vpc_names.cicd)
+      # lookup the private subnet id that belongs to AZ 'b' in the 'cicd' VPC
+      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.cicd).az_to_private_subnet_ids, "b")[0]
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.cicd).default_security_group_id,
         lookup(module.vpcs, local.tiered_vpc_names.cicd).intra_vpc_security_group_id
       ]
     },
     {
-      name = format("%s-private", local.tiered_vpc_names.general) # general-private
+      # general-private
+      name = format("%s-private", local.tiered_vpc_names.general)
       # lookup the private subnet id that belongs to AZ 'c' in the 'general' VPC
       subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.general).az_to_private_subnet_ids, "c")[0]
       vpc_security_group_ids = [
