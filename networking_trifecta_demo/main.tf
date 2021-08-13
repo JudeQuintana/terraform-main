@@ -1,11 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
-
-  allowed_account_ids = ["FILL_ME_IN"]
-
-  assume_role {
-    role_arn = "FILL_ME_IN"
-  }
+  region = var.base_region
 
   #https://github.com/hashicorp/terraform-provider-aws/issues/19583
   #default_tags {
