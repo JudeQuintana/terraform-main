@@ -1,3 +1,5 @@
+# just provider stuff here so I can override this
+# specific file for testing.
 provider "aws" {
   # currently not using default_tags in the AWS provider
   # because the behavior has been inconsistent for me.
