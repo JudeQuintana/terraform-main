@@ -1,12 +1,10 @@
-# terraform-main
-
 ## Networking Trifecta Demo
-
 Blog Post:
 [Terraform Networking Trifecta ](https://jq1.io/posts/tiered_vpc/)
 
 # Goal
-To route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918)
+Using the latest Terraform (v1.0.4+) and AWS Provider (v3.53.0+)
+route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918)
 using a Transit Gateway.
 
 - App VPC Tier: `10.0.0.0/20` (Class A Private Internet)
