@@ -1,6 +1,6 @@
 ## Networking Trifecta Demo
 Blog Post:
-[Terraform Networking Trifecta ](https://jq1.io/posts/tiered_vpc/)
+[Terraform Networking Trifecta ](https://jq1.io/posts/tnt/)
 
 # Goal
 Using the latest Terraform (v1.0.4+) and AWS Provider (v3.53.0+)
