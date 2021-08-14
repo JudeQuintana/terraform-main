@@ -8,8 +8,8 @@ route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918)
 using a Transit Gateway.
 
 - App VPC Tier: `10.0.0.0/20` (Class A Private Internet)
-- CICD VPC Tier: `192.168.0.0/20` (Class B Private Internet)
-- General VPC Tier: `172.16.0.0/20` (Class C Private Internet)
+- CICD VPC Tier: `172.16.0.0/20` (Class B Private Internet)
+- General VPC Tier: `192.168.0.0/20` (Class C Private Internet)
 
 Modules:
 - [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tiered_vpc_ng)
