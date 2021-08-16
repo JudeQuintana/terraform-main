@@ -1,5 +1,5 @@
 locals {
-  # a map to so that i can call vpcs by name from a map so i dont have
+  # A map so I can call vpcs by name i dont have
   # to type the vpc_name as a string in places i need it.
   # ie local.tiered_vpc_names.app
   tiered_vpc_names = { for vpc_name, this in module.vpcs : vpc_name => vpc_name }
