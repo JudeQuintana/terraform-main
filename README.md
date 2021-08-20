@@ -11,8 +11,6 @@ using a Transit Gateway.
 - CICD VPC Tier: `172.16.0.0/20` (Class B Private Internet)
 - General VPC Tier: `192.168.0.0/20` (Class C Private Internet)
 
-![tnt](https://jq1.io/img/tnt.png)
-
 Modules:
 - [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tiered_vpc_ng)
 - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/intra_vpc_security_group_rule_for_tiered_vpc_ng)
