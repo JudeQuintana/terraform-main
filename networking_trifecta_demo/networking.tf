@@ -46,6 +46,7 @@ module "vpcs" {
 
 # This will create a sg rule for each vpc allowing inbound-only ports from
 # all other vpc networks (excluding itself)
+# Basically allowing ssh and ping communication across all VPCs.
 locals {
   intra_vpc_security_group_rules = [
     {
