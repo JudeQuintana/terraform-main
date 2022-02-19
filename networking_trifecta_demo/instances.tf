@@ -1,14 +1,14 @@
 locals {
-  # A map so I can call vpcs by name so i dont have
+  # create a vpc_name map so I can call vpcs by name so i dont have
   # to type the vpc_name as a string in places that i need it.
-  # ie local.tiered_vpc_names.app
+  # ie local.tiered_vpc_names.app will be "app"
   tiered_vpc_names = { for vpc_name, this in module.vpcs : vpc_name => vpc_name }
 
   instances = [
     {
       # app-public
       name = format("%s-public", local.tiered_vpc_names.app)
-      # lookup the public subnet id that belongs to AZ 'a' in the 'app' VPC
+      # lookup the first public subnet id that belongs to AZ 'a' in the 'app' VPC
       subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.app).az_to_public_subnet_ids, "a")[0]
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.app).default_security_group_id,
@@ -18,7 +18,7 @@ locals {
     {
       # cicd-private
       name = format("%s-private", local.tiered_vpc_names.cicd)
-      # lookup the private subnet id that belongs to AZ 'b' in the 'cicd' VPC
+      # lookup the first private subnet id that belongs to AZ 'b' in the 'cicd' VPC
       subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.cicd).az_to_private_subnet_ids, "b")[0]
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.cicd).default_security_group_id,
@@ -28,7 +28,7 @@ locals {
     {
       # general-private
       name = format("%s-private", local.tiered_vpc_names.general)
-      # lookup the private subnet id that belongs to AZ 'c' in the 'general' VPC
+      # lookup the first private subnet id that belongs to AZ 'c' in the 'general' VPC
       subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.general).az_to_private_subnet_ids, "c")[0]
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.general).default_security_group_id,
