@@ -74,7 +74,7 @@ module "intra_vpc_security_group_rules" {
   rule       = each.value
 }
 
-# This TGW Central router module will attach all vpcs (attachment for each AZ) to one TGW
+# This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
 # associate and propagate to a single route table
 # add routes in each VPC to all other networks.
 module "tgw_centralized_router" {

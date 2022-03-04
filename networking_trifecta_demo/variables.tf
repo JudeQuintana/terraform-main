@@ -1,9 +1,11 @@
 variable "env_prefix" {
-  default = "test"
+  description = "environment prefix ie test, stg, prod"
+  default     = "test"
 }
 
 variable "base_region" {
-  default = "us-west-2"
+  description = "base region"
+  default     = "us-west-2"
 }
 
 variable "base_ec2_instance_attributes" {
@@ -21,7 +23,8 @@ variable "base_ec2_instance_attributes" {
 }
 
 variable "region_az_labels" {
-  type = map(string)
+  description = "Update this map with regions and AZs that will be in use for short name labeling"
+  type        = map(string)
 
   default = {
     us-east-1  = "use1"
