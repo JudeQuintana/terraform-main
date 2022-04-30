@@ -5,7 +5,7 @@ module "tgw_centralized_router" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   amazon_side_asn  = 64520
-  #vpcs            = module.vpcs
+  vpcs             = {}
 }
 
 module "tgw_super_router" {
