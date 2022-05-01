@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias  = "local"
+  alias  = "usw2"
   region = var.base_region
 }
 
 provider "aws" {
-  alias  = "peer"
+  alias  = "use1"
   region = var.cross_region
 }
 
@@ -17,7 +17,7 @@ module "tgw_centralized_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
 
   providers = {
-    aws = aws.local
+    aws = aws.usw2
   }
 
   env_prefix       = var.env_prefix
@@ -30,7 +30,7 @@ module "tgw_centralized_router_use1" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
 
   providers = {
-    aws = aws.peer
+    aws = aws.use1
   }
 
   env_prefix       = var.env_prefix
@@ -43,8 +43,8 @@ module "tgw_super_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tgw_super_router_for_tgw_centralized_router?ref=tgw-super-router-prep"
 
   providers = {
-    aws.local = aws.local
-    aws.peer  = aws.peer
+    aws.local = aws.usw2
+    aws.peer  = aws.use1
   }
 
   env_prefix                = var.env_prefix
