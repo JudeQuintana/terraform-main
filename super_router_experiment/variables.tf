@@ -4,8 +4,13 @@ variable "env_prefix" {
 }
 
 variable "base_region" {
-  description = "base region"
+  description = "base region/same acct"
   default     = "us-west-2"
+}
+
+variable "cross_region" {
+  description = "cross region/same acct"
+  default     = "us-east-1"
 }
 
 variable "region_az_labels" {
