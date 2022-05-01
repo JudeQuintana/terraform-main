@@ -12,7 +12,7 @@ provider "aws" {
   region = var.cross_region
 }
 
-# peering between the super router and centralized_routers within the same region and cross region works now.
+# peering between the super router and centralized_routers within the same region and cross region works now (within same account).
 module "tgw_centralized_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
 
