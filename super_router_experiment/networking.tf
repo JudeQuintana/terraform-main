@@ -43,13 +43,13 @@ module "tgw_super_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tgw_super_router_for_tgw_centralized_router?ref=tgw-super-router-prep"
 
   providers = {
-    aws.local = aws.usw2
+    aws.local = aws.usw2 # super router will be built in the aws.local provider region
     aws.peer  = aws.use1
   }
 
   env_prefix                = var.env_prefix
   region_az_labels          = var.region_az_labels
   local_amazon_side_asn     = 64521
-  local_centralized_routers = [module.tgw_centralized_router_usw2] # maybe this should be a map instead?
-  peer_centralized_routers  = [module.tgw_centralized_router_use1] # maybe this should be a map instead?
+  local_centralized_routers = [module.tgw_centralized_router_usw2] # local list must be all same region as each other in aws.local provider. maybe this should be a map instead?
+  peer_centralized_routers  = [module.tgw_centralized_router_use1] # peer list must all be same region as eachother in aws.peer provider. maybe this should be a map instead?
 }
