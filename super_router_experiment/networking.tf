@@ -23,7 +23,11 @@ module "tgw_centralized_router_usw2" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   amazon_side_asn  = 64520
-  vpcs             = {}
+  vpcs = {
+    cicd = {
+      network = "10.0.0.0/20"
+    }
+  }
 }
 
 module "tgw_centralized_router_use1" {
@@ -36,7 +40,11 @@ module "tgw_centralized_router_use1" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   amazon_side_asn  = 64519
-  vpcs             = {}
+  vpcs = {
+    app = {
+      network = "172.16.0.0/20"
+    }
+  }
 }
 
 module "tgw_super_router_usw2" {
@@ -51,5 +59,5 @@ module "tgw_super_router_usw2" {
   region_az_labels          = var.region_az_labels
   local_amazon_side_asn     = 64521
   local_centralized_routers = [module.tgw_centralized_router_usw2] # local list must be all same region as each other in aws.local provider. maybe this should be a map instead?
-  peer_centralized_routers  = [module.tgw_centralized_router_use1] # peer list must all be same region as eachother in aws.peer provider. maybe this should be a map instead?
+  peer_centralized_routers  = [module.tgw_centralized_router_use1] # peer list must all be same region as each other in aws.peer provider. maybe this should be a map instead?
 }
