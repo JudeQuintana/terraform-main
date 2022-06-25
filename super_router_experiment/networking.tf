@@ -95,10 +95,9 @@ module "tgw_super_router_usw2" {
 }
 
 output "tgw_super_router_generated_local_vpc_routes" {
-  value = module.tgw_super_router_usw2.generated_local_vpc_routes
+  value = module.tgw_super_router_usw2.generated_local_call
 }
 
 output "tgw_super_router_generated_peer_vpc_routes" {
-  value = module.tgw_super_router_usw2.generated_peer_vpc_routes
+  value = module.tgw_super_router_usw2.generated_peer_call
 }
-
