@@ -94,10 +94,10 @@ module "tgw_super_router_usw2" {
   peer_centralized_routers  = [module.tgw_centralized_router_use1] # peer list must all be same region as each other in aws.peer provider. maybe this should be a map instead?
 }
 
-output "tgw_super_router_generated_local_vpc_routes" {
-  value = module.tgw_super_router_usw2.generated_local_call
-}
+#output "local_tgws_per_vpc_network" {
+#value = module.tgw_super_router_usw2.local_tgws_per_vpc_network
+#}
 
-output "tgw_super_router_generated_peer_vpc_routes" {
-  value = module.tgw_super_router_usw2.generated_peer_call
-}
+#output "peer_tgws_per_vpc_network" {
+#value = module.tgw_super_router_usw2.peer_tgws_per_vpc_network
+#}
