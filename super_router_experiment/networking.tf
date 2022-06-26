@@ -101,3 +101,11 @@ module "tgw_super_router_usw2" {
 #output "peer_tgws_per_vpc_network" {
 #value = module.tgw_super_router_usw2.peer_tgws_per_vpc_network
 #}
+
+output "local_vpc_routes_to_other_tgws" {
+  value = module.tgw_super_router_usw2.local_vpc_routes_to_other_tgws
+}
+
+output "peer_vpc_routes_to_other_tgws" {
+  value = module.tgw_super_router_usw2.peer_vpc_routes_to_other_tgws
+}
