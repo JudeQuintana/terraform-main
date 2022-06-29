@@ -125,41 +125,6 @@ module "tgw_centralized_router_usw2" {
   #}
 }
 
-module "tgw_centralized_router_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
-
-  providers = {
-    aws = aws.use1
-  }
-
-  env_prefix       = var.env_prefix
-  region_az_labels = var.region_az_labels
-  amazon_side_asn  = 64519
-  vpcs             = module.vpcs_use1
-  #vpcs                         = {
-  #app                          = {
-  #az_to_private_route_table_id = {
-  #a                            = "rtb-0468efad92cd62ab8"
-  #b                            = "rtb-02ad79df1a7c192e7"
-  #}
-  #az_to_public_route_table_id = {
-  #a = "rtb-06b216fb818494594"
-  #b = "rtb-06b216fb818494594"
-  #}
-  #network = "172.16.0.0/20"
-  #}
-  #general = {
-  #az_to_private_route_table_id = {
-  #c = "rtb-01e5ec4882154a9a1"
-  #}
-  #az_to_public_route_table_id = {
-  #c = "rtb-0ad6cde89a9e386fd"
-  #}
-  #network = "192.168.0.0/20"
-  #}
-  #}
-}
-
 locals {
   vpc_tiers_use1 = [
     {
@@ -231,6 +196,41 @@ module "intra_vpc_security_group_rules_use1" {
   env_prefix = var.env_prefix
   vpcs       = module.vpcs_use1
   rule       = each.value
+}
+
+module "tgw_centralized_router_use1" {
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
+
+  providers = {
+    aws = aws.use1
+  }
+
+  env_prefix       = var.env_prefix
+  region_az_labels = var.region_az_labels
+  amazon_side_asn  = 64519
+  vpcs             = module.vpcs_use1
+  #vpcs                         = {
+  #app                          = {
+  #az_to_private_route_table_id = {
+  #a                            = "rtb-0468efad92cd62ab8"
+  #b                            = "rtb-02ad79df1a7c192e7"
+  #}
+  #az_to_public_route_table_id = {
+  #a = "rtb-06b216fb818494594"
+  #b = "rtb-06b216fb818494594"
+  #}
+  #network = "172.16.0.0/20"
+  #}
+  #general = {
+  #az_to_private_route_table_id = {
+  #c = "rtb-01e5ec4882154a9a1"
+  #}
+  #az_to_public_route_table_id = {
+  #c = "rtb-0ad6cde89a9e386fd"
+  #}
+  #network = "192.168.0.0/20"
+  #}
+  #}
 }
 
 module "tgw_super_router_usw2" {
