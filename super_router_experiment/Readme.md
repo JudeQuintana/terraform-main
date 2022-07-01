@@ -48,7 +48,7 @@ end.
 - ssh to public ip for  `app-public-usw2`
 - should be able to ssh to internal ip of `general-public-use1`
 
-The resulting aws config looks correct but when i attempt manually validate that i can ping and ssh from
+The resulting aws config looks correct but when i attempt manually validate, i cant ping and ssh from
 ec2 usw2 to ec2 use1 cross region. feels like im missing something
 obvious.
 
