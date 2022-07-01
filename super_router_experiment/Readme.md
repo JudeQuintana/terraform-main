@@ -32,18 +32,21 @@ variable "base_ec2_instance_attributes_use1" {
 }
 ```
 
+# it begins
+terraform init
+
 # VPCs must be applied first
 terraform apply -target module.vpcs_usw2 -target module.vpcs_use1
 
 # launch centralized routers, intra-vpcs security groups and instances
-terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1 -target aws_instance.instances_use1 -target aws_instance. instances_usw2
+terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1 -target aws_instance.instances_use1 -target aws_instance.instances_usw2
 
 # launch super router
 terraform apply  -target module.tgw_super_router_usw2
 
 - manually set sg groups to receive inbound ssh and ping from vpc
-  network in other tgw (cross-region) on each side, i should add raw sg
-group resource for this in main tf but need to create a module in the
+  network in other tgw (cross-region) on each side and from home ip, i should add a temp raw sg
+group rule resource for this in main tf but need to create a module in the
 end.
 - ssh to public ip for  `app-public-usw2`
 - should be able to ssh to internal ip of `general-public-use1`
