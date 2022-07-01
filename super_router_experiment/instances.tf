@@ -21,10 +21,10 @@ locals {
 
   instances_use1 = [
     {
-      # general-private cross region
+      # general-public cross region use1
       name = format("%s-public-use1", local.tiered_vpc_names_use1.general)
       # lookup the first public subnet id that belongs to AZ 'c' in the 'general' VPC in use1
-      subnet_id = lookup(lookup(module.vpcs_use1, local.tiered_vpc_names_use1.general).az_to_private_subnet_ids, "c")[0]
+      subnet_id = lookup(lookup(module.vpcs_use1, local.tiered_vpc_names_use1.general).az_to_public_subnet_ids, "c")[0]
       vpc_security_group_ids = [
         lookup(module.vpcs_use1, local.tiered_vpc_names_use1.general).default_security_group_id,
         lookup(module.vpcs_use1, local.tiered_vpc_names_use1.general).intra_vpc_security_group_id
