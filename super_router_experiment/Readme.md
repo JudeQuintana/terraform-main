@@ -51,3 +51,5 @@ end.
 The resulting aws config looks correct but when i attempt manually validate that i can ping and ssh from
 ec2 usw2 to ec2 use1 cross region. feels like im missing something
 obvious.
+
+ (ec2 usw2 <-> vpc usw2 <-> centralized router usw2 <-> super router usw2 <-> centralized router use1 <-> vpc use1 <-> ec2 use1)
