@@ -1,36 +1,9 @@
 #demo
 
-set your pre-defined ec2-key pair for each region in variables.tf
-
-```
-variable "base_ec2_instance_attributes_usw2" {
-  description = "base attributes for building in us-west-2"
-  type = object({
-    ami           = string
-    key_name      = string
-    instance_type = string
-  })
-  default = {
-    key_name      = "tnt-demo-usw2"         # EC2 key pair name to use when launching an instance
-    ami           = "ami-0518bb0e75d3619ca" # AWS Linux 2 us-west-2
-    instance_type = "t2.micro"
-  }
-}
-
-variable "base_ec2_instance_attributes_use1" {
-  description = "base attributes for building in us-west-2"
-  type = object({
-    ami           = string
-    key_name      = string
-    instance_type = string
-  })
-  default = {
-    key_name      = "my-ec2-key-use1"       # EC2 key pair name to use when launching an instance
-    ami           = "ami-0742b4e673072066f" # AWS Linux 2 us-east-1
-    instance_type = "t2.micro"
-  }
-}
-```
+ISSUE: tgw centralized router peering attachments arent being assigned a tgw
+route table even though im assigning it in TF. Need to
+troubleshoot/validate connectivity with aws network analyzer.
+(ec2 usw2 <-> vpc usw2 <-> centralized router usw2 <-> super router usw2 <-> centralized router use1 <-> vpc use1 <-> ec2 use1)
 
 # it begins
 terraform init
@@ -39,20 +12,7 @@ terraform init
 terraform apply -target module.vpcs_usw2 -target module.vpcs_use1
 
 # launch centralized routers, intra-vpcs security groups and instances
-terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1 -target aws_instance.instances_use1 -target aws_instance.instances_usw2
+terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_use1
 
 # launch super router
 terraform apply  -target module.tgw_super_router_usw2
-
-- manually set sg groups to receive inbound ssh and ping from vpc
-  network in other tgw (cross-region) on each side and from home ip, i should add a temp raw sg
-group rule resource for this in main tf but need to create a module in the
-end.
-- ssh to public ip for  `app-public-usw2`
-- should be able to ssh to internal ip of `general-public-use1`
-
-The resulting aws config looks correct but when i attempt manually validate, i cant ping and ssh from
-ec2 usw2 to ec2 use1 cross region. feels like im missing something
-obvious.
-
- (ec2 usw2 <-> vpc usw2 <-> centralized router usw2 <-> super router usw2 <-> centralized router use1 <-> vpc use1 <-> ec2 use1)
