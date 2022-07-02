@@ -1,8 +1,4 @@
 #demo
-
-FIXED: tgw centralized router peering attachments arent being assigned a tgw
-route table even though im assigning it in TF.
-
 Demo should work.
 
 Validated connectivity with aws network analyzer.
