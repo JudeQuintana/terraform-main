@@ -1,8 +1,11 @@
 #demo
 
-ISSUE: tgw centralized router peering attachments arent being assigned a tgw
-route table even though im assigning it in TF. Need to
-troubleshoot/validate connectivity with aws network analyzer.
+FIXED: tgw centralized router peering attachments arent being assigned a tgw
+route table even though im assigning it in TF.
+
+Demo should work.
+
+Validated connectivity with aws network analyzer.
 (ec2 usw2 <-> vpc usw2 <-> centralized router usw2 <-> super router usw2 <-> centralized router use1 <-> vpc use1 <-> ec2 use1)
 
 # it begins
