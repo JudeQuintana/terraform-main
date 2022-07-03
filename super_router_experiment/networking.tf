@@ -12,7 +12,6 @@ provider "aws" {
   region = var.cross_region
 }
 
-
 locals {
   vpc_tiers_usw2 = [
     {
