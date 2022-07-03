@@ -2,7 +2,7 @@ Demo: Rough draft of super router.
 
 A scalable way (hopefully) to route intra-region and cross-region (same aws acct for now) central router tgws and vpcs via super router tgw. no cross account support yet.
 
-Validated connectivity with aws network analyzer.
+Validated connectivity with aws route analyzer.
 (ec2 usw2a <-> vpc usw2 <-> centralized router usw2 <-> super router usw2 <-> centralized router use1 <-> vpc use1 <-> ec2 use1a)
 
 it begins
@@ -17,7 +17,7 @@ launch centralized routers, intra-vpcs security groups and instances
 launch super router
 `terraform apply  -target module.tgw_super_router_usw2`
 
-Validation with AWS Routing Analyzer
+Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> next
