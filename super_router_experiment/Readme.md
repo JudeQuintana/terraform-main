@@ -27,10 +27,10 @@ Validation with AWS Route Analyzer
     - Source:
       - Transit Gateway: Choose Centralized Router in usw2
       - Transit Gateway Attachment: Choose app-usw2 (VPC)
-      - IP Address: 10.0.16.6
+      - IP Address: 10.0.19.5
     - Destination:
       - Transit Gateway: Choose Centralized Router in use1
       - Transit Gateway Attachment: Choose general-usw1 (VPC)
-      - IP Address: 192.168.0.7
+      - IP Address: 192.168.10.3
     - Select `Run Route Analysis`
       - Forward and Return Paths should both have a `Connected` status.
