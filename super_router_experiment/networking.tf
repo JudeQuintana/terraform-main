@@ -135,6 +135,6 @@ module "tgw_super_router_usw2" {
   env_prefix                = var.env_prefix
   region_az_labels          = var.region_az_labels
   local_amazon_side_asn     = 64521
-  local_centralized_routers = [module.tgw_centralized_router_usw2] # local list must be all same region as each other in aws.local provider. maybe this should be a map instead?
-  peer_centralized_routers  = [module.tgw_centralized_router_use1] # peer list must all be same region as each other in aws.peer provider. maybe this should be a map instead?
+  local_centralized_routers = [module.tgw_centralized_router_usw2] # local list must be all same region as each other in aws.local provider but cant add to this list just yet.
+  peer_centralized_routers  = [module.tgw_centralized_router_use1] # peer list must all be same region as each other in aws.peer provider. but cant add to this list just yet.
 }
