@@ -22,7 +22,6 @@ locals {
           private = ["10.0.16.0/24", "10.0.17.0/24", "10.0.18.0/24"]
           public  = ["10.0.19.0/24", "10.0.20.0/24"]
         }
-
       }
       name    = "app"
       network = "10.0.16.0/20"
@@ -57,8 +56,6 @@ module "vpcs_usw2" {
 # This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
-
-# peering between the super router and centralized_routers within the same region and cross region works now (within same account).
 module "tgw_centralized_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
 
@@ -124,6 +121,7 @@ module "tgw_centralized_router_use1" {
   vpcs             = module.vpcs_use1
 }
 
+# peering between the super router and centralized_routers within the same region and cross region works now (within same account).
 module "tgw_super_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tgw_super_router_for_tgw_centralized_router?ref=tgw-super-router-prep"
 
