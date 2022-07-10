@@ -124,9 +124,12 @@ module "tgw_centralized_router_use1" {
 # peering and routing between the super router and centralized_routers within the same region and cross region works now (within same aws account only).
 # The caveat is the peer TGWs will have to go through the local provider region to get to other peer TGWs.
 #
+# ie usw2 vpc 1 <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> use1 vpc 2
+#
 # ie usw2 vpc 1 <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> usw2 vpc 2
 #
 # ie use1 vpc 1 <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> use1 vpc 2
+#
 module "tgw_super_router_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tgw_super_router_for_tgw_centralized_router?ref=tgw-super-router-prep"
 
