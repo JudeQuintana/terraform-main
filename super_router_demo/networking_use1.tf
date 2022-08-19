@@ -28,7 +28,7 @@ locals {
 }
 
 module "vpcs_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.use1
@@ -42,7 +42,7 @@ module "vpcs_use1" {
 }
 
 module "tgw_centralized_router_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.use1
@@ -81,7 +81,7 @@ locals {
 }
 
 module "vpcs_use1_another" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.use1
@@ -95,7 +95,7 @@ module "vpcs_use1_another" {
 }
 
 module "tgw_centralized_router_use1_another" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.use1

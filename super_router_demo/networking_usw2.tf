@@ -32,7 +32,7 @@ locals {
 }
 
 module "vpcs_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.usw2
@@ -49,7 +49,7 @@ module "vpcs_usw2" {
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
 module "tgw_centralized_router_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.usw2
@@ -89,7 +89,7 @@ locals {
 }
 
 module "vpcs_usw2_another" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.usw2
@@ -108,7 +108,7 @@ module "vpcs_usw2_another" {
 
 # peering between the super router and centralized_routers within the same region and cross region works now (within same account).
 module "tgw_centralized_router_usw2_another" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=tgw-super-router-prep"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.0"
 
   providers = {
     aws = aws.usw2
