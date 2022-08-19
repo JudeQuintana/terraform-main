@@ -20,6 +20,9 @@ apply centralized routers:
 apply super router:
  - `terraform apply -target module.tgw_super_router_usw2_to_use1`
 
+Resulting Architecture:
+![super-router](https://jq1.io/img/super-router.png)
+
 Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
   - Create global network -> `next`
