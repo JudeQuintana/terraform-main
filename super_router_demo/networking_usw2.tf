@@ -105,8 +105,6 @@ module "vpcs_usw2_another" {
 # This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
-
-# peering between the super router and centralized_routers within the same region and cross region works now (within same account).
 module "tgw_centralized_router_usw2_another" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.0"
 
