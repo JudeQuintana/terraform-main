@@ -7,16 +7,16 @@ Demo:
   - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc
   - private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc
 
-it begins
-`terraform init`
+it begins:
+ - `terraform init`
 
-VPCs MUST be applied first
-`terraform apply -target module.vpcs_usw2 -target module.vpcs_usw2_another -target module.vpcs_use1 -target module.vpcs_use1_another`
+VPCs MUST be applied first:
+ - `terraform apply -target module.vpcs_usw2 -target module.vpcs_usw2_another -target module.vpcs_use1 -target module.vpcs_use1_another`
 
-apply centralized routers
-`terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_usw2_another -target module.tgw_centralized_router_use1 -target module.tgw_centralized_router_use1_another`
+apply centralized routers:
+ - `terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_usw2_another -target module.tgw_centralized_router_use1 -target module.tgw_centralized_router_use1_another`
 
-apply super router
+apply super router:
 `terraform apply -target module.tgw_super_router_usw2_to_use1`
 
 Validation with AWS Route Analyzer
@@ -38,3 +38,7 @@ Validation with AWS Route Analyzer
       - Forward and Return Paths should both have a `Connected` status.
 
 Several other routes can be validated, try them out!
+
+Tear down:
+ - `terraform destroy`
+
