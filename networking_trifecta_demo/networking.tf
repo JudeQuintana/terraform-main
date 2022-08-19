@@ -35,7 +35,7 @@ locals {
 }
 
 module "vpcs" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.3.1"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.0"
 
   for_each = { for t in local.vpc_tiers : t.name => t }
 
@@ -65,7 +65,7 @@ locals {
 }
 
 module "intra_vpc_security_group_rules" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=v1.3.1"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=v1.4.0"
 
   for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 
@@ -78,9 +78,10 @@ module "intra_vpc_security_group_rules" {
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
 module "tgw_centralized_router" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.3.1"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.0"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
+  amazon_side_asn  = 64512
   vpcs             = module.vpcs
 }

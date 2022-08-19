@@ -20,3 +20,15 @@ Main:
 - [Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
   - See [Trifecta Demo Time](https://jq1.io/posts/tnt/#trifecta-demo-time) for instructions.
 
+
+It begins:
+ - `terraform init`
+
+VPCs MUST be applied first:
+ - `terraform apply -target module.vpcs`
+
+Apply Intra VPC Security Group Rules, EC2 instances and Centralized Router:
+ - `terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.tgw_centralized_router`
+
+Tear Down:
+ - `terraform destroy`
