@@ -21,7 +21,7 @@ apply super router
 
 Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
-  - Create global network -> next
+  - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
   - Select new global network -> go to `Transit Gateways` -> `Register
     Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
@@ -29,11 +29,11 @@ Validation with AWS Route Analyzer
     - Source:
       - Transit Gateway: Choose Centralized Router in usw2
       - Transit Gateway Attachment: Choose app-usw2 (VPC)
-      - IP Address: 10.0.19.5
+      - IP Address: `10.0.19.5`
     - Destination:
       - Transit Gateway: Choose Centralized Router in use1
       - Transit Gateway Attachment: Choose general-use1 (VPC)
-      - IP Address: 192.168.10.3
+      - IP Address: `192.168.10.3`
     - Select `Run Route Analysis`
       - Forward and Return Paths should both have a `Connected` status.
 
