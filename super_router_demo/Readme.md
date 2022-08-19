@@ -8,6 +8,9 @@ Demo:
   - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc
   - private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc
 
+Resulting Architecture:
+![super-router](https://jq1.io/img/super-router.png)
+
 it begins:
  - `terraform init`
 
@@ -20,8 +23,6 @@ apply centralized routers:
 apply super router:
  - `terraform apply -target module.tgw_super_router_usw2_to_use1`
 
-Resulting Architecture:
-![super-router](https://jq1.io/img/super-router.png)
 
 Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)

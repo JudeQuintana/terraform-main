@@ -11,6 +11,9 @@ using a Transit Gateway.
 - CICD VPC Tier: `172.16.0.0/20` (Class B Private Internet)
 - General VPC Tier: `192.168.0.0/20` (Class C Private Internet)
 
+Resulting Architecture
+![tnt](https://jq1.io/img/tnt.png)
+
 Modules:
 - [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tiered_vpc_ng)
 - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/intra_vpc_security_group_rule_for_tiered_vpc_ng)
@@ -28,9 +31,6 @@ VPCs MUST be applied first:
 
 Apply Intra VPC Security Group Rules, EC2 instances and Centralized Router:
  - `terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.tgw_centralized_router`
-
-Resulting Architecture
-![tnt](https://jq1.io/img/tnt.png)
 
 Tear Down:
  - `terraform destroy`
