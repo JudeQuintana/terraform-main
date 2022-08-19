@@ -1,5 +1,7 @@
 This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/)
 
+Super Powered, Super Sharp, Super Router!
+
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC quota for
   each us-east-1 and us-west-2 depending on how many you currently have.
