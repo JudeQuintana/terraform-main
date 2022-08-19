@@ -4,8 +4,8 @@ Demo:
 - Super Router provides both intra-region and cross-region peering and routing for Centralized Routers.
 - The caveat is the peer TGWs will have to go through the super-router local provider region to get to other peer TGWs. Architecture diagrams, lol:
   - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc
-  - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <->  private subnet usw2c in general vpc
-  - private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <->  public subnet use1c in infra vpc
+  - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc
+  - private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc
 
 it begins
 `terraform init`
