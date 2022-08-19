@@ -29,5 +29,8 @@ VPCs MUST be applied first:
 Apply Intra VPC Security Group Rules, EC2 instances and Centralized Router:
  - `terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.tgw_centralized_router`
 
+Resulting Architecture
+![tnt](https://jq1.io/img/tnt.png)
+
 Tear Down:
  - `terraform destroy`
