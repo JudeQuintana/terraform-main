@@ -1,13 +1,11 @@
 This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/)
 
 Demo:
-- Rough draft of super router.
-- A scalable way (hopefully) to peer and route intra-region and cross-region central router tgws and vpcs via super router.
-- The caveat is the peer TGWs will have to go through the super-router local provider region to get to other peer TGWs in the same region. Architecture diagrams, lol:
-  - usw2 vpc 1 <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> use1 vpc 2
-  - usw2 vpc 1 <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> usw2 vpc 2
-  - use1 vpc 1 <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> use1 vpc 2
-- [PR](https://github.com/JudeQuintana/terraform-modules/pull/6) for modules and TODO
+- Super Router provides both intra-region and cross-region peering and routing for Centralized Routers.
+- The caveat is the peer TGWs will have to go through the super-router local provider region to get to other peer TGWs. Architecture diagrams, lol:
+  - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc
+  - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <->  private subnet usw2c in general vpc
+  - private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <->  public subnet use1c in infra vpc
 
 it begins
 `terraform init`
@@ -38,3 +36,5 @@ Validation with AWS Route Analyzer
       - IP Address: 192.168.10.3
     - Select `Run Route Analysis`
       - Forward and Return Paths should both have a `Connected` status.
+
+Several other routes can be validated, try them out!
