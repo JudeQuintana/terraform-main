@@ -1,6 +1,6 @@
-This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/)
+This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/).
 
-Super Powered, Super Sharp, Super Router!
+New Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC quota for
