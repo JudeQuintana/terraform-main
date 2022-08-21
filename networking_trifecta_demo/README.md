@@ -11,7 +11,10 @@ using a Transit Gateway.
 - CICD VPC Tier: `172.16.0.0/20` (Class B Private Internet)
 - General VPC Tier: `192.168.0.0/20` (Class C Private Internet)
 
-Resulting Architecture
+Example VPC-NG architecture:
+![vpc-ng](https://jq1.io/img/vpc/aws-vpc-diagram.png)
+
+Resulting TNT Architecture (zoom out):
 ![tnt](https://jq1.io/img/tnt.png)
 
 Modules:
