@@ -3,12 +3,12 @@ variable "env_prefix" {
   default     = "test"
 }
 
-variable "base_region" {
+variable "base_region_usw2" {
   description = "base region/same acct"
   default     = "us-west-2"
 }
 
-variable "cross_region" {
+variable "cross_region_use1" {
   description = "cross region/same acct"
   default     = "us-east-1"
 }

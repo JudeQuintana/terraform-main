@@ -3,10 +3,14 @@ locals {
     {
       azs = {
         a = {
+          # Enable a NAT Gateway for all private subnets in the AZ with:
+          # enable_natgw = true
           private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
           public  = ["10.0.3.0/24", "10.0.4.0/24"]
         }
         b = {
+          # Enable a NAT Gateway for all private subnets in the AZ with:
+          # enable_natgw = true
           private = ["10.0.10.0/24", "10.0.11.0/24"]
           public  = ["10.0.12.0/24"]
         }
