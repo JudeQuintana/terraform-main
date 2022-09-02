@@ -1,6 +1,6 @@
-This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/).
-
 New Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
+
+This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/).
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC quota for
@@ -10,9 +10,9 @@ us-west-2, 1 in us-east-1)
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 - The caveat is the peer TGWs will have to go through the super-router local provider region to get to other peer TGWs. Architecture diagrams, lol:
-  - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc
-  - public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc
-  - private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc
+  - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc`
+  - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc`
+  - `private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc`
 
 Resulting Architecture:
 ![super-router](https://jq1.io/img/super-router.png)
