@@ -26,14 +26,144 @@ Main:
 - [Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
   - See [Trifecta Demo Time](https://jq1.io/posts/tnt/#trifecta-demo-time) for instructions.
 
-It begins:
- - `terraform init`
+# Caveats
+The modules build resources that will cost some money but should be minimal for the demo. (ie NATGW, EIP, TGW)
 
-VPCs MUST be applied first:
- - `terraform apply -target module.vpcs`
+You wont be able to see the generated pet names for subnet naming on plan, only on apply.
+ - Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the first public subnet in the list for the AZ.
 
-Apply Intra VPC Security Group Rules, EC2 instances and Centralized Router:
- - `terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.tgw_centralized_router`
+When modifying an AZ or VPCs in an existing configuration with A TGW Centralized rouer:
+  - Adding
+    - The VPCs must be applied first.
+    - Then apply Intra Security Groups Rules and TGW Centralized Router.
+  - Removing
+    - The first public subnet in the AZ being removed must be manually
+      removed (modified) from the TGW VPC attachments first before
+      applying to the VPC, SG Rules, and TGW.
+    - Otherwise, Terraform wants to remove the attachment from the TGW after the subnet is deleted but the
+      subnet can't be deleted until it's attachment is removed from the TGW (strange circular dependency that I haven't figured out).
+    - Full teardown (destroy) works fine.
 
-Tear Down:
- - `terraform destroy`
+# Trifecta Demo Time
+
+**This will be a demo of the following:**
+- Configure `us-west-2a` AZ in `app` VPC - `10.0.0.0/20`
+  - Launch `app-public` instance in public subnet.
+- Configure `us-west-2b` AZ with NATGW in `cicd` VPC - `172.16.0.0/20`
+  - Launch `cicd-private` instance in private subnet.
+- Configure `us-west-2c` AZ in `general` VPC - `192.168.0.0/20`
+  - Launch `general-private` instance in private subnet.
+- Configure security groups for access across VPCs.
+  - Allow ssh and ping.
+- Configure routing between all public and private subnets accross VPCs
+via TGW.
+- Verify connectivity with `t2.micro` EC2 instances.
+- Minimal assembly required.
+
+**Pre-requisites:**
+- git
+- curl
+- Terraform 1.2.0+
+- Pre-configured AWS credentials
+  - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
+user read only permissions.
+    - private key saved as `~/.ssh/my-ec2-key.pem` on local machine.
+    - must be user read only permssions `chmod 400 ~/.ssh/my-ec2-key.pem`
+
+**Assemble the Trifecta** by cloning the [Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/) repo.
+```
+$ git clone git@github.com:JudeQuintana/terraform-main.git
+$ cd networking_trifecta_demo
+```
+
+Update the `key_name` in [variables.tf](https://github.com/JudeQuintana/terraform-main/blob/main/networking_trifecta_demo/variables.tf#L19) with the EC2 key pair name you're using for the `us-west-2` region (see pre-requisites above).
+```
+# snippet
+variable "base_ec2_instance_attributes" {
+  ...
+  default = {
+    key_name      = "my-ec2-key"            # EC2 key pair name to use when launching an instance
+    ami           = "ami-0518bb0e75d3619ca" # AWS Linux 2 us-west-2
+    instance_type = "t2.micro"
+  }
+}
+```
+
+The VPCs must be applied first:
+```
+$ terraform init
+$ terraform apply -target module.vpcs
+```
+
+Now we'll:
+- Build security groups rules to allow ssh and ping across VPCs.
+- Launch instances in each enabled AZ for all VPCs.
+- Route between VPCs via TGW.
+```
+$ terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.tgw_centralized_router
+```
+
+Once the apply is complete, it will take 1-2 minutes for the TGW
+routing to fully propagate.
+
+**Verify Connectivity Between VPCs**
+```
+$ cd ../scripts/
+$ chmod u+x get_instance_info.sh
+$ ./get_instance_info.sh
+```
+
+Example output:
+```
+# aws_instance.instances["cicd-private"]
+    private_ip                           = "172.16.5.11"
+
+# aws_instance.instances["general-private"]
+    private_ip                           = "192.168.10.8"
+
+# aws_instance.instances["app-public"]
+    private_ip                           = "10.0.3.200"
+    public_ip                            = "54.187.241.115"
+
+# module.vpcs["app"].aws_vpc.this
+    default_security_group_id        = "sg-id-1234"
+
+# My Public IP
+XX.XXX.XXX.XX
+```
+
+Using the output above, add an inbound ssh rule from "My Public IP" to the default security group id of the App VPC.
+
+This can be done manually in the AWS console or with the aws cli command below.
+```
+$ aws ec2 authorize-security-group-ingress --region us-west-2 --group-id sg-id-1234 --protocol tcp --port 22 --cidr My.Public.IP.Here/32
+```
+
+Next, ssh to the `app-public` instance public IP (ie `54.187.241.115`) using the EC2 key pair private key.
+
+Then, ssh to the `private_ip` of the `general-private` instance, then `cicd-private`, then back to `app-public`.
+```
+$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.187.241.115
+
+[ec2-user@app-public ~]$ ping google.com # works! via igw
+[ec2-user@app-public ~]$ ping 192.168.10.8 # works! via tgw
+[ec2-user@app-public ~]$ ssh 192.168.10.8
+
+[ec2-user@general-private ~]$ ping google.com # doesn't work! no natgw
+[ec2-user@general-private ~]$ ping 172.16.5.11 # works! via tgw
+[ec2-user@general-private ~]$ ssh 172.16.5.11
+
+[ec2-user@cicd-private ~]$ ping google.com # works! via natgw
+[ec2-user@cicd-private ~]$ ping 10.0.3.200 # works! via tgw
+[ec2-user@cicd-private ~]$ ssh 10.0.3.200
+
+[ec2-user@app-public ~]$
+```
+
+🔻 Trifecta Complete!!!
+
+**Clean Up**
+```
+$ terraform destroy
+```
+
