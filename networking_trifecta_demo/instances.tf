@@ -61,6 +61,6 @@ sudo chmod 400 $SSH_CONFIG_PATH
 sudo chown ec2-user:ec2-user $SSH_CONFIG_PATH
 EOF
   tags = {
-    Name = format("%s", each.value.name)
+    Name = each.value.name
   }
 }
