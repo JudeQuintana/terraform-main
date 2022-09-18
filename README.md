@@ -1,4 +1,4 @@
-# TNT
+# TNT Architecture.
 [Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
 
 # Super Router!
