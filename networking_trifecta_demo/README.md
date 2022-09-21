@@ -3,7 +3,7 @@ Blog Post:
 [Terraform Networking Trifecta ](https://jq1.io/posts/tnt/)
 
 # Goal
-Using the latest Terraform (v1.2+) and AWS Provider (v4.20.0+)
+Using the latest Terraform (v1.3+) and AWS Provider (v4.20.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918)
 using a Transit Gateway.
 
