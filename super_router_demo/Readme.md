@@ -1,18 +1,21 @@
-New Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
+Original Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
 
 This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/).
 
+See the new [$init super refactor](https://jq1.io/posts/init_super_refactor/) blog post for moar deets!
+
 Demo:
-- Pre-requisite: AWS account, may need to increase your VPC quota for
+- Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
   each us-east-1 and us-west-2 depending on how many you currently have.
-This demo will be creating 4 more VPCs in each region and 3 TGWs (2 in
-us-west-2, 1 in us-east-1)
+This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in each region (6 total)
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
-- The caveat is the peer TGWs will have to go through the super-router local provider region to get to other peer TGWs. Architecture diagrams, lol:
-  - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc`
-  - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc`
-  - `private subnet use1a in app vpc <-> use1 centralized router 1 <-> usw2 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc`
+- Architecture diagrams, lol:
+  - intra-region:
+    - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc`
+    - `private subnet use1a in app vpc <-> use1 centralized router 1 <-> use1 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc`
+  - cross-region:
+    - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc`
 
 Resulting Architecture:
 ![super-router](https://jq1.io/img/super-router.png)
