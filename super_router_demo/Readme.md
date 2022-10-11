@@ -18,7 +18,7 @@ This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in ea
     - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc`
 
 Resulting Architecture:
-![super-router](https://jq1.io/img/super-router.png)
+![super-router](https://jq1.io/img/super-refactor-after.png)
 
 it begins:
  - `terraform init`
