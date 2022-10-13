@@ -10,28 +10,20 @@ Demo:
 This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in each region (6 total)
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
-- Architecture diagrams, lol:
-  - intra-region:
-    - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> usw2 centralized router 2 <-> private subnet usw2c in general vpc`
-    - `private subnet use1a in app vpc <-> use1 centralized router 1 <-> use1 super router <-> use1 centralized router 2 <-> public subnet use1c in infra vpc`
-  - cross-region:
-    - `public subnet usw2a in app vpc <-> usw2 centralized router 1 <-> usw2 super router <-> use1 super router <-> use1 centralized router 1 <-> private subnet use1c in general vpc`
-
 Resulting Architecture:
 ![super-router](https://jq1.io/img/super-refactor-after.png)
 
 it begins:
  - `terraform init`
 
-VPCs MUST be applied first:
+VPCs must be applied first:
  - `terraform apply -target module.vpcs_usw2 -target module.vpcs_usw2_another -target module.vpcs_use1 -target module.vpcs_use1_another`
 
-apply centralized routers:
+Apply centralized routers:
  - `terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_usw2_another -target module.tgw_centralized_router_use1 -target module.tgw_centralized_router_use1_another`
 
-apply super router:
+Apply super router:
  - `terraform apply -target module.tgw_super_router_usw2_to_use1`
-
 
 Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
