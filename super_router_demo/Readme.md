@@ -80,5 +80,5 @@ Validation with AWS Route Analyzer
 Several other routes can be validated, try them out!
 
 Tear down:
- - `terraform destroy`
+ - `terraform destroy` (long delay to get to yes or no prompt, be patient)
 
