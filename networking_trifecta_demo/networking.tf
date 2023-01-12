@@ -66,7 +66,7 @@ locals {
 module "vpcs" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
 
-  for_each = { for tv in local.vpc_tiers : tv.name => tv }
+  for_each = { for t in local.vpc_tiers : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
