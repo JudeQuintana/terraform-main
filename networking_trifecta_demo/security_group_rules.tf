@@ -5,15 +5,15 @@ locals {
   intra_vpc_security_group_rules = [
     {
       label     = "ssh"
+      protocol  = "tcp"
       from_port = 22
       to_port   = 22
-      protocol  = "tcp"
     },
     {
       label     = "ping"
+      protocol  = "icmp"
       from_port = 8
       to_port   = 0
-      protocol  = "icmp"
     }
   ]
 }
