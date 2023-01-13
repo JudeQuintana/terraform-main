@@ -6,8 +6,6 @@
 
 set -euo pipefail
 
-cd ../networking_trifecta_demo
-
 echo '# aws_instance.instances["general-private"]'
 terraform state show 'aws_instance.instances["general-private"]' | grep -E 'private_ip.*=.*"'
 echo
