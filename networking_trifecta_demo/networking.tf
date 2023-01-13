@@ -1,8 +1,8 @@
 locals {
-  vpc_tiers = [
+  tiered_vpcs = [
     {
-      name    = "app"
-      network = "10.0.0.0/20"
+      name         = "app"
+      network_cidr = "10.0.0.0/20"
       azs = {
         a = {
           #private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
@@ -28,8 +28,8 @@ locals {
       }
     },
     {
-      name    = "cicd"
-      network = "172.16.0.0/20"
+      name         = "cicd"
+      network_cidr = "172.16.0.0/20"
       azs = {
         b = {
           enable_natgw = true
@@ -45,8 +45,8 @@ locals {
       }
     },
     {
-      name    = "general"
-      network = "192.168.0.0/20"
+      name         = "general"
+      network_cidr = "192.168.0.0/20"
       azs = {
         c = {
           #private = ["192.168.10.0/24", "192.168.11.0/24", "192.168.12.0/24"]
@@ -66,7 +66,7 @@ locals {
 module "vpcs" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
 
-  for_each = { for t in local.vpc_tiers : t.name => t }
+  for_each = { for t in local.tiered_vpcs : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
