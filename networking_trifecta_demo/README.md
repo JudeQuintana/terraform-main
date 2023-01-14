@@ -47,7 +47,7 @@ When modifying an AZ or VPCs in an existing configuration with A TGW Centralized
 # Trifecta Demo Time
 
 **This will be a demo of the following:**
-- Configure `us-west-2a` AZ in `app` VPC - `10.0.0.0/20`
+- Configure `us-west-2a` and `us-west-2b` AZs in `app` VPC - `10.0.0.0/20`
   - Launch `app-public` instance in public subnet.
 - Configure `us-west-2b` AZ with NATGW in `cicd` VPC - `172.16.0.0/20`
   - Launch `cicd-private` instance in private subnet.

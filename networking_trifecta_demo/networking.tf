@@ -11,9 +11,10 @@ locals {
             { name = "cluster1", cidr = "10.0.0.0/24" },
           ]
           public_subnets = [
-            { name = "random1", cidr = "10.0.3.0/24" }
+            { name = "random1", cidr = "10.0.3.0/28" },
+            { name = "haproxy1", cidr = "10.0.4.64/26" },
           ]
-        },
+        }
         b = {
           #private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
           #public  = ["10.0.3.0/24", "10.0.4.0/24"]
@@ -52,10 +53,10 @@ locals {
           #private = ["192.168.10.0/24", "192.168.11.0/24", "192.168.12.0/24"]
           #public  = ["192.168.13.0/28"]
           private_subnets = [
-            { name = "random2", cidr = "192.168.10.0/24" }
+            { name = "db1", cidr = "192.168.10.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "192.168.13.0/28" }
+            { name = "random1", cidr = "192.168.13.0/28" },
           ]
         }
       }
