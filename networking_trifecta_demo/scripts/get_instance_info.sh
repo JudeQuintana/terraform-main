@@ -26,5 +26,6 @@ echo '# My Public IP'
 curl https://checkip.amazonaws.com/
 echo
 
-echo 'AWS CLI Command to copy and run (replace in app-vpc-sg-id and My.Public.IP.Here):'
-echo 'aws ec2 authorize-security-group-ingress --region us-west-2 --group-id app-vpc-sg-id --protocol tcp --port 22 --cidr My.Public.IP.Here/32'
+echo 'If you have awscli configured follow the instructions below otherwise you have to do it manually in the AWS console'
+echo 'AWS CLI Command to copy and run (replace both app-vpc-default-sg-id and My.Public.IP.Here):'
+echo 'aws ec2 authorize-security-group-ingress --region us-west-2 --group-id app-vpc-default-sg-id --protocol tcp --port 22 --cidr My.Public.IP.Here/32'
