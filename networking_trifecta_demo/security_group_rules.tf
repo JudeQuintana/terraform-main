@@ -23,7 +23,8 @@ module "intra_vpc_access" {
 
   for_each = { for r in local.intra_vpc_access : r.label => r }
 
-  env_prefix = var.env_prefix
+  env_prefix       = var.env_prefix
+  region_az_labels = var.region_az_labels
   intra_vpc_access = {
     rule = each.value
     vpcs = module.vpcs
