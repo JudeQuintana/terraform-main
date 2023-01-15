@@ -23,7 +23,7 @@ locals {
           #private = ["10.0.26.0/24"]
           #public  = ["10.0.27.0/24"]
           private_subnets = [
-            { name = "cluster2", cidr = "10.0.26.0/24" },
+            { name = "cluster2", cidr = "10.0.27.0/24" },
           ]
           public_subnets = [
             { name = "random2", cidr = "10.0.30.0/28" },
