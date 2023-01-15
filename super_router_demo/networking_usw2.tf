@@ -1,120 +1,149 @@
 locals {
-  vpc_tiers_usw2 = [
+  tiered_vpcs_usw2 = [
     {
+      name         = "app"
+      network_cidr = "10.0.16.0/20"
       azs = {
         a = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
-          private = ["10.0.16.0/24", "10.0.17.0/24", "10.0.18.0/24"]
-          public  = ["10.0.19.0/24", "10.0.20.0/24", "10.0.21.0/24"]
+          #private = ["10.0.16.0/24", "10.0.17.0/24", "10.0.18.0/24"]
+          #public  = ["10.0.19.0/24", "10.0.20.0/24", "10.0.21.0/24"]
+          private_subnets = [
+            { name = "cluster1", cidr = "10.0.16.0/24" },
+          ]
+          public_subnets = [
+            { name = "random1", cidr = "10.0.19.0/28" },
+            { name = "haproxy1", cidr = "10.0.21.64/26" },
+          ]
         }
         b = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
-          private = ["10.0.26.0/24"]
-          public  = ["10.0.27.0/24"]
+          #private = ["10.0.26.0/24"]
+          #public  = ["10.0.27.0/24"]
+          private_subnets = [
+            { name = "cluster2", cidr = "10.0.26.0/24" },
+          ]
+          public_subnets = [
+            { name = "random2", cidr = "10.0.30.0/28" },
+            { name = "haproxy2", cidr = "10.0.31.64/26" },
+          ]
         }
       }
-      name    = "app"
-      network = "10.0.16.0/20"
     },
     {
+      name         = "general"
+      network_cidr = "192.168.16.0/20"
       azs = {
         c = {
-          private = ["192.168.16.0/24", "192.168.17.0/24", "192.168.18.0/24"]
-          public  = ["192.168.19.0/28"]
+          #private = ["192.168.16.0/24", "192.168.17.0/24", "192.168.18.0/24"]
+          #public  = ["192.168.19.0/28"]
+          private_subnets = [
+            { name = "experiment1", cidr = "192.168.16.0/24" },
+          ]
+          public_subnets = [
+            { name = "random3", cidr = "192.168.19.0/28" },
+            { name = "haproxy3", cidr = "192.168.20.64/26" },
+          ]
         }
       }
-      name    = "general"
-      network = "192.168.16.0/20"
     }
   ]
 }
 
 module "vpcs_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.5"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.usw2
   }
 
-  for_each = { for t in local.vpc_tiers_usw2 : t.name => t }
+  for_each = { for t in local.tiered_vpcs_usw2 : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  tier             = each.value
+  tiered_vpc       = each.value
 }
-
-# This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
-# associate and propagate to a single route table
-# generate and add routes in each VPC to all other networks.
-module "tgw_centralized_router_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.5"
-
-  providers = {
-    aws = aws.usw2
-  }
-
-  env_prefix       = var.env_prefix
-  region_az_labels = var.region_az_labels
-  amazon_side_asn  = 64520
-  vpcs             = module.vpcs_usw2
-}
-
 
 # Another
 locals {
-  vpc_tiers_usw2_another = [
+  tiered_vpcs_usw2_another = [
     {
+      name         = "cicd"
+      network_cidr = "172.16.0.0/20"
       azs = {
         a = {
-          private = ["172.16.1.0/24", "172.16.2.0/24", "172.16.3.0/24"]
-          public  = ["172.16.5.0/28"]
+          #private = ["172.16.1.0/24", "172.16.2.0/24", "172.16.3.0/24"]
+          #public  = ["172.16.5.0/28"]
+          private_subnets = [
+            { name = "jenkins1", cidr = "172.16.1.0/24" }
+          ]
+          public_subnets = [
+            { name = "natgw", cidr = "172.16.5.0/28" },
+            { name = "random1", cidr = "172.16.6.0/26" }
+          ]
         }
       }
-      name    = "cicd"
-      network = "172.16.0.0/20"
     },
     {
+      name         = "infra"
+      network_cidr = "172.16.16.0/20"
       azs = {
         c = {
-          private = ["172.16.16.0/24", "172.16.17.0/24", "172.16.18.0/24"]
-          public  = ["172.16.19.0/28"]
+          #private = ["172.16.16.0/24", "172.16.17.0/24", "172.16.18.0/24"]
+          #public  = ["172.16.19.0/28"]
+          private_subnets = [
+            { name = "jenkins2", cidr = "172.16.16.0/24" }
+          ]
+          public_subnets = [
+            { name = "random1", cidr = "172.16.19.0/28" }
+          ]
         }
       }
-      name    = "infra"
-      network = "172.16.16.0/20"
     }
   ]
 }
 
 module "vpcs_usw2_another" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.5"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.usw2
   }
 
-  for_each = { for t in local.vpc_tiers_usw2_another : t.name => t }
+  for_each = { for t in local.tiered_vpcs_usw2_another : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  tier             = each.value
+  tiered_vpc       = each.value
 }
 
-# This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
-# associate and propagate to a single route table
-# generate and add routes in each VPC to all other networks.
-module "tgw_centralized_router_usw2_another" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.5"
+locals {
+  centralized_routers_usw2 = [
+    {
+      name            = "cable"
+      amazon_side_asn = 64520
+      vpcs            = module.vpcs_usw2
+    },
+    {
+      name            = "storm"
+      amazon_side_asn = 64525
+      vpcs            = module.vpcs_usw2_another
+    },
+  ]
+}
+
+module "centralized_routers_usw2" {
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.usw2
   }
 
-  env_prefix       = var.env_prefix
-  region_az_labels = var.region_az_labels
-  amazon_side_asn  = 64525
-  vpcs             = module.vpcs_usw2_another
-}
+  for_each = { for c in local.centralized_routers_usw2 : c.name => c }
 
+  env_prefix         = var.env_prefix
+  region_az_labels   = var.region_az_labels
+  centralized_router = each.value
+}
