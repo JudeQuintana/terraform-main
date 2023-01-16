@@ -44,8 +44,8 @@ locals {
           #private = ["192.168.10.0/24", "192.168.11.0/24", "192.168.12.0/24"]
           #public  = ["192.168.13.0/28"]
           private_subnets = [
-            { name = "experiement1", cidr = "192.168.10.0/24" },
-            { name = "experiement2", cidr = "192.168.11.0/24" }
+            { name = "experiment1", cidr = "192.168.10.0/24" },
+            { name = "experiment2", cidr = "192.168.11.0/24" }
           ]
           public_subnets = [
             { name = "random1", cidr = "192.168.13.0/28" },
