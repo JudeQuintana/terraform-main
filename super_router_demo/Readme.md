@@ -20,10 +20,10 @@ VPCs must be applied first:
  - `terraform apply -target module.vpcs_usw2 -target module.vpcs_usw2_another -target module.vpcs_use1 -target module.vpcs_use1_another`
 
 Apply centralized routers:
- - `terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_usw2_another -target module.tgw_centralized_router_use1 -target module.tgw_centralized_router_use1_another`
+ - `terraform apply -target module.centralized_routers_usw2 -target module.tgw_centralized_routers_use1`
 
 Apply super router:
- - `terraform apply -target module.tgw_super_router_usw2_to_use1`
+ - `terraform apply -target module.super_router_usw2_to_use1`
 
 Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
