@@ -10,7 +10,7 @@ module "super_router_usw2_to_use1" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   super_router = {
-    name = "galactus"
+    name = "professor-x"
     local = {
       amazon_side_asn     = 64521
       centralized_routers = module.centralized_routers_usw2

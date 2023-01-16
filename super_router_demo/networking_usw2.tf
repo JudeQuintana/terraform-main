@@ -10,11 +10,11 @@ locals {
           #private = ["10.0.16.0/24", "10.0.17.0/24", "10.0.18.0/24"]
           #public  = ["10.0.19.0/24", "10.0.20.0/24", "10.0.21.0/24"]
           private_subnets = [
-            { name = "cluster1", cidr = "10.0.16.0/24" },
+            { name = "cluster1", cidr = "10.0.16.0/24" }
           ]
           public_subnets = [
             { name = "random1", cidr = "10.0.19.0/28" },
-            { name = "haproxy1", cidr = "10.0.21.64/26" },
+            { name = "haproxy1", cidr = "10.0.21.64/26" }
           ]
         }
         b = {
@@ -23,11 +23,11 @@ locals {
           #private = ["10.0.26.0/24"]
           #public  = ["10.0.27.0/24"]
           private_subnets = [
-            { name = "cluster2", cidr = "10.0.27.0/24" },
+            { name = "cluster2", cidr = "10.0.27.0/24" }
           ]
           public_subnets = [
             { name = "random2", cidr = "10.0.30.0/28" },
-            { name = "haproxy2", cidr = "10.0.31.64/26" },
+            { name = "haproxy2", cidr = "10.0.31.64/26" }
           ]
         }
       }
@@ -40,11 +40,11 @@ locals {
           #private = ["192.168.16.0/24", "192.168.17.0/24", "192.168.18.0/24"]
           #public  = ["192.168.19.0/28"]
           private_subnets = [
-            { name = "experiment1", cidr = "192.168.16.0/24" },
+            { name = "experiment1", cidr = "192.168.16.0/24" }
           ]
           public_subnets = [
             { name = "random3", cidr = "192.168.19.0/28" },
-            { name = "haproxy3", cidr = "192.168.20.64/26" },
+            { name = "haproxy3", cidr = "192.168.20.64/26" }
           ]
         }
       }
@@ -122,7 +122,7 @@ module "vpcs_usw2_another" {
 locals {
   centralized_routers_usw2 = [
     {
-      name            = "cable"
+      name            = "thunderbird"
       amazon_side_asn = 64520
       vpcs            = module.vpcs_usw2
     },
@@ -130,7 +130,7 @@ locals {
       name            = "storm"
       amazon_side_asn = 64525
       vpcs            = module.vpcs_usw2_another
-    },
+    }
   ]
 }
 

@@ -10,11 +10,11 @@ locals {
           #private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
           #public  = ["10.0.3.0/24", "10.0.4.0/24"]
           private_subnets = [
-            { name = "cluster1", cidr = "10.0.0.0/24" },
+            { name = "cluster1", cidr = "10.0.0.0/24" }
           ]
           public_subnets = [
             { name = "random1", cidr = "10.0.3.0/28" },
-            { name = "haproxy1", cidr = "10.0.4.64/26" },
+            { name = "haproxy1", cidr = "10.0.4.64/26" }
           ]
         }
         b = {
@@ -28,7 +28,7 @@ locals {
           #public  = ["10.0.12.0/24"]
           private_subnets = [
             { name = "cluster2", cidr = "10.0.10.0/24" },
-            { name = "random2", cidr = "10.0.11.0/24" },
+            { name = "random2", cidr = "10.0.11.0/24" }
           ]
           public_subnets = [
             { name = "random3", cidr = "10.0.12.0/24" }
@@ -45,11 +45,11 @@ locals {
           #public  = ["192.168.13.0/28"]
           private_subnets = [
             { name = "experiement1", cidr = "192.168.10.0/24" },
-            { name = "experiement2", cidr = "192.168.11.0/24" },
+            { name = "experiement2", cidr = "192.168.11.0/24" }
           ]
           public_subnets = [
             { name = "random1", cidr = "192.168.13.0/28" },
-            { name = "haproxy1", cidr = "192.168.14.64/26" },
+            { name = "haproxy1", cidr = "192.168.14.64/26" }
           ]
         }
       }
@@ -83,11 +83,11 @@ locals {
           #private = ["10.0.32.0/24", "10.0.34.0/24"]
           #public  = ["10.0.35.0/24", "10.0.36.0/24"]
           private_subnets = [
-            { name = "jenkins1", cidr = "10.0.32.0/24" },
+            { name = "jenkins1", cidr = "10.0.32.0/24" }
           ]
           public_subnets = [
             { name = "natgw", cidr = "10.0.35.0/28" },
-            { name = "random1", cidr = "10.0.36.64/26" },
+            { name = "random1", cidr = "10.0.36.64/26" }
           ]
         }
       }
@@ -100,10 +100,10 @@ locals {
           #private = ["192.168.32.0/24", "192.168.33.0/24", "192.168.34.0/24"]
           #public  = ["192.168.35.0/28"]
           private_subnets = [
-            { name = "db1", cidr = "192.168.32.0/24" },
+            { name = "db1", cidr = "192.168.32.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "192.168.35.0/26" },
+            { name = "random1", cidr = "192.168.35.0/26" }
           ]
         }
       }
@@ -136,7 +136,7 @@ locals {
       name            = "bishop"
       amazon_side_asn = 64524
       vpcs            = module.vpcs_use1_another
-    },
+    }
   ]
 }
 
