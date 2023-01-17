@@ -20,10 +20,6 @@ locals {
         b = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
-          # When enabled, the NAT Gateway will be built in the first public subnet in the list for an AZ by default
-          # And when a VPC is passed to a Centralized Router, the VPC attachment will also use the first public subnet in the list by default
-          # This is becuase a public subnet will always exist in a Tiered VPC
-          # The trade off is always having to assign at least 1 public subnet per AZ so better to make is small public subnet /28 as the first subnet or bigger if you want
           #private = ["10.0.10.0/24", "10.0.11.0/24"]
           #public  = ["10.0.12.0/24"]
           private_subnets = [
