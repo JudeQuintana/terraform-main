@@ -2,7 +2,7 @@
 # all other vpc networks (excluding itself)
 # Basically allowing ssh and ping communication across all VPCs.
 locals {
-  intra_vpc_access = [
+  intra_vpc_security_group_rules = [
     {
       label     = "ssh"
       protocol  = "tcp"
@@ -18,14 +18,14 @@ locals {
   ]
 }
 
-module "intra_vpc_access" {
+module "intra_vpc_security_group_rules" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=moar-better"
 
-  for_each = { for r in local.intra_vpc_access : r.label => r }
+  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  intra_vpc_access = {
+  intra_vpc_security_group_rule = {
     rule = each.value
     vpcs = module.vpcs
   }
