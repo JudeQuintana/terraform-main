@@ -12,8 +12,8 @@ locals {
           ]
           public_subnets = [
             { name = "random1", cidr = "10.0.3.0/28" },
-            { name = "haproxy1", cidr = "10.0.4.0/26" },
             { name = "natgw", cidr = "10.0.10.0/28", special = true },
+            { name = "haproxy1", cidr = "10.0.4.0/26" }
           ]
         }
         b = {
