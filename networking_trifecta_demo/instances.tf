@@ -29,7 +29,7 @@ locals {
       # general-private
       name = format("%s-private", local.tiered_vpc_names.general)
       # lookup the private subnet id for the 'random2' subnet in AZ 'c' for the 'general' VPC
-      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.general).subnet_name_to_subnet_id, "random1")
+      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.general).subnet_name_to_subnet_id, "db1")
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.general).default_security_group_id,
         lookup(module.vpcs, local.tiered_vpc_names.general).intra_vpc_security_group_id
