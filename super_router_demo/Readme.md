@@ -20,7 +20,7 @@ VPCs must be applied first:
  - `terraform apply -target module.vpcs_usw2 -target module.vpcs_usw2_another -target module.vpcs_use1 -target module.vpcs_use1_another`
 
 Apply centralized routers:
- - `terraform apply -target module.centralized_routers_usw2 -target module.tgw_centralized_routers_use1`
+ - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1`
 
 Apply super router:
  - `terraform apply -target module.super_router_usw2_to_use1`
