@@ -63,7 +63,7 @@ via TGW.
 **Pre-requisites:**
 - git
 - curl
-- Terraform 1.2.0+
+- Terraform 1.3.0+
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
 user read only permissions.
