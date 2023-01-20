@@ -13,7 +13,7 @@ locals {
             { name = "cluster1", cidr = "10.0.16.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "10.0.19.0/28" },
+            { name = "random1", cidr = "10.0.19.0/28", special = true },
             { name = "haproxy1", cidr = "10.0.21.64/26" }
           ]
         }
@@ -26,7 +26,7 @@ locals {
             { name = "cluster2", cidr = "10.0.27.0/24" }
           ]
           public_subnets = [
-            { name = "random2", cidr = "10.0.30.0/28" },
+            { name = "random2", cidr = "10.0.30.0/28", special = true },
             { name = "haproxy2", cidr = "10.0.31.64/26" }
           ]
         }
@@ -43,7 +43,7 @@ locals {
             { name = "experiment1", cidr = "192.168.16.0/24" }
           ]
           public_subnets = [
-            { name = "random3", cidr = "192.168.19.0/28" },
+            { name = "random3", cidr = "192.168.19.0/28", special = true },
             { name = "haproxy3", cidr = "192.168.20.64/26" }
           ]
         }
@@ -80,7 +80,7 @@ locals {
             { name = "jenkins1", cidr = "172.16.1.0/24" }
           ]
           public_subnets = [
-            { name = "natgw", cidr = "172.16.5.0/28" },
+            { name = "natgw", cidr = "172.16.5.0/28", special = true },
             { name = "random1", cidr = "172.16.6.0/26" }
           ]
         }
@@ -97,7 +97,7 @@ locals {
             { name = "jenkins2", cidr = "172.16.16.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "172.16.19.0/28" }
+            { name = "random1", cidr = "172.16.19.0/28", special = true }
           ]
         }
       }
