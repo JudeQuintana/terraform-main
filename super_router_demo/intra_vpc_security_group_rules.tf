@@ -28,7 +28,8 @@ module "intra_vpc_security_group_rules_usw2" {
     aws = aws.usw2
   }
 
-  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  # dont use r.label for key so that it can be changed independently
+  for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -45,7 +46,8 @@ module "intra_vpc_security_group_rules_use1" {
     aws = aws.use1
   }
 
-  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  #for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -70,8 +72,12 @@ module "super_intra_vpc_security_group_rules_usw2_to_use1" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   super_intra_vpc_security_group_rules = {
-    local = module.intra_vpc_security_group_rules_usw2
-    peer  = module.intra_vpc_security_group_rules_use1
+    local = {
+      intra_vpc_security_group_rules = module.intra_vpc_security_group_rules_usw2
+    }
+    peer = {
+      intra_vpc_security_group_rules = module.intra_vpc_security_group_rules_use1
+    }
   }
 }
 
