@@ -41,7 +41,7 @@ module "intra_vpc_security_group_rules_usw2" {
     aws = aws.usw2
   }
 
-  # dont use r.label for key so that it can be changed independently without forcing new resources
+  # dont use r.label for key so it can be changed independently without forcing new resources
   for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
 
   env_prefix       = var.env_prefix
@@ -59,7 +59,7 @@ module "intra_vpc_security_group_rules_use1" {
     aws = aws.use1
   }
 
-  # dont use r.label for key so that it can be changed independently without forcing new resources
+  # dont use r.label for key so it can be changed independently without forcing new resources
   for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
 
   env_prefix       = var.env_prefix
