@@ -1,7 +1,7 @@
 locals {
   tiered_vpcs_use1 = [
     {
-      name         = "app"
+      name         = "app2"
       network_cidr = "10.0.0.0/20"
       azs = {
         a = {
@@ -33,7 +33,7 @@ locals {
       }
     },
     {
-      name         = "general"
+      name         = "general2"
       network_cidr = "192.168.0.0/20"
       azs = {
         c = {
@@ -70,9 +70,9 @@ module "vpcs_use1" {
 
 # Another
 locals {
-  tiered_vpcs_use1_another = [
+  tiered_vpcs_another_use1 = [
     {
-      name         = "cicd"
+      name         = "cicd2"
       network_cidr = "10.0.32.0/20"
       azs = {
         a = {
@@ -82,14 +82,14 @@ locals {
             { name = "jenkins1", cidr = "10.0.32.0/24" }
           ]
           public_subnets = [
-            { name = "natgw", cidr = "10.0.35.0/28", special = true },
-            { name = "random1", cidr = "10.0.36.64/26" }
+            { name = "random1", cidr = "10.0.36.64/26" },
+            { name = "natgw", cidr = "10.0.35.0/28", special = true }
           ]
         }
       }
     },
     {
-      name         = "infra"
+      name         = "infra2"
       network_cidr = "192.168.32.0/20"
       azs = {
         c = {
@@ -107,14 +107,14 @@ locals {
   ]
 }
 
-module "vpcs_use1_another" {
+module "vpcs_another_use1" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.use1
   }
 
-  for_each = { for t in local.tiered_vpcs_use1_another : t.name => t }
+  for_each = { for t in local.tiered_vpcs_another_use1 : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -131,7 +131,7 @@ locals {
     {
       name            = "bishop"
       amazon_side_asn = 64524
-      vpcs            = module.vpcs_use1_another
+      vpcs            = module.vpcs_another_use1
     }
   ]
 }

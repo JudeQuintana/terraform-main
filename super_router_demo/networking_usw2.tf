@@ -1,7 +1,7 @@
 locals {
   tiered_vpcs_usw2 = [
     {
-      name         = "app"
+      name         = "app1"
       network_cidr = "10.0.16.0/20"
       azs = {
         a = {
@@ -33,7 +33,7 @@ locals {
       }
     },
     {
-      name         = "general"
+      name         = "general1"
       network_cidr = "192.168.16.0/20"
       azs = {
         c = {
@@ -68,9 +68,9 @@ module "vpcs_usw2" {
 
 # Another
 locals {
-  tiered_vpcs_usw2_another = [
+  tiered_vpcs_another_usw2 = [
     {
-      name         = "cicd"
+      name         = "cicd1"
       network_cidr = "172.16.0.0/20"
       azs = {
         a = {
@@ -87,7 +87,7 @@ locals {
       }
     },
     {
-      name         = "infra"
+      name         = "infra2"
       network_cidr = "172.16.16.0/20"
       azs = {
         c = {
@@ -105,14 +105,14 @@ locals {
   ]
 }
 
-module "vpcs_usw2_another" {
+module "vpcs_another_usw2" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.usw2
   }
 
-  for_each = { for t in local.tiered_vpcs_usw2_another : t.name => t }
+  for_each = { for t in local.tiered_vpcs_another_usw2 : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -129,7 +129,7 @@ locals {
     {
       name            = "storm"
       amazon_side_asn = 64525
-      vpcs            = module.vpcs_usw2_another
+      vpcs            = module.vpcs_another_usw2
     }
   ]
 }
