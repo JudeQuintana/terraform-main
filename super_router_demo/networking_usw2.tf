@@ -80,8 +80,8 @@ locals {
             { name = "jenkins1", cidr = "172.16.1.0/24" }
           ]
           public_subnets = [
-            { name = "natgw", cidr = "172.16.5.0/28", special = true },
-            { name = "random1", cidr = "172.16.6.0/26" }
+            { name = "random1", cidr = "172.16.6.0/26" },
+            { name = "natgw", cidr = "172.16.5.0/28", special = true }
           ]
         }
       }
@@ -124,11 +124,13 @@ locals {
     {
       name            = "thunderbird"
       amazon_side_asn = 64520
+      blackhole_cidrs = local.blackhole_cidrs
       vpcs            = module.vpcs_usw2
     },
     {
       name            = "storm"
       amazon_side_asn = 64525
+      blackhole_cidrs = local.blackhole_cidrs
       vpcs            = module.vpcs_another_usw2
     }
   ]
