@@ -30,6 +30,8 @@ locals {
 
   #all_vpcs_use1            = concat([for this in module.vpcs_use1 : this], [for this in module.vpcs_use1_another : this])
   #all_vpc_name_to_vpc_use1 = { for this in local.all_vpcs_use1 : this.name => this }
+  #...
+  #vpcs = local.all_vpc_name_to_vpc_use1
 }
 
 module "intra_vpc_security_group_rules_usw2" {
@@ -39,7 +41,7 @@ module "intra_vpc_security_group_rules_usw2" {
     aws = aws.usw2
   }
 
-  # dont use r.label for key so that it can be changed independently
+  # dont use r.label for key so that it can be changed independently without forcing new resources
   for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
 
   env_prefix       = var.env_prefix
@@ -47,7 +49,6 @@ module "intra_vpc_security_group_rules_usw2" {
   intra_vpc_security_group_rule = {
     rule = each.value
     vpcs = merge(module.vpcs_usw2, module.vpcs_usw2_another)
-    #vpcs = local.all_vpc_name_to_vpc_usw2
   }
 }
 
@@ -58,7 +59,7 @@ module "intra_vpc_security_group_rules_use1" {
     aws = aws.use1
   }
 
-  #for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  # dont use r.label for key so that it can be changed independently without forcing new resources
   for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
 
   env_prefix       = var.env_prefix
@@ -66,7 +67,6 @@ module "intra_vpc_security_group_rules_use1" {
   intra_vpc_security_group_rule = {
     rule = each.value
     vpcs = merge(module.vpcs_use1, module.vpcs_use1_another)
-    #vpcs = local.all_vpc_name_to_vpc_use1
   }
 }
 
@@ -90,6 +90,6 @@ module "super_intra_vpc_security_group_rules_usw2_to_use1" {
   }
 }
 
-output "super_intra_vpc_rules" {
-  value = module.super_intra_vpc_security_group_rules_usw2_to_use1
-}
+#output "super_intra_vpc_rules" {
+#value = module.super_intra_vpc_security_group_rules_usw2_to_use1
+#}
