@@ -87,7 +87,7 @@ locals {
       }
     },
     {
-      name         = "infra2"
+      name         = "infra1"
       network_cidr = "172.16.16.0/20"
       azs = {
         c = {
