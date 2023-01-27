@@ -23,12 +23,13 @@ locals {
     }
   ]
 
+  #?????????
   # better to do this to gaurantee map key uniqueness instead of merge(module.vpcs_usw2, module.vpcs_usw2_another) for each vpcs in same region which might overwrite keys
-  all_vpcs_usw2            = concat([for this in module.vpcs_usw2 : this], [for this in module.vpcs_usw2_another : this])
-  all_vpc_name_to_vpc_usw2 = { for this in local.all_vpcs_usw2 : this.name => this }
+  #all_vpcs_usw2            = concat([for this in module.vpcs_usw2 : this], [for this in module.vpcs_usw2_another : this])
+  #all_vpc_name_to_vpc_usw2 = { for this in local.all_vpcs_usw2 : this.name => this }
 
-  all_vpcs_use1            = concat([for this in module.vpcs_use1 : this], [for this in module.vpcs_use1_another : this])
-  all_vpc_name_to_vpc_use1 = { for this in local.all_vpcs_use1 : this.name => this }
+  #all_vpcs_use1            = concat([for this in module.vpcs_use1 : this], [for this in module.vpcs_use1_another : this])
+  #all_vpc_name_to_vpc_use1 = { for this in local.all_vpcs_use1 : this.name => this }
 }
 
 module "intra_vpc_security_group_rules_usw2" {
@@ -45,7 +46,8 @@ module "intra_vpc_security_group_rules_usw2" {
   region_az_labels = var.region_az_labels
   intra_vpc_security_group_rule = {
     rule = each.value
-    vpcs = local.all_vpc_name_to_vpc_usw2
+    vpcs = merge(module.vpcs_usw2, module.vpcs_usw2_another)
+    #vpcs = local.all_vpc_name_to_vpc_usw2
   }
 }
 
@@ -63,8 +65,8 @@ module "intra_vpc_security_group_rules_use1" {
   region_az_labels = var.region_az_labels
   intra_vpc_security_group_rule = {
     rule = each.value
-    #vpcs = merge(module.vpcs_use1, module.vpcs_use1_another)
-    vpcs = local.all_vpc_name_to_vpc_use1
+    vpcs = merge(module.vpcs_use1, module.vpcs_use1_another)
+    #vpcs = local.all_vpc_name_to_vpc_use1
   }
 }
 
