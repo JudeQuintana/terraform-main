@@ -20,8 +20,7 @@ locals {
 module "intra_vpc_security_group_rules" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=moar-better"
 
-  # dont use r.label for key so it can be changed independently without forcing new resources
-  for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
+  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
