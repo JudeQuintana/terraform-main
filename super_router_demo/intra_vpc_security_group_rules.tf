@@ -19,7 +19,7 @@ locals {
 }
 
 module "intra_vpc_security_group_rules_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule?ref=moar-better"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.usw2
@@ -36,7 +36,7 @@ module "intra_vpc_security_group_rules_usw2" {
 }
 
 module "intra_vpc_security_group_rules_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule?ref=moar-better"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=moar-better"
 
   providers = {
     aws = aws.use1
