@@ -7,8 +7,6 @@ locals {
         a = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
-          #private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-          #public  = ["10.0.3.0/24", "10.0.4.0/24"]
           private_subnets = [
             { name = "cluster1", cidr = "10.0.0.0/24" }
           ]
@@ -20,8 +18,6 @@ locals {
         b = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
-          #private = ["10.0.10.0/24", "10.0.11.0/24"]
-          #public  = ["10.0.12.0/24"]
           private_subnets = [
             { name = "cluster2", cidr = "10.0.10.0/24" },
             { name = "random2", cidr = "10.0.11.0/24" }
@@ -37,8 +33,6 @@ locals {
       network_cidr = "192.168.0.0/20"
       azs = {
         c = {
-          #private = ["192.168.10.0/24", "192.168.11.0/24", "192.168.12.0/24"]
-          #public  = ["192.168.13.0/28"]
           private_subnets = [
             { name = "experiment1", cidr = "192.168.10.0/24" },
             { name = "experiment2", cidr = "192.168.11.0/24" }
@@ -121,36 +115,3 @@ module "vpcs_another_use1" {
   tiered_vpc       = each.value
 }
 
-locals {
-  centralized_routers_use1 = [
-    {
-      name            = "wolverine"
-      amazon_side_asn = 64519
-      blackhole_cidrs = local.blackhole_cidrs
-      vpcs            = module.vpcs_use1
-    },
-    {
-      name            = "bishop"
-      amazon_side_asn = 64524
-      blackhole_cidrs = local.blackhole_cidrs
-      vpcs            = module.vpcs_another_use1
-    }
-  ]
-}
-
-# This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
-# associate and propagate to a single route table
-# generate and add routes in each VPC to all other networks.
-module "centralized_routers_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=moar-better"
-
-  providers = {
-    aws = aws.use1
-  }
-
-  for_each = { for c in local.centralized_routers_use1 : c.name => c }
-
-  env_prefix         = var.env_prefix
-  region_az_labels   = var.region_az_labels
-  centralized_router = each.value
-}

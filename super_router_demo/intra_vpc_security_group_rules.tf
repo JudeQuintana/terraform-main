@@ -1,6 +1,6 @@
 # This will create a sg rule for each vpc allowing inbound-only ports from
 # all other vpc networks (excluding itself)
-# Basically allowing ssh and ping communication across all VPCs within each region
+# Basically allowing ssh and ping communication between all VPCs within each region
 locals {
   intra_vpc_security_group_rules = [
     {
@@ -54,7 +54,7 @@ module "intra_vpc_security_group_rules_use1" {
   }
 }
 
-# Basically allowing ssh and ping communication across all cross region
+# allowing ssh and ping communication across regions
 module "super_intra_vpc_security_group_rules_usw2_to_use1" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/super_intra_vpc_security_group_rules?ref=moar-better"
 

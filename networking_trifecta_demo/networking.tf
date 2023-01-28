@@ -5,8 +5,6 @@ locals {
       network_cidr = "10.0.0.0/20"
       azs = {
         a = {
-          #private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-          #public  = ["10.0.3.0/24", "10.0.4.0/24"]
           private_subnets = [
             { name = "cluster1", cidr = "10.0.0.0/24" }
           ]
@@ -17,8 +15,6 @@ locals {
           ]
         }
         b = {
-          #private = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-          #public  = ["10.0.3.0/24", "10.0.4.0/24"]
           private_subnets = [
             { name = "cluster2", cidr = "10.0.1.0/24" },
             { name = "random2", cidr = "10.0.5.0/24" }
@@ -35,8 +31,6 @@ locals {
       azs = {
         b = {
           enable_natgw = true
-          #private = ["172.16.5.0/24", "172.16.6.0/24", "172.16.7.0/24"]
-          #public  = ["172.16.8.0/28", "172.16.9.0/28"]
           private_subnets = [
             { name = "jenkins1", cidr = "172.16.5.0/24" }
           ]
@@ -51,8 +45,6 @@ locals {
       network_cidr = "192.168.0.0/20"
       azs = {
         c = {
-          #private = ["192.168.10.0/24", "192.168.11.0/24", "192.168.12.0/24"]
-          #public  = ["192.168.13.0/28"]
           private_subnets = [
             { name = "db1", cidr = "192.168.10.0/24" }
           ]
