@@ -19,17 +19,11 @@ it begins:
 Apply Tiered-VPCs (must exist before Centralized Routers):
  - `terraform apply -target module.vpcs_usw2 -target module.vpcs_another_usw2 -target module.vpcs_use1 -target module.vpcs_another_use1`
 
-Apply Centralized Routers (must exist before Super Router):
- - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1`
+Apply Centralized Routers (must exist before Super Router) and Intra VPC Security Group Rules:
+ - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1`
 
-Apply Intra VPC Security Group Rules :
- - `terraform apply -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1`
-
-Apply Super Router:
- - `terraform apply -target module.super_router_usw2_to_use1`
-
-Apply Super Intra VPC Security Group Rules:
- - `terraform apply -target module.super_intra_vpc_security_group_rules_usw2_to_use1`
+Apply Super Router and Super Intra VPC Security Group Rules:
+ - `terraform apply -target module.super_router_usw2_to_use1 -target module.super_intra_vpc_security_group_rules_usw2_to_use1`
 
 
 Validation with AWS Route Analyzer
