@@ -70,8 +70,6 @@ locals {
       network_cidr = "10.0.32.0/20"
       azs = {
         a = {
-          #private = ["10.0.32.0/24", "10.0.34.0/24"]
-          #public  = ["10.0.35.0/24", "10.0.36.0/24"]
           private_subnets = [
             { name = "jenkins1", cidr = "10.0.32.0/24" }
           ]
@@ -87,8 +85,6 @@ locals {
       network_cidr = "192.168.32.0/20"
       azs = {
         c = {
-          #private = ["192.168.32.0/24", "192.168.33.0/24", "192.168.34.0/24"]
-          #public  = ["192.168.35.0/28"]
           private_subnets = [
             { name = "db1", cidr = "192.168.32.0/24" }
           ]
