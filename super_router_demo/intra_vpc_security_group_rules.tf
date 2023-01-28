@@ -26,7 +26,8 @@ module "intra_vpc_security_group_rules_usw2" {
   }
 
   # dont use r.label for key so it can be changed independently without forcing new resources
-  for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
+  #for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
+  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -44,7 +45,8 @@ module "intra_vpc_security_group_rules_use1" {
   }
 
   # dont use r.label for key so it can be changed independently without forcing new resources
-  for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
+  #for_each = { for r in local.intra_vpc_security_group_rules : format("%s-%s-%s", r.protocol, r.from_port, r.to_port) => r }
+  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
