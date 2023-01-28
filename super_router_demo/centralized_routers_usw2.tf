@@ -16,7 +16,7 @@ locals {
 }
 
 module "centralized_routers_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=moar-better"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/centralized_router?ref=moar-better"
 
   providers = {
     aws = aws.usw2
