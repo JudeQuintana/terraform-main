@@ -76,7 +76,7 @@ module "centralized_router" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   centralized_router = {
-    name            = "bishop"
+    name            = "gambit"
     amazon_side_asn = 64512
     blackhole_cidrs = ["172.16.8.0/24"]
     vpcs            = module.vpcs
