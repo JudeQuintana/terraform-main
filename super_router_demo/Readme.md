@@ -2,7 +2,7 @@ Original Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/p
 
 Fresh new decentralized design in [$init super refactor](https://jq1.io/posts/init_super_refactor/).
 
-New features means new steez in [Slappin chrome on the WIP'](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
+New features means new steez in [Slappin chrome on the WIP](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
