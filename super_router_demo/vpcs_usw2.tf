@@ -47,7 +47,7 @@ locals {
 }
 
 module "vpcs_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.6"
 
   providers = {
     aws = aws.usw2
@@ -96,7 +96,7 @@ locals {
 }
 
 module "vpcs_another_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=moar-better"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.6"
 
   providers = {
     aws = aws.usw2
