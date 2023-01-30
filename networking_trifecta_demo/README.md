@@ -47,7 +47,7 @@ When modifying an AZ or VPCs in an existing configuration with A TGW Centralized
 # Trifecta Demo Time
 
 **This will be a demo of the following:**
-- Configure `us-west-2a` AZ in `app` VPC - `10.0.0.0/20`
+- Configure `us-west-2a` and `us-west-2b` AZs in `app` VPC - `10.0.0.0/20`
   - Launch `app-public` instance in public subnet.
 - Configure `us-west-2b` AZ with NATGW in `cicd` VPC - `172.16.0.0/20`
   - Launch `cicd-private` instance in private subnet.
@@ -63,7 +63,7 @@ via TGW.
 **Pre-requisites:**
 - git
 - curl
-- Terraform 1.2.0+
+- Terraform 1.3.0+
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
 user read only permissions.
@@ -100,7 +100,7 @@ Now we'll:
 - Launch instances in each enabled AZ for all VPCs.
 - Route between VPCs via TGW.
 ```
-$ terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.tgw_centralized_router
+$ terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
 ```
 
 Once the apply is complete, it will take 1-2 minutes for the TGW
@@ -108,9 +108,8 @@ routing to fully propagate.
 
 **Verify Connectivity Between VPCs**
 ```
-$ cd ../scripts/
-$ chmod u+x get_instance_info.sh
-$ ./get_instance_info.sh
+$ chmod u+x ./scripts/get_instance_info.sh
+$ ./scripts/get_instance_info.sh
 ```
 
 Example output:
@@ -130,18 +129,18 @@ Example output:
 
 # My Public IP
 XX.XXX.XXX.XX
+
+# If you have awscli configured follow the instructions below otherwise you have to do it manually in the AWS console
+# AWS CLI Command to copy, replace both app-vpc-default-sg-id and My.Public.IP.Here and run script:
+
+aws ec2 authorize-security-group-ingress --region us-west-2 --group-id app-vpc-default-sg-id --protocol tcp --port 22 --cidr My.Public.IP.Here/32
 ```
 
-Using the output above, add an inbound ssh rule from "My Public IP" to the default security group id of the App VPC.
-
-This can be done manually in the AWS console or with the aws cli command below.
-```
-$ aws ec2 authorize-security-group-ingress --region us-west-2 --group-id sg-id-1234 --protocol tcp --port 22 --cidr My.Public.IP.Here/32
-```
+Run the `awscli` command from the output above to add an inbound ssh rule from "My Public IP" to the default security group id of the App VPC.
 
 Next, ssh to the `app-public` instance public IP (ie `54.187.241.115`) using the EC2 key pair private key.
 
-Then, ssh to the `private_ip` of the `general-private` instance, then `cicd-private`, then back to `app-public`.
+Then, ssh to the `private_ip` of the `general-private` instance, then ssh to `cicd-private`, then ssh back to `app-public`.
 ```
 $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.187.241.115
 

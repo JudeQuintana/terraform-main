@@ -6,8 +6,6 @@
 
 set -euo pipefail
 
-cd ../networking_trifecta_demo
-
 echo '# aws_instance.instances["general-private"]'
 terraform state show 'aws_instance.instances["general-private"]' | grep -E 'private_ip.*=.*"'
 echo
@@ -27,3 +25,8 @@ echo
 echo '# My Public IP'
 curl https://checkip.amazonaws.com/
 echo
+
+echo '# If you have awscli configured follow the instructions below otherwise you have to do it manually in the AWS console'
+echo '# AWS CLI Command to copy, replace both app-vpc-default-sg-id and My.Public.IP.Here and run script:'
+echo
+echo 'aws ec2 authorize-security-group-ingress --region us-west-2 --group-id app-vpc-default-sg-id --protocol tcp --port 22 --cidr My.Public.IP.Here/32'

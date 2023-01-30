@@ -1,8 +1,8 @@
 Original Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
 
-This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/).
+Fresh new decentralized design in [$init super refactor](https://jq1.io/posts/init_super_refactor/).
 
-See the new [$init super refactor](https://jq1.io/posts/init_super_refactor/) blog post for moar deets!
+New features means new steez in [Slappin chrome on the WIP'](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
@@ -13,17 +13,18 @@ This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in ea
 Resulting Architecture:
 ![super-router](https://jq1.io/img/super-refactor-after.png)
 
-it begins:
+It begins:
  - `terraform init`
 
-VPCs must be applied first:
- - `terraform apply -target module.vpcs_usw2 -target module.vpcs_usw2_another -target module.vpcs_use1 -target module.vpcs_use1_another`
+Apply Tiered-VPCs (must exist before Centralized Routers):
+ - `terraform apply -target module.vpcs_usw2 -target module.vpcs_another_usw2 -target module.vpcs_use1 -target module.vpcs_another_use1`
 
-Apply centralized routers:
- - `terraform apply -target module.tgw_centralized_router_usw2 -target module.tgw_centralized_router_usw2_another -target module.tgw_centralized_router_use1 -target module.tgw_centralized_router_use1_another`
+Apply Centralized Routers (must exist before Super Router) and Intra VPC Security Group Rules:
+ - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1`
 
-Apply super router:
- - `terraform apply -target module.tgw_super_router_usw2_to_use1`
+Apply Super Router and Super Intra VPC Security Group Rules:
+ - `terraform apply -target module.super_router_usw2_to_use1 -target module.super_intra_vpc_security_group_rules_usw2_to_use1`
+
 
 Validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
@@ -32,48 +33,48 @@ Validation with AWS Route Analyzer
   - Select new global network -> go to `Transit Gateways` -> `Register
     Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
   - Go to `Transit gateway network` -> `Route Analyzer`
-    - Intra-Region Test 1
+    - Intra-Region Test 1 (usw2 to usw2)
       - Source:
-        - Transit Gateway: Choose Centralized Router in usw2
-        - Transit Gateway Attachment: Choose general-usw2 (VPC)
-        - IP Address: `192.168.16.7`
+        - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - IP Address: `192.168.16.7` (`experiment1` private subnet)
       - Destination:
-        - Transit Gateway: Choose Centralized Router in usw2
-        - Transit Gateway Attachment: Choose cicd-usw2 (VPC)
-        - IP Address: `172.16.0.9`
+        - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
+        - IP Address: `172.16.6.9` (`random1` public subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
-    - Intra-Region Test 2
+    - Intra-Region Test 2 (use1 to use1)
       - Source:
-        - Transit Gateway: Choose Centralized Router in use1
-        - Transit Gateway Attachment: Choose infra-use1 (VPC)
-        - IP Address: `192.168.32.8`
+        - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
+        - IP Address: `192.168.32.8` (`db1` private subnet)
       - Destination:
-        - Transit Gateway: Choose Centralized Router in use1
-        - Transit Gateway Attachment: Choose app-use1 (VPC)
-        - IP Address: `10.0.0.4`
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - IP Address: `10.0.0.4` (`cluster1` private subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
-    - Cross-Region Test 1
+    - Cross-Region Test 1 (usw2 to use1)
       - Source:
-        - Transit Gateway: Choose Centralized Router in usw2
-        - Transit Gateway Attachment: Choose app-usw2 (VPC)
-        - IP Address: `10.0.19.5`
+        - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
+        - Transit Gateway Attachment: `Choose TEST-tiered-vpc-app1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - IP Address: `10.0.19.5` (`random1` public subnet)
       - Destination:
-        - Transit Gateway: Choose Centralized Router in use1
-        - Transit Gateway Attachment: Choose general-use1 (VPC)
-        - IP Address: `192.168.10.6`
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
+        - Transit Gateway Attachment: `Choose TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - IP Address: `192.168.11.6` (`experiment2` private subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
-    - Cross-Region Test 2
+    - Cross-Region Test 2 (use1 to usw2)
       - Source:
-        - Transit Gateway: Choose Centralized Router in use1
-        - Transit Gateway Attachment: Choose cicd-use1 (VPC)
-        - IP Address: `10.0.32.3`
+        - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
+        - IP Address: `10.0.32.3` (`jenkins1` private subnet)
       - Destination:
-        - Transit Gateway: Choose Centralized Router in usw2
-        - Transit Gateway Attachment: Choose infra-usw2 (VPC)
-        - IP Address: `172.16.16.6`
+        - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
+        - IP Address: `172.16.16.6` (`jenkins2` private subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
 
