@@ -140,7 +140,7 @@ Run the `awscli` command from the output above to add an inbound ssh rule from "
 
 Next, ssh to the `app-public` instance public IP (ie `54.187.241.115`) using the EC2 key pair private key.
 
-Then, ssh to the `private_ip` of the `general-private` instance, then ssh `cicd-private`, then ssh back to `app-public`.
+Then, ssh to the `private_ip` of the `general-private` instance, then ssh to `cicd-private`, then ssh back to `app-public`.
 ```
 $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.187.241.115
 

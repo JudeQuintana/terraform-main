@@ -1,8 +1,8 @@
 Original Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
 
-This is a follow up to the [generating routes post](https://jq1.io/posts/generating_routes/).
+Fresh new decentralized design in [$init super refactor](https://jq1.io/posts/init_super_refactor/).
 
-See the new [$init super refactor](https://jq1.io/posts/init_super_refactor/) blog post for moar deets!
+New features means new steez in [Slappin chrome on the WIP'](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
@@ -13,7 +13,7 @@ This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in ea
 Resulting Architecture:
 ![super-router](https://jq1.io/img/super-refactor-after.png)
 
-it begins:
+It begins:
  - `terraform init`
 
 Apply Tiered-VPCs (must exist before Centralized Routers):
