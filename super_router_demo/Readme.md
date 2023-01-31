@@ -27,7 +27,7 @@ Apply Super Router and Super Intra VPC Security Group Rules:
 
 
 Validation with AWS Route Analyzer
-- Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home#/networks) (free to use)
+- Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
   - Select new global network -> go to `Transit Gateways` -> `Register
