@@ -11,7 +11,7 @@ using a Transit Gateway.
 - CICD VPC Tier: `172.16.0.0/20` (Class B Private Internet)
 - General VPC Tier: `192.168.0.0/20` (Class C Private Internet)
 
-Example VPC-NG architecture but with auto named subnets:
+Example VPC-NG architecture subnets:
 ![vpc-ng](https://jq1.io/img/vpc/aws-vpc-diagram.png)
 
 The resulting architecture is a hub spoke topology (zoom out):
