@@ -58,11 +58,11 @@ Validation with AWS Route Analyzer
     - Cross-Region Test 1 (usw2 to use1)
       - Source:
         - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
-        - Transit Gateway Attachment: `Choose TEST-tiered-vpc-app1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
         - IP Address: `10.0.19.5` (`random1` public subnet)
       - Destination:
         - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
-        - Transit Gateway Attachment: `Choose TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
         - IP Address: `192.168.11.6` (`experiment2` private subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
