@@ -2,7 +2,7 @@
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
 module "centralized_router" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.7"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.8"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
