@@ -47,7 +47,6 @@ locals {
 }
 
 module "vpcs_usw2" {
-  #source = "/Users/jude/projects/terraform-modules/networking/tiered_vpc_ng"
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.8"
 
   providers = {
