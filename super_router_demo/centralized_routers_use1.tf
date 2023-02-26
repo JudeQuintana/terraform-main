@@ -19,7 +19,7 @@ locals {
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
 module "centralized_routers_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.8"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=v1.4.9"
 
   providers = {
     aws = aws.use1
