@@ -27,10 +27,6 @@ variable "region_az_labels" {
   type        = map(string)
 
   default = {
-    us-east-1  = "use1"
-    us-east-1a = "use1a"
-    us-east-1b = "use1b"
-    us-east-1c = "use1c"
     us-west-2  = "usw2"
     us-west-2a = "usw2a"
     us-west-2b = "usw2b"
