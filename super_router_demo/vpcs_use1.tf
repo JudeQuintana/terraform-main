@@ -48,7 +48,8 @@ locals {
 }
 
 module "vpcs_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.9"
+  source  = "JudeQuintana/tiered-vpc-ng/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.use1
@@ -98,7 +99,8 @@ locals {
 }
 
 module "vpcs_another_use1" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=v1.4.9"
+  source  = "JudeQuintana/tiered-vpc-ng/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.use1
