@@ -4,7 +4,7 @@ Fresh new decentralized design in [$init super refactor](https://jq1.io/posts/in
 
 New features means new steez in [Slappin chrome on the WIP](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
 
-All the modules in this project have been (published)[https://jq1.io/posts/finally_published_to_public_registry/] to the Terraform Cloud
+All the modules in this project have been [published](https://jq1.io/posts/finally_published_to_public_registry/) to the Terraform Cloud
 Public Registry and used in this demo.
 
 Demo:
