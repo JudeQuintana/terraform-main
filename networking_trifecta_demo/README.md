@@ -2,6 +2,9 @@
 Blog Post:
 [Terraform Networking Trifecta ](https://jq1.io/posts/tnt/)
 
+All the modules in this project have been (published)[https://jq1.io/posts/finally_published_to_public_registry/] to the Terraform Cloud
+Public Registry and used in this demo.
+
 # Goal
 Using the latest Terraform (v1.3+) and AWS Provider (v4.20.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918)
