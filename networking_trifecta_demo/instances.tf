@@ -8,7 +8,7 @@ locals {
     {
       # app-public
       name = format("%s-public", local.tiered_vpc_names.app)
-      # lookup the public subnet id for the 'random2' subnet in the 'a' AZ for the 'app' VPC
+      # lookup the public subnet id for the 'random1' subnet in the 'a' AZ for the 'app' VPC
       subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.app).public_subnet_name_to_subnet_id, "random1")
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.app).default_security_group_id,
@@ -28,7 +28,7 @@ locals {
     {
       # general-private
       name = format("%s-private", local.tiered_vpc_names.general)
-      # lookup the private subnet id for the 'random2' subnet in AZ 'c' for the 'general' VPC
+      # lookup the private subnet id for the 'db1' subnet in AZ 'c' for the 'general' VPC
       subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.general).private_subnet_name_to_subnet_id, "db1")
       vpc_security_group_ids = [
         lookup(module.vpcs, local.tiered_vpc_names.general).default_security_group_id,
