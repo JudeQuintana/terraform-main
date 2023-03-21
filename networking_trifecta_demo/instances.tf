@@ -2,7 +2,7 @@ locals {
   # create a vpc_name map so I can call vpcs by name so i dont have
   # to type it as a string in places that i need it.
   # ie local.tiered_vpc_names.app will be "app"
-  tiered_vpc_names = { for this in module.vpcs : this.name => this.name }
+  tiered_vpc_names = { for v in module.vpcs : v.name => v.name }
 
   instances = [
     {
