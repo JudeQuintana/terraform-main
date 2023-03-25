@@ -32,19 +32,17 @@ Main:
 # Caveats
 The modules build resources that will cost some money but should be minimal for the demo. (ie NATGW, EIP, TGW)
 
-You wont be able to see the generated pet names for subnet naming on plan, only on apply.
- - Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the first public subnet in the list for the AZ.
+Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the public subnets labeled as special for the AZ and is used for VPC attachments when passed to a Centralized Router.
 
 When modifying an AZ or VPCs in an existing configuration with A TGW Centralized rouer:
   - Adding
     - The VPCs must be applied first.
     - Then apply Intra Security Groups Rules and TGW Centralized Router.
   - Removing
-    - The first public subnet in the AZ being removed must be manually
-      removed (modified) from the TGW VPC attachments first before
-      applying to the VPC, SG Rules, and TGW.
-    - Otherwise, Terraform wants to remove the attachment from the TGW after the subnet is deleted but the
-      subnet can't be deleted until it's attachment is removed from the TGW (strange circular dependency that I haven't figured out).
+    - The AZ being removed must have it's (special) public subnet manually removed (modified) from the TGW VPC attachment before applying (destroying) the VPC.
+      - Otherwise, Terraform wants to remove the attachment from the TGW after the special public subnet is deleted but the public subnet can't be deleted until it's attachment is removed from the TGW (strange circular dependency).
+    - The VPC being removed must have it's TGW attachment manually deleted before applying (destroying).
+      - similar circular dependency to the AZ being removed.
     - Full teardown (destroy) works fine.
 
 # Trifecta Demo Time
