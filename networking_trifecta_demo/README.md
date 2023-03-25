@@ -42,8 +42,9 @@ When modifying an AZ or VPCs in an existing configuration with A TGW Centralized
     - The AZ being removed must have it's (special) public subnet manually removed (modified) from the TGW VPC attachment before applying (destroying) the VPC.
       - Otherwise, Terraform wants to remove the attachment from the TGW after the special public subnet is deleted but the public subnet can't be deleted until it's attachment is removed from the TGW (strange circular dependency).
     - The VPC being removed must have it's TGW attachment manually deleted before applying (destroying).
-      - Similar circular dependency to the AZ being removed but also
-        will need to be deleted from state so removing is awkward sometimes.
+      - Similar circular dependency to the AZ being removed but also the
+        resources
+        `module.centralized_router.aws_ec2_transit_gateway_vpc_attachment.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_propagation.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_association.this["vpc-id-being-deleted"]` for the deleted VPC will need to be removed from state. This makesmaking VPC removal in code awkward sometimes.
     - Full teardown (destroy) works fine.
 
 # Trifecta Demo Time
