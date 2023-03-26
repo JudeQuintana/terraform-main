@@ -43,7 +43,7 @@ When modifying an AZ or VPCs in an existing configuration with A TGW Centralized
     - The VPC being removed must have it's TGW attachment manually deleted before applying (destroying).
       - Also, the
         resources
-        `module.centralized_router.aws_ec2_transit_gateway_vpc_attachment.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_propagation.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_association.this["vpc-id-being-deleted"]` for the deleted VPC will need to be removed from state due to use of ignore lifecyles. This makes VPC removal in code awkward sometimes.
+        `module.centralized_router.aws_ec2_transit_gateway_vpc_attachment.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_propagation.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_association.this["vpc-id-being-deleted"]` for the deleted VPC will need to be removed from state. This makes VPC removal in code awkward sometimes but doable.
     - Full teardown (destroy) works fine.
 
 # Trifecta Demo Time
