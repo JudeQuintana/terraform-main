@@ -39,11 +39,12 @@ When modifying an AZ or VPCs in an existing configuration with A TGW Centralized
     - The VPCs must be applied first.
     - Then apply Intra Security Groups Rules and TGW Centralized Router.
   - Removing
-    - The AZ being removed must have it's (special) public subnet manually removed (modified) from the TGW VPC attachment before applying (destroying) the AZ.
-    - The VPC being removed must have it's TGW attachment manually deleted before applying (destroying).
-      - Also, the
-        resources
-        `module.centralized_router.aws_ec2_transit_gateway_vpc_attachment.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_propagation.this["vpc-id-being-deleted"]` and `module.centralized_router.aws_ec2_transit_gateway_route_table_association.this["vpc-id-being-deleted"]` for the deleted VPC will need to be removed from state. This makes VPC removal in code awkward sometimes but doable.
+    - An AZ being removed must have it's (special) public subnet for the AZ manually removed (modified) from the TGW VPC attachment then wait until state goes from `Modifying` to `Available` before applying (destroying) the AZ.
+    - A VPC being removed must have it's TGW attachment manually deleted then wait until state goes from `Deleting` to `Deleted` before applying (destroying) the VPC.
+      - Then apply Centralized Router to clean up routes in other VPCs
+        that were pointing to the VPC that was deleted. Terraform should
+detect the manually deleted resources for vpc attachment, route table assocition and route
+propagation were missing and delete them from state.
     - Full teardown (destroy) works fine.
 
 # Trifecta Demo Time
