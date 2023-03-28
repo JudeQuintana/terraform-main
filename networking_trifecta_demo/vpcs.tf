@@ -14,15 +14,15 @@ locals {
             { name = "natgw", cidr = "10.0.10.0/28", special = true }
           ]
         }
-        #b = {
-        #private_subnets = [
-        #{ name = "cluster2", cidr = "10.0.1.0/24" },
-        #{ name = "random2", cidr = "10.0.5.0/24" }
-        #]
-        #public_subnets = [
-        #{ name = "random3", cidr = "10.0.6.0/24", special = true }
-        #]
-        #}
+        b = {
+          private_subnets = [
+            { name = "cluster2", cidr = "10.0.1.0/24" },
+            { name = "random2", cidr = "10.0.5.0/24" }
+          ]
+          public_subnets = [
+            { name = "random3", cidr = "10.0.6.0/24", special = true }
+          ]
+        }
       }
     },
     {
@@ -40,20 +40,20 @@ locals {
         }
       }
     },
-    #{
-    #name         = "general"
-    #network_cidr = "192.168.0.0/20"
-    #azs = {
-    #c = {
-    #private_subnets = [
-    #{ name = "db1", cidr = "192.168.10.0/24" }
-    #]
-    #public_subnets = [
-    #{ name = "random1", cidr = "192.168.13.0/28", special = true }
-    #]
-    #}
-    #}
-    #}
+    {
+      name         = "general"
+      network_cidr = "192.168.0.0/20"
+      azs = {
+        c = {
+          private_subnets = [
+            { name = "db1", cidr = "192.168.10.0/24" }
+          ]
+          public_subnets = [
+            { name = "random1", cidr = "192.168.13.0/28", special = true }
+          ]
+        }
+      }
+    }
   ]
 }
 
