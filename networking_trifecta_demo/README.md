@@ -35,7 +35,7 @@ The modules build resources that will cost some money but should be minimal for 
 Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the public subnets labeled as special for the AZ and is used for VPC attachments when passed to a Centralized Router.
 
 When modifying an AZ or VPCs in an existing configuration with A TGW Centralized rouer:
-  - Adding
+  - Adding an AZ or VPC.
     - The VPCs must be applied first.
     - Then apply Intra Security Groups Rules and TGW Centralized Router.
   - Removing
