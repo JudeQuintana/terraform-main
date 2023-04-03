@@ -14,7 +14,7 @@ This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in ea
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 The resulting architecture is a decentralized hub spoke topology:
-![super-router](https://jq1.io/img/Super_Router_Shokunin.png)
+![super-router-shokunin](https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png)
 
 It begins:
  - `terraform init`

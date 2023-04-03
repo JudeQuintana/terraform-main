@@ -15,10 +15,10 @@ using a Transit Gateway.
 - General VPC Tier: `192.168.0.0/20` (Class C Private Internet)
 
 Example VPC-NG architecture subnets:
-![vpc-ng](https://jq1.io/img/vpc/aws-vpc-diagram.png)
+![vpc-ng](https://jq1-io.s3.amazonaws.com/base/aws-vpc.png)
 
 The resulting architecture is a hub spoke topology (zoom out):
-![tnt](https://jq1.io/img/tnt.png)
+![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
 Modules:
 - [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tiered_vpc_ng)
