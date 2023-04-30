@@ -1,15 +1,18 @@
 variable "env_prefix" {
   description = "environment prefix ie test, stg, prod"
+  type        = string
   default     = "test"
 }
 
 variable "base_region_usw2" {
   description = "base region/same acct"
+  type        = string
   default     = "us-west-2"
 }
 
 variable "cross_region_use1" {
   description = "cross region/same acct"
+  type        = string
   default     = "us-east-1"
 }
 

@@ -1,10 +1,12 @@
 variable "env_prefix" {
   description = "environment prefix ie test, stg, prod"
+  type        = string
   default     = "test"
 }
 
 variable "base_region" {
   description = "base region"
+  type        = string
   default     = "us-west-2"
 }
 
