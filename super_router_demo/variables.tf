@@ -19,7 +19,6 @@ variable "cross_region_use1" {
 variable "region_az_labels" {
   description = "Update this map with regions and AZs that will be in use for short name labeling"
   type        = map(string)
-
   default = {
     us-east-1  = "use1"
     us-east-1a = "use1a"
