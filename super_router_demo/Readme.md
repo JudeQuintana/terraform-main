@@ -1,11 +1,11 @@
-Original Blog Post: [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
+The modules that power the [TNT Architecture](https://jq1.io/posts/tnt/) and [Super Router ](https://jq1.io/posts/init_super_refactor/)
+projects for "scaling" VPCs and TGWs in AWS have been [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Terraform Cloud public registry at `v1.0.0` and are used in this demo! They can be composed together to build a decentralized hub spoke topology with automatic peering and routing for cross-region and intra-region VPC and TGW connectivity.
 
-Fresh new decentralized design in [$init super refactor](https://jq1.io/posts/init_super_refactor/).
+Related articles:
 
-New features means new steez in [Slappin chrome on the WIP](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
-
-All the modules in this project have been [published](https://jq1.io/posts/finally_published_to_public_registry/) to the Terraform Cloud
-Public Registry and used in this demo.
+- Original Blog Post in [Super Powered, Super Sharp, Super Router!](https://jq1.io/posts/super_router/)
+- Fresh new decentralized design in [$init super refactor](https://jq1.io/posts/init_super_refactor/).
+- New features means new steez in [Slappin chrome on the WIP](https://jq1.io/posts/slappin_chrome_on_the_wip/)!
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
