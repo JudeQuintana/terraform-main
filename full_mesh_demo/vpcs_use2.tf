@@ -6,6 +6,8 @@ locals {
       network_cidr = "172.16.0.0/20"
       azs = {
         a = {
+          # Enable a NAT Gateway for all private subnets in the AZ with:
+          # enable_natgw = true
           private_subnets = [
             { name = "jenkins1", cidr = "172.16.1.0/24" }
           ]
