@@ -8,10 +8,8 @@ module "full_mesh_trio" {
     aws.three = aws.usw2
   }
 
-  env_prefix       = var.env_prefix
-  region_az_labels = var.region_az_labels
+  env_prefix = var.env_prefix
   full_mesh_trio = {
-    name = "apocalypse"
     one = {
       centralized_router = module.centralized_router_use1
     }
