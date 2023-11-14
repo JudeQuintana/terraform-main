@@ -11,5 +11,6 @@ module "centralized_router_use2" {
     name            = "magneto"
     amazon_side_asn = 64520
     vpcs            = module.vpcs_use2
+    blackhole_cidrs = local.blackhole_cidrs
   }
 }

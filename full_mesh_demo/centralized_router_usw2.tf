@@ -12,5 +12,6 @@ module "centralized_router_usw2" {
     name            = "arch-angel"
     amazon_side_asn = 64521
     vpcs            = module.vpcs_usw2
+    blackhole_cidrs = local.blackhole_cidrs
   }
 }

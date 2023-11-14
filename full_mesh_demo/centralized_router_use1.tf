@@ -14,5 +14,6 @@ module "centralized_router_use1" {
     name            = "mystique"
     amazon_side_asn = 64519
     vpcs            = module.vpcs_use1
+    blackhole_cidrs = local.blackhole_cidrs
   }
 }
