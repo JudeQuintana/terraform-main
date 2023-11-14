@@ -28,9 +28,9 @@ Apply Centralized Routers (must exist before Super Router) and Intra VPC Securit
 Apply Super Router and Super Intra VPC Security Group Rules:
  - `terraform apply -target module.super_router_usw2_to_use1 -target module.super_intra_vpc_security_group_rules_usw2_to_use1`
 
-The decentralized hub spoke topology is now complete!
+The Super Router is now complete!
 
-Note: If we were using this in Terraform Cloud then it would be best for each of the module applys above to be in their own separate networking workspace with triggers. For example, if a VPC or AZ is added in it's own VPC workspace then apply and trigger the centralized router workspace to build routes.)
+Note: If we were using this in Terraform Cloud then it would be best for each of the module applys above to be in their own separate networking workspace with triggers. For example, if a VPC or AZ is added in it's own VPC workspace then apply and trigger the centralized router workspace to build routes, then trigger a workspace to add to Super Router.)
 
 Routing and peering Validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
