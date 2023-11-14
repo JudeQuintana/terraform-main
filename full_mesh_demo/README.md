@@ -1,11 +1,13 @@
 # Full Mesh Trio Demo
 - [Full Mesh Trio](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/full_mesh_trio) module takes in three Centralized Routers and compose a full mesh peering configuration between them. It will then generate routes for all tgws and their respsective VPCs.
 
+Full Mesh Trio module builds peering links (red) between existing hub spoke tgws (Centralized Routers) and adds proper routes to all TGWs and their attached VPCs, etc.
+
 The resulting architecture is a full mesh configurion between 3 hub spoke topologies:
 ![full-mesh-trio](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio.png)
 
 Related articles:
-- Blog Post in [Chefin' up a Full Mesh Trio via Terraform composition!](https://jq1.io/posts/full_mesh_trio/)
+- Blog Post in coming soon...
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
@@ -19,7 +21,7 @@ Apply Tiered-VPCs (must exist before Centralized Routers):
  - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
 
 Apply Centralized Routers (must exist before Full Mesh Trio):
- - `terraform apply -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_use2 `
+ - `terraform apply -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
 Apply Full Mesh Trio:
  - `terraform apply -target module.full_mesh_trio`
@@ -28,7 +30,7 @@ Full Mesh Trio is now complete!
 
 Note: If we were using this in Terraform Cloud then it would be best for each of the module applys above to be in their own separate networking workspace with triggers. For example, if a VPC or AZ is added in it's own VPC workspace then apply and trigger the centralized router workspace to build routes, then trigger full mesh trio)
 
-Routing and peering Validation with AWS Route Analyzer:
+Routing and peering validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
@@ -61,7 +63,7 @@ Routing and peering Validation with AWS Route Analyzer:
       - Source:
         - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
         - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general1-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
-        - IP Address: `10.0.32.3` (`jenkins1` private subnet)
+        - IP Address: `192.168.16.3` (`experiment` private subnet)
       - Destination:
         - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
         - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
