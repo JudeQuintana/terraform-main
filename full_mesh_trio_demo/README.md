@@ -1,7 +1,7 @@
 # Full Mesh Trio Demo
 [Full Mesh Trio module](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) takes in three Centralized Routers and composes a full mesh peering (cross region) configuration between them. It will then generate routes for all tgws and their respsective VPCs.
 
-The resulting architecture is a full mesh configurion between 3 cross-region hub spoke topologies:
+The resulting architecture is a full mesh between 3 cross-region hub spoke topologies:
 ![full-mesh-trio](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio.png)
 
 Related articles:
