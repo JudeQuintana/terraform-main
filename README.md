@@ -10,8 +10,6 @@
 
 --=[ AwS CLouD NeTWoRkiNg SuiTE 3000 ]=--
 
---=[ RaZoR SHarP EdiTiOn ]=--
-
 --=[ #StayUp ]=--
 ```
 
