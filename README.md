@@ -8,7 +8,7 @@
 
 --=[ PrEsENtZ ]=--
 
---=[ AwS CLouD NeTWoRkiNg SuiTE ]=--
+--=[ AwS CLouD NeTWoRkiNg SuiTE 3000 ]=--
 
 --=[ RaZoR SHarP EdiTiOn ]=--
 
