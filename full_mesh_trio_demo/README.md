@@ -63,7 +63,7 @@ Routing and peering validation with AWS Route Analyzer:
       - Source:
         - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
         - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general1-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
-        - IP Address: `192.168.16.3` (`experiment` private subnet)
+        - IP Address: `192.168.16.3` (`experiment1` private subnet)
       - Destination:
         - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
         - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
