@@ -59,7 +59,7 @@ Routing and peering validation with AWS Route Analyzer:
         - IP Address: `10.0.19.9` (`random1` public subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
-    - Cross-Region Test 3 (use1a to usw2c)
+    - Cross-Region Test 3 (usw2c to use1c)
       - Source:
         - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
         - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general1-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
