@@ -48,8 +48,9 @@ locals {
 }
 
 module "vpcs_use1" {
-  source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.0"
+  #source  = "JudeQuintana/tiered-vpc-ng/aws"
+  #version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=vpc-peering"
 
   providers = {
     aws = aws.use1
