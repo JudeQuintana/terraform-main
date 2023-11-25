@@ -24,3 +24,8 @@
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo)
  - Compose a TGW full mesh topology from multiple existing hub spokes using Tiered VPC-NG, Centralized Router, and Full Mesh Trio modules.
+
+
+Note:
+ - All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
+ - The most useful modules are then [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
