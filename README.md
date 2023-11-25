@@ -28,4 +28,5 @@
 ---
 Notes:
  - All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
+ - Sometimes I'll blog about ideas at [jq1.io](https:/jq1.io).
  - The most useful modules are then [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
