@@ -1,5 +1,5 @@
 module "vpc_peering" {
-  source = "/Users/jude/projects/terraform-modules/networking/vpc_peering"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering?ref=vpc-peering"
 
   providers = {
     aws.local = aws.use1
