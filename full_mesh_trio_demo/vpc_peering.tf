@@ -1,3 +1,4 @@
+# cross region vpc peering, should work for intra vpc peering
 module "vpc_peering" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering?ref=vpc-peering"
 
