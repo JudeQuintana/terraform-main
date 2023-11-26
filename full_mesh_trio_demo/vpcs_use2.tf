@@ -9,7 +9,8 @@ locals {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
           private_subnets = [
-            { name = "jenkins1", cidr = "172.16.1.0/24" }
+            { name = "jenkins1", cidr = "172.16.1.0/24" },
+            { name = "jenkins7", cidr = "172.16.2.0/24" }
           ]
           public_subnets = [
             { name = "random1", cidr = "172.16.6.0/26" },
