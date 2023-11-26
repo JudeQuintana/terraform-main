@@ -1,5 +1,5 @@
 # cross region vpc peering, should work for intra vpc peering
-# generates appropriate routes for each VPC
+# generates appropriate routes for all subnet cidrs in each VPC or select specific subnet cidrs across the peering connection
 module "vpc_peering_deluxe" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering_deluxe?ref=vpc-peering"
 
