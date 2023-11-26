@@ -1,6 +1,6 @@
 # cross region vpc peering, should work for intra vpc peering
-module "vpc_peering" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering?ref=vpc-peering"
+module "vpc_peering_deluxe" {
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering_deluxe?ref=vpc-peering"
 
   providers = {
     aws.local = aws.use1
@@ -8,7 +8,7 @@ module "vpc_peering" {
   }
 
   env_prefix = var.env_prefix
-  vpc_peering = {
+  vpc_peering_deluxe = {
     local = {
       vpc = lookup(module.vpcs_use1, "general2")
     }
