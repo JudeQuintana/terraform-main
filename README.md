@@ -20,12 +20,12 @@
 
 ## Super Router!
 [Super Router Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo)
- - Compose a TGW decentralized hub spoke topology from multiple existing hub spokes using Tiered VPC-NG, Centralized Router, and Super Router modules.
+ - Compose a TGW decentralized hub spoke topology from existing hub spokes using Tiered VPC-NG, Centralized Router, and Super Router modules.
  - Validate connectivity with AWS Route Analyzer.
 
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo)
- - Compose a TGW full mesh topology from multiple existing hub spokes using Tiered VPC-NG, Centralized Router, and Full Mesh Trio modules.
+ - Compose a TGW full mesh topology from existing hub spokes using Tiered VPC-NG, Centralized Router, and Full Mesh Trio modules.
  - Includes a VPC peering example within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW.
  - Validate connectivity with AWS Route Analyzer.
 
