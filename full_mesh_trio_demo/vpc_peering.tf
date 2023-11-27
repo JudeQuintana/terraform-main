@@ -1,7 +1,6 @@
-# cross region vpc peering, should work for intra vpc peering
-# generates appropriate routes for all subnet cidrs in each VPC or select specific subnet cidrs to route across the peering connection
-module "vpc_peering_deluxe" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering_deluxe?ref=vpc-peering"
+# VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default unless specific subnet cidrs are selected to route across the VPC peering connection via only_route_subnet_cidrs list is populated.
+module "vpc_peering_deluxe_use1_general2_to_use2_cicd1" {
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering_deluxe?ref=v1.6.0"
 
   providers = {
     aws.local = aws.use1
