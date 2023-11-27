@@ -1,8 +1,27 @@
 # Full Mesh Trio Demo
-[Full Mesh Trio module](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) takes in three Centralized Routers and composes a cross-region TGW full mesh topology from existing hub spokes in AWS. It peers and generates routes for TGWs and their respective VPCs. 
+[Full Mesh Trio module](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) takes in three Centralized Routers and composes a cross-region TGW full mesh topology from existing hub spokes in AWS. It peers and generates routes for TGWs and their respective VPCs.
 
 The resulting architecture is a full mesh between 3 cross-region hub spoke topologies:
-![full-mesh-trio](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio.png)
+![full-mesh-trio](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio-new.png)
+
+---
+
+### Bonus Update!
+
+[VPC Peering Deluxe module](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/vpc_peering_deluxe):
+ - VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default.
+ - Should also work for intra region VPCs.
+ - Specific subnet cidrs can be selected (instead of default behavior of allow all subnets) to route across the VPC peering connection via only_route_subnet_cidrs variable list is populated.
+ - Additional option to allow remote dns resolution too.
+ - Can be used in tandem with Centralized Router, Super Router and Full Mesh Trio for workloads that transfer lots of data to save on cost instead of via TGW.
+
+Important:
+ - If you've ran this demo before then it's possible that you'll need to run `terraform get -update` to get the updated Tiered VPC-NG outputs needed for VPC Pering Deluxe.
+
+cross region Full mesh with cross region VPC peering:
+![full-mesh-trio-with-vpc-peering](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio-with-vpc-peering.png)
+
+---
 
 Related articles:
 - Blog Post in coming soon...
@@ -15,11 +34,11 @@ This demo will be creating 6 VPCs (2 in each region) and 3 TGWs (1 in each regio
 It begins:
  - `terraform init`
 
-Apply Tiered-VPCs (must exist before Centralized Routers):
+Apply Tiered-VPCs (must exist before Centralized Routers and VPC Peering Deluxe):
  - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
 
-Apply Centralized Routers (must exist before Full Mesh Trio):
- - `terraform apply -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
+Apply VPC Peering Deluxe and Centralized Routers (must exist before Full Mesh Trio):
+ - `terraform apply -target module.vpc_peering_deluxe_use1_general2_to_use2_cicd1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
 Apply Full Mesh Trio:
  - `terraform apply -target module.full_mesh_trio`
