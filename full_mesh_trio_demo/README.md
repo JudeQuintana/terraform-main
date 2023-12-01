@@ -9,10 +9,11 @@ The resulting architecture is a full mesh between 3 cross-region hub spoke topol
 ### Bonus Update!
 
 [VPC Peering Deluxe module](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe):
- - VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default (should also work for intra VPCs)
+ - VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default
+ - The module should also work for inter region VPCs.
  - Specific subnet cidrs can be selected (instead of default behavior) to route across the VPC peering connection via only_route_subnet_cidrs variable list.
  - Additional option to allow remote dns resolution too.
- - Can be used in tandem with Centralized Router, Super Router and Full Mesh Trio for workloads that transfer lots of data to save on cost instead of via TGW.
+ - Can be used in tandem with Centralized Router, Super Router and Full Mesh Trio for workloads that transfer lots of data to save on cost instead of via TGW (especially inter region).
 
 Important:
  - If you've ran this demo before then it's possible that you'll need to run `terraform get -update` to get the updated Tiered VPC-NG outputs needed for VPC Pering Deluxe.
