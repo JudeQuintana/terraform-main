@@ -70,7 +70,7 @@ module "intra_vpc_security_group_rules_usw2" {
 }
 
 module "full_mesh_intra_vpc_security_groups_rules" {
-  source = "/Users/jude/projects/terraform-modules/networking/full_mesh_intra_vpc_security_group_rules"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_intra_vpc_security_group_rules?ref=full-mesh-intra-vpc-security-group-rules-module"
 
   providers = {
     aws.one   = aws.use1
