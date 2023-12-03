@@ -72,7 +72,8 @@ module "intra_vpc_security_group_rules_usw2" {
 
 # allow all ssh and ping communication between all VPCs across regions in each intra-vpc security group
 module "full_mesh_intra_vpc_security_group_rules" {
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_intra_vpc_security_group_rules?ref=full-mesh-intra-vpc-security-group-rules-module"
+  source  = "JudeQuintana/full-mesh-intra-vpc-security-group-rules/aws"
+  version = "1.0.0"
 
   providers = {
     aws.one   = aws.use1
