@@ -69,7 +69,7 @@ module "intra_vpc_security_group_rules_usw2" {
   }
 }
 
-module "full_mesh_intra_vpc_security_groups_rules" {
+module "full_mesh_intra_vpc_security_group_rules" {
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_intra_vpc_security_group_rules?ref=full-mesh-intra-vpc-security-group-rules-module"
 
   providers = {
