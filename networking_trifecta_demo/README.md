@@ -8,7 +8,7 @@ Public Registry and used in this demo.
 # Goal
 Using the latest Terraform (v1.3+) and AWS Provider (v4.20.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918)
-using a Transit Gateway.
+using a Transit Gateway AKA a hub spoke topology.
 
 - App VPC Tier: `10.0.0.0/20` (Class A Private Internet)
 - CICD VPC Tier: `172.16.0.0/20` (Class B Private Internet)
