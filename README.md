@@ -35,3 +35,4 @@ Notes:
  - Sometimes I'll blog about ideas at [jq1.io](https:/jq1.io).
  - The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
  - All demos include an example of generating security group rules for VPCs for each TGW configuration.
+ - There is no overlapping CIDR detection so it's important that the VPC's network and subnet CIDRs are allocated correctly.
