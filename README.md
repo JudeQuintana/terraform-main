@@ -20,12 +20,12 @@
 
 ## Super Router!
 [Super Router Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo)
- - Compose a Transit Gateway decentralized hub spoke topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
+ - Compose a cross-region and inter-region Transit Gateway decentralized hub spoke topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
  - Validate connectivity with AWS Route Analyzer.
 
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo)
- - Compose a Transit Gateway full mesh topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) modules.
+ - Compose a cross-region Transit Gateway full mesh topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) modules.
  - Includes a VPC peering example within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe) module.
  - Validate connectivity with AWS Route Analyzer.
 
