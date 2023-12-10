@@ -15,18 +15,18 @@
 
 ## TNT Architecture!
 [Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
- - Compose a TGW hub spoke topology using Tiered VPC-NG and Centralized Router modules.
+ - Compose a Transit Gateway hub spoke topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) modules.
  - Validate connectivity with EC2 instances.
 
 ## Super Router!
 [Super Router Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo)
- - Compose a TGW decentralized hub spoke topology from existing hub spokes using Tiered VPC-NG, Centralized Router, and Super Router modules.
+ - Compose a Transite Gateway decentralized hub spoke topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
  - Validate connectivity with AWS Route Analyzer.
 
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo)
- - Compose a TGW full mesh topology from existing hub spokes using Tiered VPC-NG, Centralized Router, and Full Mesh Trio modules.
- - Includes a VPC peering example within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW using the VPC Peering Deluxe module.
+ - Compose a Transit Gateway full mesh topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) modules.
+ - Includes a VPC peering example within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe) module.
  - Validate connectivity with AWS Route Analyzer.
 
 ---
@@ -35,4 +35,8 @@ Notes:
  - Sometimes I'll blog about ideas at [jq1.io](https:/jq1.io).
  - The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
  - All demos include an example of generating security group rules for VPCs for each TGW configuration.
- - There is no overlapping CIDR detection so it's important that the VPC's network and subnet CIDRs are allocated correctly.
+   - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule)
+   - [Super Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
+   - [Full Mesh Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
+ - There is no overlapping CIDR detection so it's important that the VPC's network and subnet CIDRs are allocated correctly across regions.
+ - Demos can be used with AWS 5.x provider but there will be a warning about a `aws_eip` attribute deprecation. Should still work when enabling NATGW for a given AZ.
