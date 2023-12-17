@@ -31,22 +31,22 @@ Demo:
   each us-east-1, us-east-2, us-west-2 depending on how many you currently have.
 This demo will be creating 6 VPCs (2 in each region) and 3 TGWs (1 in each region)
 
-It begins:
- 1. `terraform init`
+1. It begins:
+  - `terraform init`
 
-Apply Tiered-VPCs (must exist before Centralized Routers, VPC Peering Deluxe and Full Mesh Intra VPC Security Group Rules):
- 2. `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
+2. Apply Tiered-VPCs (must exist before Centralized Routers, VPC Peering Deluxe and Full Mesh Intra VPC Security Group Rules):
+  - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
 
-Apply Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.
- 3. `terraform apply -target module.full_mesh_intra_vpc_security_group_rules`
+3. Apply Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.
+  - `terraform apply -target module.full_mesh_intra_vpc_security_group_rules`
 
-Apply VPC Peering Deluxe and Centralized Routers (must exist before Full Mesh Trio):
- 4. `terraform apply -target module.vpc_peering_deluxe_use1_general2_to_use2_cicd1 -target module.vpc_peering_deluxe_usw2_app1_to_usw2_general1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
+4. Apply VPC Peering Deluxe and Centralized Routers (must exist before Full Mesh Trio):
+  - `terraform apply -target module.vpc_peering_deluxe_use1_general2_to_use2_cicd1 -target module.vpc_peering_deluxe_usw2_app1_to_usw2_general1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
-Apply Full Mesh Trio:
- 5. `terraform apply -target module.full_mesh_trio`
+5. Apply Full Mesh Trio:
+  - `terraform apply -target module.full_mesh_trio`
 
-Note: You can combine steps 3 though 5 with `terraform apply`
+Note: You can combine steps 3 though 5 with `terraform apply`.
 
 Full Mesh Trio is now complete!
 
