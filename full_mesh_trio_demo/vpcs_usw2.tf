@@ -32,6 +32,15 @@ locals {
       name         = "general1"
       network_cidr = "192.168.16.0/20"
       azs = {
+        a = {
+          private_subnets = [
+            { name = "cluster4", cidr = "192.168.21.0/24" }
+          ]
+          public_subnets = [
+            { name = "random2", cidr = "192.168.22.0/28", special = true },
+            { name = "haproxy1", cidr = "192.168.23.64/26" }
+          ]
+        }
         c = {
           private_subnets = [
             { name = "experiment1", cidr = "192.168.16.0/24" }
