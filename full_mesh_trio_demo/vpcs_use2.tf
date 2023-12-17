@@ -52,9 +52,8 @@ locals {
 }
 
 module "vpcs_use2" {
-  #source  = "JudeQuintana/tiered-vpc-ng/aws"
-  #version = "1.0.0"
-  source = "/Users/jude/projects/terraform-modules/networking/tiered_vpc_ng"
+  source  = "JudeQuintana/tiered-vpc-ng/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.use2

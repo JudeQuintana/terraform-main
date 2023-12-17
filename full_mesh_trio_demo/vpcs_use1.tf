@@ -16,8 +16,6 @@ locals {
           ]
         }
         b = {
-          # Enable a NAT Gateway for all private subnets in the AZ with:
-          # enable_natgw = true
           private_subnets = [
             { name = "cluster2", cidr = "10.0.10.0/24" },
             { name = "random2", cidr = "10.0.11.0/24" }
