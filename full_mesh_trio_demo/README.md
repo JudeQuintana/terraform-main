@@ -40,7 +40,7 @@ This demo will be creating 6 VPCs (2 in each region) and 3 TGWs (1 in each regio
 3. Apply Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.
   - `terraform apply -target module.full_mesh_intra_vpc_security_group_rules`
 
-4. Apply VPC Peering Deluxe and Centralized Routers (must exist before Full Mesh Trio):
+4. Apply VPC Peering Deluxe and Centralized Routers:
   - `terraform apply -target module.vpc_peering_deluxe_use1_general2_to_use2_cicd1 -target module.vpc_peering_deluxe_usw2_app1_to_usw2_general1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
 5. Apply Full Mesh Trio:
