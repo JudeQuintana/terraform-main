@@ -38,5 +38,5 @@ Notes:
    - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule)
    - [Super Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
    - [Full Mesh Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
- - There is no overlapping CIDR detection so it's important that the VPC's network and subnet CIDRs are allocated correctly across regions.
- - Demos can be used with AWS 5.x provider but there will be a warning about a `aws_eip` attribute deprecation. Should still work when enabling NATGW for a given AZ.
+ - There is no overlapping CIDR detection across regions so it's important that the VPC's network and subnet CIDRs are allocated correctly.
+ - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x. Should still work when enabling NATGW for a given AZ.

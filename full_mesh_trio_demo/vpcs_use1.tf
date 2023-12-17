@@ -32,6 +32,16 @@ locals {
       name         = "general2"
       network_cidr = "192.168.0.0/20"
       azs = {
+        a = {
+          private_subnets = [
+            { name = "data1", cidr = "192.168.0.0/24" },
+            { name = "data2", cidr = "192.168.1.0/24" }
+          ]
+          public_subnets = [
+            { name = "random4", cidr = "192.168.5.0/28", special = true },
+            { name = "haproxy4", cidr = "192.168.6.64/26" }
+          ]
+        }
         c = {
           private_subnets = [
             { name = "experiment1", cidr = "192.168.10.0/24" },
@@ -48,8 +58,9 @@ locals {
 }
 
 module "vpcs_use1" {
-  source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.0"
+  #source  = "JudeQuintana/tiered-vpc-ng/aws"
+  #version = "1.0.0"
+  source = "/Users/jude/projects/terraform-modules/networking/tiered_vpc_ng"
 
   providers = {
     aws = aws.use1

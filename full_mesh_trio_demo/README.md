@@ -10,7 +10,7 @@ The resulting architecture is a full mesh between 3 cross-region hub spoke topol
 
 [VPC Peering Deluxe module](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe):
  - VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default
- - The module should also work for inter region VPCs.
+ - The module also works for inter region VPCs.
  - Specific subnet cidrs can be selected (instead of default behavior) to route across the VPC peering connection via only_route_subnet_cidrs variable list.
  - Additional option to allow remote dns resolution too.
  - Can be used in tandem with Centralized Router, Super Router and Full Mesh Trio for workloads that transfer lots of data to save on cost instead of via TGW (especially inter region).
@@ -19,7 +19,7 @@ Important:
  - If you've ran this demo before then it's possible that you'll need to run `terraform get -update` to get the updated Tiered VPC-NG outputs needed for VPC Pering Deluxe.
 
 cross region Full mesh with cross region VPC peering:
-![full-mesh-trio-with-vpc-peering](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio-with-vpc-peering.png)
+![full-mesh-trio-with-vpc-peering](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio-with-two-vpc-peering-examples.png)
 
 ---
 
@@ -32,19 +32,21 @@ Demo:
 This demo will be creating 6 VPCs (2 in each region) and 3 TGWs (1 in each region)
 
 It begins:
- - `terraform init`
+ 1. `terraform init`
 
 Apply Tiered-VPCs (must exist before Centralized Routers, VPC Peering Deluxe and Full Mesh Intra VPC Security Group Rules):
- - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
+ 2. `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
 
 Apply Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.
- - `terraform apply -target module.full_mesh_intra_vpc_security_group_rules`
+ 3. `terraform apply -target module.full_mesh_intra_vpc_security_group_rules`
 
 Apply VPC Peering Deluxe and Centralized Routers (must exist before Full Mesh Trio):
- - `terraform apply -target module.vpc_peering_deluxe_use1_general2_to_use2_cicd1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
+ 4. `terraform apply -target module.vpc_peering_deluxe_use1_general2_to_use2_cicd1 -target module.vpc_peering_deluxe_usw2_app1_to_usw2_general1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
 Apply Full Mesh Trio:
- - `terraform apply -target module.full_mesh_trio`
+ 5. `terraform apply -target module.full_mesh_trio`
+
+Note: You can combine steps 3 though 5 with `terraform apply`
 
 Full Mesh Trio is now complete!
 
