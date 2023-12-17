@@ -26,7 +26,7 @@
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo)
  - Compose a cross-region Transit Gateway full mesh topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) modules.
- - Includes a VPC peering example within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe) module.
+ - Includes a VPC peering cross region and inter region examples within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe) module.
  - Validate connectivity with AWS Route Analyzer.
 
 ---
@@ -39,4 +39,6 @@ Notes:
    - [Super Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
    - [Full Mesh Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
  - There is no overlapping CIDR detection across regions so it's important that the VPC's network and subnet CIDRs are allocated correctly.
- - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x. Should still work when enabling NATGW for a given AZ. It's possible you might need to run `terraform init -upgrade` in each demo to upgrade to the 5.x provider if you were previously running the demo using 4.x provider.
+ - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x.
+   - Should still work when enabling NATGW for a given AZ.
+   - It's possible you might need to run `terraform init -upgrade` in each demo to upgrade to the 5.x provider if you were previously running the demo using 4.x provider.
