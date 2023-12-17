@@ -18,7 +18,7 @@ The resulting architecture is a full mesh between 3 cross-region hub spoke topol
 Important:
  - If you've ran this demo before then it's possible that you'll need to run `terraform get -update` to get the updated Tiered VPC-NG outputs needed for VPC Pering Deluxe.
 
-cross region Full mesh with cross region VPC peering:
+cross region Full mesh with cross region and inter region VPC peering:
 ![full-mesh-trio-with-vpc-peering](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio-with-two-vpc-peering-examples.png)
 
 ---
