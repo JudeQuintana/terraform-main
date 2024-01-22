@@ -4,6 +4,16 @@ Full Mesh Transit Gateway across 10 regions.
 
 ![mega-mesh](https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png)
 
+---
+Update 1/22/2024:
+ - The Terraform Public Registry is not syncing some of my modules
+   correctly and can't get necessary updates.
+ - I've pointed all module sources directly to github repos (same
+   repos that the public registry points to) for all demos. The new Mega Mesh
+   module will remain unpublished until it's sorted out.
+
+---
+
 1. It begins
   - `terraform init`
 2. Build VPCs (must exist before centralized routers and mega mesh)
@@ -12,7 +22,7 @@ Full Mesh Transit Gateway across 10 regions.
   - `terraform apply -target module.centralized_router_use1 -target module.centralized_router_usw1 -target module.centralized_router_euc1 -target module.centralized_router_euw1 -target module.centralized_router_apne1 -target module.centralized_router_apse1 -target module.centralized_router_sae1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
 4. Build Mega Mesh
-  - `terraaform apply -target module.mega_mesh`
+  - `terraform apply -target module.mega_mesh`
 
 Mesh Complete!
 
@@ -46,7 +56,7 @@ Routing and peering validation with AWS Route Analyzer:
         - IP Address: `10.0.70.8`
       - Destination:
         - Transit Gateway: Choose `TEST-centralized-router-rogue-euw1`
-        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general5-euw1 <-> TEST-centralized-rogue-euw1` (VPC)
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general4-euw1 <-> TEST-centralized-rogue-euw1` (VPC)
         - IP Address: `192.168.38.6`
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.

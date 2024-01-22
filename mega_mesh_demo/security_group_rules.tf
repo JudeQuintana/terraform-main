@@ -1,2 +1,2 @@
 # TODO
-# mega mesh intra security group rules
+# mega mesh intra vpc security group rules

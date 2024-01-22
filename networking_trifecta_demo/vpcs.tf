@@ -58,8 +58,7 @@ locals {
 }
 
 module "vpcs" {
-  source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-tiered-vpc-ng.git?ref=v1.0.0"
 
   for_each = { for t in local.tiered_vpcs : t.name => t }
 

@@ -12,6 +12,15 @@
 
 --=[ #StayUp ]=--
 ```
+---
+Update 1/22/2024:
+ - The Terraform Public Registry is not syncing some of my modules
+   correctly and can't get necessary updates.
+ - I've pointed all module sources directly to github repos (same
+   repos that the public registry points to) for all demos. The new Mega Mesh
+   module will remain unpublished until it's sorted out.
+
+---
 
 ## TNT Architecture!
 [Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
@@ -25,8 +34,13 @@
 
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo)
- - Compose a cross-region Transit Gateway full mesh topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) modules.
+ - Compose a Full Mesh Transit Gateway topology across 3 regions from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio) modules.
  - Includes a VPC peering cross region and inter region examples within a full mesh configuration for high traffic workloads to save on cost instead of going through the TGW using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe) module.
+ - Validate connectivity with AWS Route Analyzer.
+
+## Mega Mesh!
+[Mega Mesh Demo](https://github.com/JudeQuintana/terraform-main/tree/main/mega_mesh_demo)
+ - Compose a Full Mesh Transit Gateway topology across 10 regions from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) and [Mega Mesh](https://github.com/JudeQuintana/terraform-aws-mega-mesh) modules.
  - Validate connectivity with AWS Route Analyzer.
 
 ---

@@ -1,6 +1,4 @@
 module "centralized_router_usw1" {
-  #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.0.0"
   source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=v1.0.0"
 
   providers = {

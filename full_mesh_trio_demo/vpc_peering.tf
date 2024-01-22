@@ -2,8 +2,7 @@
 
 # cross region peering, route specific subnets only across peering connection
 module "vpc_peering_deluxe_use1_general2_to_use2_cicd1" {
-  source  = "JudeQuintana/vpc-peering-deluxe/aws"
-  version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-vpc-peering-deluxe.git?ref=v1.0.0"
 
   providers = {
     aws.local = aws.use1
@@ -27,8 +26,7 @@ module "vpc_peering_deluxe_use1_general2_to_use2_cicd1" {
 
 ## inter region vpc peering, route all subnets across peering connection
 module "vpc_peering_deluxe_usw2_app1_to_usw2_general1" {
-  source  = "JudeQuintana/vpc-peering-deluxe/aws"
-  version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-vpc-peering-deluxe.git?ref=v1.0.0"
 
   providers = {
     aws.local = aws.usw2
