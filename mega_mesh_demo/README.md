@@ -1,6 +1,6 @@
 # Mega Mesh
 Mega Mesh == (Full Mesh Trio)² + 1
-Full Mesh Transit Gateway across 10 regions.
+[Mega Mesh module](https://github.com/JudeQuintana/terraform-aws-mega-mesh) takes in 10 Centralized Routers and composes a Full Mesh Transit Gateway topology across 10 regions from existing hub spokes in AWS. It peers and generates routes for TGWs and their respective VPCs.
 
 ![mega-mesh](https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png)
 
