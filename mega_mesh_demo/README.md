@@ -14,6 +14,56 @@ Full Mesh Transit Gateway across 10 regions.
 4. Build Mega Mesh
   - `terraaform apply -target module.mega_mesh`
 
+Mesh Complete!
+
 Notes:
   - You can combine steps 3 and 4 with `terraform apply`.
   - I have to use direct module repo links for centralized router (etc) because TF public registry is not synching correctly at the moment.
+
+Routing and peering validation with AWS Route Analyzer:
+- Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
+  - Create global network -> `next`
+    - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
+  - Select new global network -> go to `Transit Gateways` -> `Register
+    Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
+  - Go to `Transit gateway network` -> `Route Analyzer`
+    - Cross-Region Test 1
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
+        - IP Address: `10.0.11.4`
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-gambit-apse1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app6-apse1 <-> TEST-centralized-gambit-apse1` (VPC)
+        - IP Address: `10.0.64.7`
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+
+    - Cross-Region Test 2
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-gambit-apse1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app6-apse1 <-> TEST-centralized-router-gambit-apse1` (VPC)
+        - IP Address: `10.0.70.8`
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-rogue-euw1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general5-euw1 <-> TEST-centralized-rogue-euw1` (VPC)
+        - IP Address: `192.168.38.6`
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+
+    - Cross-Region Test 3
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-sae1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app8-apse1 <-> TEST-centralized-router-woverine-sae1` (VPC)
+        - IP Address: `10.0.128.10`
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-jean-grey-apne1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app5-apne1 <-> TEST-centralized-jean-grey-apne1` (VPC)
+        - IP Address: `172.16.40.9`
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+
+Several other routes can be validated, try them out!
+
+Tear down:
+ - `terraform destroy` (long pause)
