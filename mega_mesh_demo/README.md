@@ -37,6 +37,8 @@ Notes:
   - Add blackhole cidrs on any centralized router via the
     `var.blackhole_cidrs` list to create blackhole
     routes or aggregate routes.
+  - AZs (a,b,c etc) that are not opt-in for a region are different per AWS account
+    so it's possible you'll need to change the AZ letter for a VPC if it's saying it's not available for the region.
 
 Routing and peering validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
