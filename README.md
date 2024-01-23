@@ -53,12 +53,13 @@ Notes:
  - The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
  - All demos include an example of generating security group rules for VPCs for each TGW configuration.
    - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule)
-   - [Super Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
-   - [Full Mesh Intra VPC Secuity Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
- - There is no overlapping CIDR detection across regions so it's important that the VPC's network and subnet CIDRs are allocated correctly.
+   - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
+   - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
+   - TODO: Mega Mesh Intra VPC Security Group Rules
+ - There is no overlapping CIDR detection cross region or intra region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
  - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x.
    - Should still work when enabling NATGW for a given AZ.
-   - It's possible you might need to run `terraform init -upgrade` in each demo to upgrade to the 5.x provider if you were previously running the demo using 4.x provider.
+   - It's possible you might need to run `terraform init -upgrade` n each demo to upgrade to the 5.x provider if you were previously running the demo using 4.x provider. Or run `terraform get -update` to refresh module code.
  - Visual inspiration to spice up the concept:
    - https://twitter.com/MAKIO135/status/1378469836305666055
    - https://twitter.com/MAKIO135/status/1380634991818911746
