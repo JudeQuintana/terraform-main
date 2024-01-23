@@ -32,7 +32,6 @@ Mesh Complete!
 
 Notes:
   - You can combine steps 3 and 4 with `terraform apply`.
-  - I have to use direct module repo sources for centralized router (etc) because TF public registry is not synching correctly at the moment.
 
 Routing and peering validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
