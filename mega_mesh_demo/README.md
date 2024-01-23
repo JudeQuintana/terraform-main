@@ -32,6 +32,8 @@ Mesh Complete!
 
 Notes:
   - You can combine steps 3 and 4 with `terraform apply`.
+  - Add blackhole cidrs on any centralized router to create blackhole
+    routes or aggregate routes.
 
 Routing and peering validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
