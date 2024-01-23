@@ -20,8 +20,10 @@ Update 1/22/2024:
 
 1. It begins
   - `terraform init`
+
 2. Build VPCs (must exist before centralized routers and mega mesh)
   - `terraform apply -target module.vpcs_use1 -target module.vpcs_usw1 -target module.vpcs_euc1 -target module.vpcs_euw1 -target module.vpcs_apne1 -target module.vpcs_apse1 -target module.vpcs_cac1 -target module.vpcs_sae1 -target module.vpcs_use2 -target module.vpcs_usw2`
+
 3. Build Centralized Routers
   - `terraform apply -target module.centralized_router_use1 -target module.centralized_router_usw1 -target module.centralized_router_euc1 -target module.centralized_router_euw1 -target module.centralized_router_apne1 -target module.centralized_router_apse1 -target module.centralized_router_sae1 -target module.centralized_router_use2 -target module.centralized_router_usw2`
 
@@ -32,7 +34,8 @@ Mesh Complete!
 
 Notes:
   - You can combine steps 3 and 4 with `terraform apply`.
-  - Add blackhole cidrs on any centralized router to create blackhole
+  - Add blackhole cidrs on any centralized router via the
+    `var.blackhole_cidrs` list to create blackhole
     routes or aggregate routes.
 
 Routing and peering validation with AWS Route Analyzer:
