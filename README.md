@@ -19,7 +19,7 @@ Update 1/22/2024:
  - I've pointed all module sources directly to github repos (same
    repos that the public registry points to) for all demos so that they
    continue to be able to work together.
- - The current registry modules will continue to work together but
+ - The current registry modules will work together but
    won't work with the new Mega Mesh module until it's sorted out so it
    will remain unpublished on the registry.
 
