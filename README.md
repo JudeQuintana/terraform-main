@@ -14,7 +14,7 @@
 ```
 ---
 Update 1/22/2024:
- - The Terraform Public Registry is not syncing some of my modules
+ - The Terraform Public Registry is not syncing some of the modules
    correctly and can't get necessary updates.
  - The current registry modules will continue to work together but
    won't work with the new Mega Mesh module until it's sorted out.
