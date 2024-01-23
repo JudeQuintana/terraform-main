@@ -16,12 +16,12 @@
 Update 1/22/2024:
  - The Terraform Public Registry is not syncing some of the modules
    correctly and can't get necessary updates.
- - The current registry modules will continue to work together but
-   won't work with the new Mega Mesh module until it's sorted out.
  - I've pointed all module sources directly to github repos (same
    repos that the public registry points to) for all demos so that they
    continue to be able to work together.
- - The Mega Mesh module will remain unpublished on the registry.
+ - The current registry modules will continue to work together but
+   won't work with the new Mega Mesh module until it's sorted out so it
+   will remain unpublished on the registry.
 
 ---
 
