@@ -1,51 +1,47 @@
 locals {
   tiered_vpcs_usw2 = [
     {
-      name         = "app1"
-      network_cidr = "10.0.16.0/20"
+      name         = "app10"
+      network_cidr = "192.168.96.0/20"
       azs = {
         a = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
           private_subnets = [
-            { name = "cluster1", cidr = "10.0.16.0/24" }
+            { name = "cluster1", cidr = "192.168.96.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "10.0.19.0/28", special = true },
-            { name = "haproxy1", cidr = "10.0.21.64/26" }
+            { name = "random1", cidr = "192.168.100.0/28", special = true },
           ]
         }
-        b = {
+        c = {
           private_subnets = [
-            { name = "cluster2", cidr = "10.0.27.0/24" }
+            { name = "cluster2", cidr = "192.168.103.0/24" }
           ]
           public_subnets = [
-            { name = "random2", cidr = "10.0.30.0/28", special = true },
-            { name = "haproxy2", cidr = "10.0.31.64/26" }
+            { name = "random2", cidr = "192.168.106.0/28", special = true },
           ]
         }
       }
     },
     {
-      name         = "general1"
-      network_cidr = "192.168.16.0/20"
+      name         = "general10"
+      network_cidr = "10.0.160.0/20"
       azs = {
         a = {
           private_subnets = [
-            { name = "cluster4", cidr = "192.168.21.0/24" }
+            { name = "cluster4", cidr = "10.0.160.0/24" }
           ]
           public_subnets = [
-            { name = "random2", cidr = "192.168.22.0/28", special = true },
-            { name = "haproxy1", cidr = "192.168.23.64/26" }
+            { name = "random2", cidr = "10.0.164.0/28", special = true },
           ]
         }
         c = {
           private_subnets = [
-            { name = "experiment1", cidr = "192.168.16.0/24" }
+            { name = "experiment1", cidr = "10.0.166.0/24" }
           ]
           public_subnets = [
-            { name = "random3", cidr = "192.168.19.0/28", special = true },
-            { name = "haproxy3", cidr = "192.168.20.64/26" }
+            { name = "random3", cidr = "10.0.168.0/28", special = true },
           ]
         }
       }

@@ -1,49 +1,47 @@
-# Another
 locals {
   tiered_vpcs_use2 = [
     {
-      name         = "cicd1"
-      network_cidr = "172.16.0.0/20"
+      name         = "app9"
+      network_cidr = "192.168.128.0/20"
       azs = {
         a = {
           # Enable a NAT Gateway for all private subnets in the AZ with:
           # enable_natgw = true
           private_subnets = [
-            { name = "jenkins1", cidr = "172.16.1.0/24" }
+            { name = "cluster1", cidr = "192.168.128.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "172.16.6.0/26" },
-            { name = "natgw1", cidr = "172.16.5.0/28", special = true }
+            { name = "random1", cidr = "192.168.132.0/24", special = true },
           ]
         }
-        b = {
+        c = {
           private_subnets = [
-            { name = "artifacts1", cidr = "172.16.10.0/24" }
+            { name = "cluster2", cidr = "192.168.134.0/24" }
           ]
           public_subnets = [
-            { name = "attachments1", cidr = "172.16.11.0/28", special = true }
+            { name = "random2", cidr = "192.168.136.0/28", special = true },
           ]
         }
       }
     },
     {
-      name         = "infra1"
-      network_cidr = "172.16.16.0/20"
+      name         = "general9"
+      network_cidr = "172.16.128.0/20"
       azs = {
         a = {
           private_subnets = [
-            { name = "artifacts2", cidr = "172.16.22.0/24" }
+            { name = "cluster4", cidr = "172.16.128.0/24" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "172.16.23.0/28", special = true }
+            { name = "random2", cidr = "172.16.132.0/28", special = true },
           ]
         }
         c = {
           private_subnets = [
-            { name = "jenkins2", cidr = "172.16.16.0/24" }
+            { name = "experiment1", cidr = "172.16.135.0/24" }
           ]
           public_subnets = [
-            { name = "random2", cidr = "172.16.19.0/28", special = true }
+            { name = "random3", cidr = "172.16.136.0/28", special = true },
           ]
         }
       }

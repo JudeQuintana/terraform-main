@@ -1,7 +1,7 @@
 locals {
-  tiered_vpcs_usw2 = [
+  tiered_vpcs_euc1 = [
     {
-      name         = "app1"
+      name         = "app3"
       network_cidr = "10.0.16.0/20"
       azs = {
         a = {
@@ -27,7 +27,7 @@ locals {
       }
     },
     {
-      name         = "general1"
+      name         = "general3"
       network_cidr = "192.168.16.0/20"
       azs = {
         a = {
@@ -53,14 +53,14 @@ locals {
   ]
 }
 
-module "vpcs_usw2" {
+module "vpcs_euc1" {
   source = "git@github.com:JudeQuintana/terraform-aws-tiered-vpc-ng.git?ref=v1.0.0"
 
   providers = {
-    aws = aws.usw2
+    aws = aws.euc1
   }
 
-  for_each = { for t in local.tiered_vpcs_usw2 : t.name => t }
+  for_each = { for t in local.tiered_vpcs_euc1 : t.name => t }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels

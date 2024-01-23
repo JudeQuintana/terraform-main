@@ -1,6 +1,5 @@
 module "full_mesh_trio" {
-  source  = "JudeQuintana/full-mesh-trio/aws"
-  version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-full-mesh-trio.git?ref=v1.0.0"
 
   providers = {
     aws.one   = aws.use1

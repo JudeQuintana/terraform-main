@@ -1,16 +1,16 @@
-module "centralized_router_use2" {
+module "centralized_router_apne1" {
   source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=v1.0.0"
 
   providers = {
-    aws = aws.use2
+    aws = aws.apne1
   }
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   centralized_router = {
-    name            = "magneto"
-    amazon_side_asn = 64520
-    vpcs            = module.vpcs_use2
-    blackhole_cidrs = local.blackhole_cidrs
+    name            = "jean-grey"
+    amazon_side_asn = 64523
+    vpcs            = module.vpcs_apne1
   }
 }
+

@@ -1,7 +1,7 @@
 locals {
   tiered_vpcs_use1 = [
     {
-      name         = "app2"
+      name         = "app1"
       network_cidr = "10.0.0.0/20"
       azs = {
         a = {
@@ -27,7 +27,7 @@ locals {
       }
     },
     {
-      name         = "general2"
+      name         = "general1"
       network_cidr = "192.168.0.0/20"
       azs = {
         a = {

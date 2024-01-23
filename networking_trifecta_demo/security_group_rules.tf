@@ -18,8 +18,7 @@ locals {
 }
 
 module "intra_vpc_security_group_rules" {
-  source  = "JudeQuintana/intra-vpc-security-group-rule/aws"
-  version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-intra-vpc-security-group-rule.git?ref=v1.0.0"
 
   for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
 

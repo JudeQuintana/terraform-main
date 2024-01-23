@@ -8,9 +8,9 @@ module "centralized_router_use2" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   centralized_router = {
-    name            = "magneto"
-    amazon_side_asn = 64520
+    name            = "apocalypse"
+    amazon_side_asn = 64527
     vpcs            = module.vpcs_use2
-    blackhole_cidrs = local.blackhole_cidrs
   }
 }
+
