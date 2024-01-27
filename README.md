@@ -53,7 +53,7 @@ Notes:
    - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
    - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
    - TODO: Mega Mesh Intra VPC Security Group Rules
-  - Available AZs (a,b,c etc) region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a AZ)
+  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a AZ)
     so it's possible you'll need to change the AZ letter for a VPC if the provider saying it's not available for the region.
  - There is no overlapping CIDR detection cross region or intra region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
  - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x.
