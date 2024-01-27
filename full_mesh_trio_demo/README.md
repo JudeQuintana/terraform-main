@@ -9,14 +9,14 @@ The resulting architecture is a full mesh between 3 cross-region hub spoke topol
 ### Bonus Update!
 
 [VPC Peering Deluxe module](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe):
- - VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default
+ - VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default.
  - The module also works for inter region VPCs.
  - Specific subnet cidrs can be selected (instead of default behavior) to route across the VPC peering connection via only_route_subnet_cidrs variable list.
  - Additional option to allow remote dns resolution too.
- - Can be used in tandem with Centralized Router, Super Router and Full Mesh Trio for workloads that transfer lots of data to save on cost instead of via TGW (especially inter region).
+ - Can be used in tandem with Centralized Router, Super Router, Full Mesh Trio and Mega Mesh for workloads that transfer lots of data to save on cost instead of via TGW (especially inter region).
 
 Important:
- - If you've ran this demo before then it's possible that you'll need to run `terraform get -update` to get the updated Tiered VPC-NG outputs needed for VPC Pering Deluxe.
+ - If you've ran this demo before then it's possible that you'll need to run `terraform get -update` to get the updated Tiered VPC-NG outputs needed for VPC Peering Deluxe.
 
 cross region Full mesh with cross region and inter region VPC peering:
 ![full-mesh-trio-with-vpc-peering](https://jq1-io.s3.amazonaws.com/full-mesh-trio/full-mesh-trio-with-two-vpc-peering-examples.png)
@@ -24,7 +24,7 @@ cross region Full mesh with cross region and inter region VPC peering:
 ---
 
 Related articles:
-- Blog Post in coming soon...
+- Blog Post coming soon...
 
 Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
