@@ -18,7 +18,7 @@ Update 1/27/2024:
    so've pointed all module sources back to the public registry.
  - The new Mega Mesh module is now published and all registry modules will continue work together.
  - *The VPC peering deluxe module is the only one not syncing correctly
-    but will work for both stale and new versions. I'm hoping this will be fix soon.
+    but will work for both stale and new versions. I'm hoping this will be fixed soon otherwise you can use `source = "git@github.com:JudeQuintana/terraform-aws-vpc-peering-deluxe.git?ref=v1.0.0"`.
 
 ---
 
