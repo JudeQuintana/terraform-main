@@ -54,7 +54,8 @@ locals {
 }
 
 module "vpcs_euc1" {
-  source = "git@github.com:JudeQuintana/terraform-aws-tiered-vpc-ng.git?ref=v1.0.0"
+  source  = "JudeQuintana/tiered-vpc-ng/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.euc1

@@ -19,7 +19,8 @@ locals {
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
 module "centralized_routers_use1" {
-  source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=v1.0.0"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.use1

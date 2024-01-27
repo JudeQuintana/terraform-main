@@ -6,15 +6,10 @@ Mega Mesh == (Full Mesh Trio)² + 1
 ![mega-mesh](https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png)
 
 ---
-Update 1/22/2024:
- - The Terraform Public Registry is not syncing some of the modules
-   correctly and can't get necessary updates.
- - I've pointed all module sources directly to github repos (same
-   repos that the public registry points to) for all demos so that they
-   continue to be able to work together.
- - The current registry modules will continue to work together but
-   won't work with the new Mega Mesh module until it's sorted out so it
-   will remain unpublished on the registry.
+Update 1/27/2024:
+ - The Terraform Public Registry is mostly* syncing modules correctly again
+   so've pointed all module sources back to the public registry.
+ - The new Mega Mesh module is now published and all registry modules will continue work together.
 
 ---
 
@@ -35,10 +30,9 @@ Mesh Complete!
 Notes:
   - You can combine steps 3 and 4 with `terraform apply`.
   - Add blackhole cidrs on any centralized router via the
-    `var.blackhole_cidrs` list to create blackhole
-    routes or aggregate routes.
-  - AZs (a,b,c etc) that are not opt-in for a region are different per AWS account
-    so it's possible you'll need to change the AZ letter for a VPC if it's saying it's not available for the region.
+    `var.centralized_router.blackhole_cidrs` list to create blackhole routes or aggregate routes.
+  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a AZ)
+    so it's possible you'll need to change the AZ letter for a VPC if the provider saying it's not available for the region.
 
 Routing and peering validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)

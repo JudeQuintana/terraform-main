@@ -2,7 +2,8 @@
 # associate and propagate to a single route table
 # generate and add routes in each VPC to all other networks.
 module "centralized_router" {
-  source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=v1.0.0"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.0.0"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels

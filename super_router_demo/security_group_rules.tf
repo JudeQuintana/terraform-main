@@ -19,7 +19,8 @@ locals {
 }
 
 module "intra_vpc_security_group_rules_usw2" {
-  source = "git@github.com:JudeQuintana/terraform-aws-intra-vpc-security-group-rule.git?ref=v1.0.0"
+  source  = "JudeQuintana/intra-vpc-security-group-rule/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.usw2
@@ -36,7 +37,8 @@ module "intra_vpc_security_group_rules_usw2" {
 }
 
 module "intra_vpc_security_group_rules_use1" {
-  source = "git@github.com:JudeQuintana/terraform-aws-intra-vpc-security-group-rule.git?ref=v1.0.0"
+  source  = "JudeQuintana/intra-vpc-security-group-rule/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.use1
@@ -54,7 +56,8 @@ module "intra_vpc_security_group_rules_use1" {
 
 # allowing ssh and ping communication across regions
 module "super_intra_vpc_security_group_rules_usw2_to_use1" {
-  source = "git@github.com:JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules.git?ref=v1.0.0"
+  source  = "JudeQuintana/super-intra-vpc-security-group-rules/aws"
+  version = "1.0.0"
 
   providers = {
     aws.local = aws.usw2
