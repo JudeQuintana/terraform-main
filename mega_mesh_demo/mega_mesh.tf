@@ -1,5 +1,6 @@
 module "mega_mesh" {
-  source = "git@github.com:JudeQuintana/terraform-aws-mega-mesh.git?ref=v1.0.0"
+  source  = "JudeQuintana/mega-mesh/aws"
+  version = "1.0.0"
 
   providers = {
     aws.one   = aws.use1

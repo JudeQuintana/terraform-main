@@ -1,5 +1,6 @@
 module "centralized_router_euc1" {
-  source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=v1.0.0"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.0.0"
 
   providers = {
     aws = aws.euc1
