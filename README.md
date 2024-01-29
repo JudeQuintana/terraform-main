@@ -14,11 +14,9 @@
 ```
 ---
 Update 1/27/2024:
- - The Terraform Public Registry is mostly* syncing modules correctly again
-   so've pointed all module sources back to the public registry.
+ - The Terraform Public Registry is syncing modules correctly again
+   so've pointed all module sources back to the registry.
  - The new Mega Mesh module is now published and all registry modules will continue work together.
- - *The VPC peering deluxe module is the only one not syncing correctly
-    but will work for both stale and new versions. I'm hoping this will be fixed soon otherwise you can use `source = "git@github.com:JudeQuintana/terraform-aws-vpc-peering-deluxe.git?ref=v1.0.0"`.
 
 ---
 
@@ -53,7 +51,7 @@ Notes:
    - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
    - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
    - TODO: Mega Mesh Intra VPC Security Group Rules
-  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a AZ)
+  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider saying it's not available for the region.
  - There is no overlapping CIDR detection cross region or intra region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
  - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x.
