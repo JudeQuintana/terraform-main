@@ -6,10 +6,10 @@ Mega Mesh == (Full Mesh Trio)² + 1
 ![mega-mesh](https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png)
 
 ---
-Update 1/27/2024:
- - The Terraform Public Registry is mostly* syncing modules correctly again
-   so've pointed all module sources back to the public registry.
- - The new Mega Mesh module is now published and all registry modules will continue work together.
+Update 1/29/2024:
+ - The Terraform Public Registry is syncing modules correctly again
+   so I've pointed all module sources back to the registry.
+ - The new Mega Mesh module is now published and all registry modules will continue to work together.
  - I'm getting questions regarding the difference between full mesh TGWs
    vs CloudWAN. I'm reposting my reply here:
 ```
