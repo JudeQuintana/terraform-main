@@ -10,6 +10,17 @@ Update 1/27/2024:
  - The Terraform Public Registry is mostly* syncing modules correctly again
    so've pointed all module sources back to the public registry.
  - The new Mega Mesh module is now published and all registry modules will continue work together.
+ - I'm getting questions regarding the difference between full mesh TGWs
+   vs CloudWAN. I'm reposting my reply here:
+```
+I haven't had the chance work with CloudWAN yet. I've talked to a few people about the differences.
+
+There can only be one routing domain with full mesh TGW topology because you can only have one peering link between a pair of TGWs so you can't really segment traffic across regions even when you're separating route tables across TGWs.
+
+CloudWAN allows for multiple routing domains spanning regions via segments. You can choose to share routes between them and it hides the peering, route table, etc management. The high cost tradeoff is it makes managing large networks with traffic segmentation easier vs engineers managing a large TGW topology themselves.
+
+That's what I've gathered so far but maybe more knowledgeable people can chime in. Hopefully I'll be able to tinker with CloudWAN in the near future.
+```
 
 ---
 

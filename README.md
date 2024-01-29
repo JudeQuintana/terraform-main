@@ -16,7 +16,7 @@
 Update 1/27/2024:
  - The Terraform Public Registry is syncing modules correctly again
    so I've pointed all module sources back to the registry.
- - The new Mega Mesh module is now published and all registry modules will continue work together.
+ - The new Mega Mesh module is now published and all registry modules will continue to work together.
 
 ---
 
