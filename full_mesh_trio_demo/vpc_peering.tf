@@ -1,6 +1,4 @@
-#VPC Peering Deluxe module will create appropriate routes for all subnets in each cross region Tiered VPC-NG by default unless specific subnet cidrs are selected to route across the VPC peering connection via only_route_subnet_cidrs list.
-
-# cross region peering, route specific subnets only across peering connection
+# cross region peering, only route specific subnets across peering connection
 module "vpc_peering_deluxe_use1_general2_to_use2_cicd1" {
   source  = "JudeQuintana/vpc-peering-deluxe/aws"
   version = "1.0.0"
@@ -25,7 +23,7 @@ module "vpc_peering_deluxe_use1_general2_to_use2_cicd1" {
   }
 }
 
-## inter region vpc peering, route all subnets across peering connection
+# inter region vpc peering, route all subnets across peering connection
 module "vpc_peering_deluxe_usw2_app1_to_usw2_general1" {
   source  = "JudeQuintana/vpc-peering-deluxe/aws"
   version = "1.0.0"

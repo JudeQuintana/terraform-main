@@ -7,11 +7,8 @@ Mega Mesh == (Full Mesh Trio)² + 1
 
 ---
 Update 1/29/2024:
- - The Terraform Public Registry is syncing modules correctly again
-   so I've pointed all module sources back to the registry.
- - The new Mega Mesh module is now published and all registry modules will continue to work together.
- - I'm getting questions regarding the difference between full mesh TGWs
-   vs CloudWAN. I'm reposting my reply here:
+ - Sometimes I get questions regarding the difference between full mesh TGWs
+   and CloudWAN. I'm reposting my reply here:
 
  > I haven't had the chance work with CloudWAN yet. I've talked to a few people about the differences.
  >
