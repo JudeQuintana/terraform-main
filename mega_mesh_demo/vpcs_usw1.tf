@@ -1,10 +1,11 @@
-# use1 only us-west-1b, us-west-1c azs are availble
 locals {
   tiered_vpcs_usw1 = [
     {
       name         = "app2"
       network_cidr = "172.16.0.0/20"
       azs = {
+        # Enable a NAT Gateway for all private subnets in the AZ with:
+        # enable_natgw = true
         b = {
           private_subnets = [
             { name = "artifacts1", cidr = "172.16.10.0/24" }

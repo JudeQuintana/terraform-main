@@ -1,4 +1,3 @@
-# apne1 only ap-northeast-1a, ap-northeast-1c, ap-northeast-1d azs are available
 locals {
   tiered_vpcs_apne1 = [
     {
