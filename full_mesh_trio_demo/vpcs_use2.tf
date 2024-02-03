@@ -1,4 +1,3 @@
-# Another
 locals {
   tiered_vpcs_use2 = [
     {

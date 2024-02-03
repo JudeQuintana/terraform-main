@@ -53,7 +53,6 @@ module "vpcs_apne1" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
   version = "1.0.0"
 
-
   providers = {
     aws = aws.apne1
   }

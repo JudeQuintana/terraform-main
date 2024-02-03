@@ -6,7 +6,6 @@ Mega Mesh == (Full Mesh Trio)² + 1
 ![mega-mesh](https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png)
 
 ---
-Update 1/29/2024:
  - Sometimes I get questions regarding the difference between full mesh TGWs
    and CloudWAN. I'm reposting my reply here:
 
@@ -47,6 +46,7 @@ Routing and peering validation with AWS Route Analyzer:
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
   - Select new global network -> go to `Transit Gateways` -> `Register
     Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
+
   - Go to `Transit gateway network` -> `Route Analyzer`
     - Cross-Region Test 1
       - Source:

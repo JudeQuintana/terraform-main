@@ -80,7 +80,7 @@ $ git clone git@github.com:JudeQuintana/terraform-main.git
 $ cd networking_trifecta_demo
 ```
 
-Update the `key_name` in [variables.tf](https://github.com/JudeQuintana/terraform-main/blob/main/networking_trifecta_demo/variables.tf#L19) with the EC2 key pair name you're using for the `us-west-2` region (see pre-requisites above).
+Update the `var.base_ec2_instance_attributes.key_name` in [variables.tf](https://github.com/JudeQuintana/terraform-main/blob/main/networking_trifecta_demo/variables.tf#L21) with the EC2 key pair name you're using for the `us-west-2` region (see pre-requisites above).
 ```
 # snippet
 variable "base_ec2_instance_attributes" {
