@@ -48,7 +48,7 @@ Notes:
   - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider saying it's not available for the region.
  - There is no overlapping CIDR detection cross region or intra region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
- - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation for Tiered VPC-NG for 5.x.
+ - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation in the 5.x provider for Tiered VPC-NG.
    - Should still work when enabling NATGW for a given AZ.
    - It's possible you might need to run `terraform init -upgrade` n each demo to upgrade to the 5.x provider if you were previously running the demo using 4.x provider.
    - Or run `terraform get -update` to refresh module code.
