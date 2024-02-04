@@ -50,7 +50,7 @@ Notes:
  - There is no overlapping CIDR detection cross region or intra region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
  - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation in the 5.x provider for Tiered VPC-NG.
    - Should still work when enabling NATGW for a given AZ.
-   - It's possible you might need to run `terraform init -upgrade` n each demo to upgrade to the 5.x provider if you were previously running the demo using 4.x provider.
+   - It's possible you might need to run `terraform init -upgrade` in each demo to upgrade to the AWS 5.x provider if you were previously running the demo using the 4.x provider.
    - Or run `terraform get -update` to refresh module code.
  - Visual inspiration to spice up the concept:
    - https://twitter.com/MAKIO135/status/1378469836305666055
