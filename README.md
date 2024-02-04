@@ -39,7 +39,7 @@ Notes:
  - Sometimes I'll blog about ideas at [jq1.io](https:/jq1.io).
  - All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
  - The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
- - All demos include an example of generating security group rules for VPCs for each TGW configuration.
+ - All demos include an example of generating security group rules for intra region and cross region VPCs for each TGW configuration.
    - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule)
    - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules)
    - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules)
