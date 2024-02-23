@@ -20,7 +20,7 @@
 
 ## Super Router!
 [Super Router Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo)
- - Compose an inter-region and cross-region Transit Gateway decentralized hub spoke topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
+ - Compose an inter-region and cross-region decentralized Transit Gateway hub spoke topology from existing hub spokes using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
  - Validate connectivity with AWS Route Analyzer.
 
 ## Full Mesh Trio!
@@ -36,7 +36,7 @@
 
 ---
 Notes:
- - Sometimes I'll blog about ideas at [jq1.io](https:/jq1.io).
+ - Sometimes I'll blog about ideas at [jq1.io](https://jq1.io).
  - All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
  - The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
  - All demos include an example of generating security group rules for inter-region and cross-region VPCs for each TGW configuration.
@@ -46,7 +46,7 @@ Notes:
    - TODO: Mega Mesh Intra VPC Security Group Rules
  - The Centralized Router module is an implementation of the [AWS Centralized Router concept](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-centralized-router.html) but without VPN Gateway or Direct Connect, only VPCs.
   - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
-    so it's possible you'll need to change the AZ letter for a VPC if the provider saying it's not available for the region.
+    so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
  - There is no overlapping CIDR detection inter-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
  - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation in the 5.x provider for Tiered VPC-NG.
    - `aws_eip` will still work when enabling NATGW for a given AZ.
