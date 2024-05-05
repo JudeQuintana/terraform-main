@@ -15,12 +15,12 @@
 
 ## TNT Architecture!
 [Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
- - Compose a Transit Gateway hub and spoke topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) modules.
+ - Compose a hub and spoke Transit Gateway topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) modules.
  - Validate connectivity with EC2 instances.
 
 ## Super Router!
 [Super Router Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo)
- - Compose a decentralized Transit Gateway hub and spoke topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
+ - Compose a decentralized hub and spoke Transit Gateway topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router) modules.
  - Validate connectivity with AWS Route Analyzer.
 
 ## Full Mesh Trio!
