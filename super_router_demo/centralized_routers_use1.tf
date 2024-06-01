@@ -20,7 +20,7 @@ locals {
 # generate and add routes in each VPC to all other networks.
 module "centralized_routers_use1" {
   source  = "JudeQuintana/centralized-router/aws"
-  version = "1.0.0"
+  version = "1.0.1"
 
   providers = {
     aws = aws.use1

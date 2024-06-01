@@ -5,11 +5,11 @@ locals {
       network_cidr = "10.0.0.0/20"
       azs = {
         a = {
-          # Enable a NAT Gateway for all private subnets in the AZ with:
-          # enable_natgw = true
           private_subnets = [
             { name = "cluster1", cidr = "10.0.0.0/24" }
           ]
+          # Enable a NAT Gateway for all private subnets in the same AZ
+          # by adding the `natgw = true` attribute to any public subnet
           public_subnets = [
             { name = "random1", cidr = "10.0.3.0/28", special = true },
             { name = "haproxy1", cidr = "10.0.4.64/26" }
@@ -18,10 +18,7 @@ locals {
         b = {
           private_subnets = [
             { name = "cluster2", cidr = "10.0.10.0/24" },
-            { name = "random2", cidr = "10.0.11.0/24" }
-          ]
-          public_subnets = [
-            { name = "random3", cidr = "10.0.12.0/24", special = true }
+            { name = "random2", cidr = "10.0.11.0/24", special = true }
           ]
         }
       }
@@ -33,11 +30,7 @@ locals {
         a = {
           private_subnets = [
             { name = "data1", cidr = "192.168.0.0/24" },
-            { name = "data2", cidr = "192.168.1.0/24" }
-          ]
-          public_subnets = [
-            { name = "random4", cidr = "192.168.5.0/28", special = true },
-            { name = "haproxy4", cidr = "192.168.6.64/26" }
+            { name = "data2", cidr = "192.168.1.0/24", special = true }
           ]
         }
         c = {
@@ -57,7 +50,7 @@ locals {
 
 module "vpcs_use1" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.0"
+  version = "1.0.1"
 
   providers = {
     aws = aws.use1

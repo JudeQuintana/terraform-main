@@ -4,12 +4,12 @@ locals {
       name         = "app2"
       network_cidr = "172.16.0.0/20"
       azs = {
-        # Enable a NAT Gateway for all private subnets in the AZ with:
-        # enable_natgw = true
         b = {
           private_subnets = [
             { name = "artifacts1", cidr = "172.16.10.0/24" }
           ]
+          # Enable a NAT Gateway for all private subnets in the same AZ
+          # by adding the `natgw = true` attribute to any public subnet
           public_subnets = [
             { name = "attachments1", cidr = "172.16.11.0/28", special = true }
           ]
@@ -52,7 +52,7 @@ locals {
 
 module "vpcs_usw1" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.0"
+  version = "1.0.1"
 
   providers = {
     aws = aws.usw1
