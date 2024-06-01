@@ -5,22 +5,19 @@ locals {
       network_cidr = "172.16.0.0/20"
       azs = {
         a = {
-          # Enable a NAT Gateway for all private subnets in the AZ with:
-          # enable_natgw = true
           private_subnets = [
             { name = "jenkins1", cidr = "172.16.1.0/24" }
           ]
+          # Enable a NAT Gateway for all private subnets in the same AZ
+          # by adding the `natgw = true` attribute to any public subnet
           public_subnets = [
-            { name = "random1", cidr = "172.16.6.0/26" },
-            { name = "natgw1", cidr = "172.16.5.0/28", special = true }
+            { name = "random1", cidr = "172.16.6.0/26", special = true },
+            { name = "natgw1", cidr = "172.16.5.0/28" }
           ]
         }
         b = {
           private_subnets = [
-            { name = "artifacts1", cidr = "172.16.10.0/24" }
-          ]
-          public_subnets = [
-            { name = "attachments1", cidr = "172.16.11.0/28", special = true }
+            { name = "artifacts1", cidr = "172.16.10.0/24", special = true }
           ]
         }
       }
@@ -39,10 +36,10 @@ locals {
         }
         c = {
           private_subnets = [
-            { name = "jenkins2", cidr = "172.16.16.0/24" }
+            { name = "jenkins2", cidr = "172.16.16.0/24", special = true }
           ]
           public_subnets = [
-            { name = "random2", cidr = "172.16.19.0/28", special = true }
+            { name = "random2", cidr = "172.16.19.0/28" }
           ]
         }
       }
@@ -52,7 +49,7 @@ locals {
 
 module "vpcs_use2" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.0"
+  version = "1.0.1"
 
   providers = {
     aws = aws.use2

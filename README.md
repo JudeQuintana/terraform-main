@@ -48,10 +48,21 @@ Notes:
   - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
  - There is no overlapping CIDR detection inter-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
- - Demos can be used with AWS 4.x and 5.x providers but there will be a warning about a `aws_eip` attribute deprecation in the 5.x provider for Tiered VPC-NG.
-   - `aws_eip` will still work when enabling NATGW for a given AZ.
-   - It's possible you might need to run `terraform init -upgrade` in each demo to upgrade to the AWS 5.x provider if you were previously using the 4.x provider.
+
+Updates:
+ - Demos have been updated to use Tiered VPC-NG and Centralized Router
+   at `v1.0.1`.
+   - This version now only uses the AWS 5.x provider.
+   - Demonstrates using private subnets only, public subnets only
+     or both using `special = true` on either subnet per AZ.
+   - Build a NATGW for all private subnets by adding `natgw = true` to
+     any public subnet.
+   - Is still compatible with all other modules at `v1.0.0` (super
+     router, full mesh trio, mega mesh etc)
+   - No provided move blocks for migration path to Tiered VPC-NG `v1.0.1` so it's best to start fresh.
+   - It's possible you might need to run `terraform init -upgrade` in each demo to upgrade to the latest 5.x provider.
    - Or run `terraform get -update` to refresh module code.
+
  - Visual inspiration to spice up the concept:
    - https://twitter.com/MAKIO135/status/1378469836305666055
    - https://twitter.com/MAKIO135/status/1380634991818911746

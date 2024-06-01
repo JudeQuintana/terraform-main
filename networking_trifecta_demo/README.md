@@ -118,26 +118,26 @@ $ ./scripts/get_instance_info.sh
 
 Example output:
 ```
-# aws_instance.instances["cicd-private"]
-    private_ip                           = "172.16.5.11"
-
-# aws_instance.instances["general-private"]
-    private_ip                           = "192.168.10.8"
+# module.vpcs["app"].aws_vpc.this
+    default_security_id =  "sg-12345678"
 
 # aws_instance.instances["app-public"]
     private_ip                           = "10.0.3.200"
     public_ip                            = "54.187.241.115"
 
-# module.vpcs["app"].aws_vpc.this
-    default_security_group_id        = "sg-id-1234"
+# aws_instance.instances["general-private"]
+    private_ip                           = "192.168.10.8"
+
+# aws_instance.instances["cicd-private"]
+    private_ip                           = "172.16.5.11"
 
 # My Public IP
-XX.XXX.XXX.XX
+XX.XX.XX.XX
 
 # If you have awscli configured follow the instructions below otherwise you have to do it manually in the AWS console
-# AWS CLI Command to copy, replace both app-vpc-default-sg-id and My.Public.IP.Here and run script:
+# AWS CLI Command to copy ("q" to exit returned output):
 
-aws ec2 authorize-security-group-ingress --region us-west-2 --group-id app-vpc-default-sg-id --protocol tcp --port 22 --cidr My.Public.IP.Here/32
+aws ec2 authorize-security-group-ingress --region us-west-2 --group-id  "sg-12345678" --protocol tcp --port 22 --cidr XX.XX.XX.XX/32
 ```
 
 Run the `awscli` command from the output above to add an inbound ssh rule from "My Public IP" to the default security group id of the App VPC.

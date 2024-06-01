@@ -1,6 +1,6 @@
 module "centralized_router_use2" {
   source  = "JudeQuintana/centralized-router/aws"
-  version = "1.0.0"
+  version = "1.0.1"
 
   providers = {
     aws = aws.use2
