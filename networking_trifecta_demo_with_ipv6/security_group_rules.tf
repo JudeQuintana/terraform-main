@@ -57,7 +57,7 @@ module "ipv6_intra_vpc_security_group_rules" {
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  intra_vpc_security_group_rule = {
+  ipv6_intra_vpc_security_group_rule = {
     rule = each.value
     vpcs = module.vpcs
   }
