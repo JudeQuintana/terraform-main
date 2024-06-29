@@ -1,4 +1,7 @@
-TODO: update for ipv6 validation
+TODO:
+- update for ipv6 validation
+- update intra_vpc_security_group_rules module take in ipv6 cidrs (only
+  ipv4)
 ## Networking Trifecta Demo
 Blog Post:
 [Terraform Networking Trifecta ](https://jq1.io/posts/tnt/)
