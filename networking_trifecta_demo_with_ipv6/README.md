@@ -1,9 +1,5 @@
 TODO:
 - update this readme for ipv6 validation
-- update intra_vpc_security_group_rules module take in ipv6 cidrs (only
-  ipv4), so you'll need to manually add inbound ssh and icmp for ipv6
-  for ingress on each intra-vpc security group until the module is
-  updated.
 - manually created ipam pool (free tier) in AWS UI
 - You need to make your own IPv6 IPAM pools since my AWS Account owns
   these specific IPv6 CIDRs (ie subnet your own) so the demo will not
