@@ -1,7 +1,12 @@
 TODO:
-- update for ipv6 validation
+- update this readme for ipv6 validation
 - update intra_vpc_security_group_rules module take in ipv6 cidrs (only
   ipv4)
+- IMPORTANT: You need to make your own IPv6 IPAM pools since my AWS Account owns
+  these specific IPv6 CIDRs (ie subnet your own) so the demo will not
+  work as is with other AWS accounts.
+
+
 ## Networking Trifecta Demo
 Blog Post:
 [Terraform Networking Trifecta ](https://jq1.io/posts/tnt/)
