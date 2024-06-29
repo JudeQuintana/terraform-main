@@ -1,3 +1,4 @@
+TODO: update for ipv6 validation
 ## Networking Trifecta Demo
 Blog Post:
 [Terraform Networking Trifecta ](https://jq1.io/posts/tnt/)
