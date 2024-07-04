@@ -10,11 +10,16 @@ locals {
   ipam_pool_id = data.aws_vpc_ipam_pool.ipv6.id
 }
 
+# ipv4 can be with or without ipam
+# ipv6 must have ipam
 locals {
   tiered_vpcs = [
     {
-      name         = "app"
-      network_cidr = "10.0.0.0/20"
+      name = "app"
+      ipv4 = {
+        network_cidr            = "10.0.0.0/20"
+        secondary_network_cidrs = ["10.1.0.0/20", "10.2.0.0/20"]
+      }
       ipv6 = {
         network_cidr = "2600:1f24:66:c100::/56"
         ipam_pool_id = local.ipam_pool_id
@@ -42,8 +47,11 @@ locals {
       }
     },
     {
-      name         = "cicd"
-      network_cidr = "172.16.0.0/20"
+      name = "cicd"
+      ipv4 = {
+        network_cidr            = "172.16.0.0/20"
+        secondary_network_cidrs = ["172.17.0.0/20"]
+      }
       ipv6 = {
         network_cidr = "2600:1f24:66:c200::/56"
         ipam_pool_id = local.ipam_pool_id
@@ -59,14 +67,16 @@ locals {
           # `special` and `natgw` can also be enabled together on a public subnet
           public_subnets = [
             { name = "other", cidr = "172.16.8.0/28", ipv6_cidr = "2600:1f24:66:c207::/64", special = true },
-            #{ name      = "natgw", cidr = "172.16.8.16/28", natgw    = true }
+            #{ name = "natgw", cidr = "172.16.8.16/28", ipv6_cidr = "2600:1f24:66:c208::/64", natgw = true }
           ]
         }
       }
     },
     {
-      name         = "general"
-      network_cidr = "192.168.0.0/20"
+      name = "general"
+      ipv4 = {
+        network_cidr = "192.168.0.0/20"
+      }
       ipv6 = {
         network_cidr = "2600:1f24:66:c300::/56"
         ipam_pool_id = local.ipam_pool_id

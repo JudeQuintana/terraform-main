@@ -36,7 +36,7 @@ module "intra_vpc_security_group_rules" {
 locals {
   ipv6_intra_vpc_security_group_rules = [
     {
-      label     = "ssh"
+      label     = "ssh6"
       protocol  = "tcp"
       from_port = 22
       to_port   = 22
