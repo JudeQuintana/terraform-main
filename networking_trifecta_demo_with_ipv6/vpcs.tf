@@ -7,7 +7,7 @@ data "aws_vpc_ipam_pool" "ipv6" {
 }
 
 locals {
-  ipam_pool_id = data.aws_vpc_ipam_pool.ipv6.id
+  ipam_pool = data.aws_vpc_ipam_pool.ipv6
 }
 
 # TODO: make ipam pool module for ipv4 and ipv6
@@ -19,12 +19,12 @@ locals {
     {
       name = "app"
       ipv4 = {
-        network_cidr            = "10.0.0.0/20"
-        secondary_network_cidrs = ["10.1.0.0/20", "10.2.0.0/20"]
+        network_cidr    = "10.0.0.0/20"
+        secondary_cidrs = ["10.1.0.0/20", "10.2.0.0/20"]
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c100::/56"
-        ipam_pool_id = local.ipam_pool_id
+        ipam_pool    = local.ipam_pool
       }
       azs = {
         a = {
@@ -51,12 +51,12 @@ locals {
     {
       name = "cicd"
       ipv4 = {
-        network_cidr            = "172.16.0.0/20"
-        secondary_network_cidrs = ["172.17.0.0/20"]
+        network_cidr    = "172.16.0.0/20"
+        secondary_cidrs = ["172.17.0.0/20"]
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c200::/56"
-        ipam_pool_id = local.ipam_pool_id
+        ipam_pool    = local.ipam_pool
       }
       azs = {
         b = {
@@ -81,7 +81,7 @@ locals {
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c300::/56"
-        ipam_pool_id = local.ipam_pool_id
+        ipam_pool    = local.ipam_pool
       }
       azs = {
         c = {
