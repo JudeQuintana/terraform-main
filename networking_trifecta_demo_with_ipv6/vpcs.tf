@@ -14,8 +14,6 @@ locals {
   ipam_pool = data.aws_vpc_ipam_pool.ipv6
 }
 
-# TODO: make ipam pool module for ipv4 and ipv6
-
 # ipv4 can be with or without ipam
 # ipv6 must have ipam
 locals {
