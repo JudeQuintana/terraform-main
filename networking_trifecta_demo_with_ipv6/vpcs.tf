@@ -11,7 +11,7 @@ data "aws_vpc_ipam_pool" "ipv6" {
 }
 
 locals {
-  ipam_pool = data.aws_vpc_ipam_pool.ipv6
+  ipv6_ipam_pool = data.aws_vpc_ipam_pool.ipv6
 }
 
 # ipv4 can be with or without ipam
@@ -26,7 +26,7 @@ locals {
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c100::/56"
-        ipam_pool    = local.ipam_pool
+        ipam_pool    = local.ipv6_ipam_pool
       }
       azs = {
         a = {
@@ -58,7 +58,7 @@ locals {
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c200::/56"
-        ipam_pool    = local.ipam_pool
+        ipam_pool    = local.ipv6_ipam_pool
       }
       azs = {
         b = {
@@ -83,7 +83,7 @@ locals {
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c300::/56"
-        ipam_pool    = local.ipam_pool
+        ipam_pool    = local.ipv6_ipam_pool
       }
       azs = {
         c = {
