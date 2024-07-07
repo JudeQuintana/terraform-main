@@ -1,7 +1,11 @@
-# manually set up ipam
+# ipam was set up manually
 data "aws_vpc_ipam_pool" "ipv6" {
   filter {
     name   = "description"
+    values = ["*test*"]
+  }
+  filter {
+    name   = "address-family"
     values = ["ipv6"]
   }
 }
