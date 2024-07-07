@@ -53,7 +53,6 @@ data "aws_ami" "al2023" {
   }
 }
 
-
 # The .ssh/config is forwarding the private key to any host
 # so you can easily ssh to each instance since instances are
 # ssh key only.
