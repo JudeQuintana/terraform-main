@@ -9,11 +9,13 @@ module "centralized_router" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   centralized_router = {
-    name                 = "gambit"
-    amazon_side_asn      = 64512
-    blackhole_cidrs      = ["172.16.8.0/24"]
-    blackhole_ipv6_cidrs = ["2600:1f24:66:c109::/64"]
-    vpcs                 = module.vpcs
+    name            = "gambit"
+    amazon_side_asn = 64512
+    vpcs            = module.vpcs
+    blackhole = {
+      cidrs      = ["172.16.8.0/24"]
+      ipv6_cidrs = ["2600:1f24:66:c109::/64"]
+    }
   }
 }
 
