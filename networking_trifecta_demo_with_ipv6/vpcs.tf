@@ -37,14 +37,13 @@ locals {
           ]
           eigw = true
           private_subnets = [
-            { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c108::/64" },
+            { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c108::/64" }
           ]
         }
         b = {
           eigw = true
           private_subnets = [
-            { name = "cluster2", cidr = "10.0.1.0/24", ipv6_cidr = "2600:1f24:66:c106::/64"
-            },
+            { name = "cluster2", cidr = "10.0.1.0/24", ipv6_cidr = "2600:1f24:66:c106::/64" },
             { name = "random2", cidr = "10.0.5.0/24", ipv6_cidr = "2600:1f24:66:c107::/64", special = true }
           ]
         }
@@ -71,7 +70,7 @@ locals {
           # `special` and `natgw` can also be enabled together on a public subnet
           public_subnets = [
             { name = "other", cidr = "172.16.8.0/28", ipv6_cidr = "2600:1f24:66:c207::/64", special = true },
-            #{ name = "natgw", cidr = "172.16.8.16/28", ipv6_cidr = "2600:1f24:66:c208::/64", natgw = true }
+            { name = "natgw", cidr = "172.16.8.16/28", ipv6_cidr = "2600:1f24:66:c208::/64", natgw = true }
           ]
         }
       }
@@ -92,7 +91,6 @@ locals {
           ]
           public_subnets = [
             { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c308::/64" },
-            #{ name = "other3", cidr = "192.168.15.0/28", ipv6_cidr = "2600:1f24:66:c309::/64" },
           ]
         }
       }
