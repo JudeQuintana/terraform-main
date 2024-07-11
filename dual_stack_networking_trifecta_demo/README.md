@@ -19,18 +19,22 @@ Preq:
 VPC CIDR Allocations:
 - App VPC Tier:
   - IPv4 `10.0.0.0/20` (Class A Private Internet)
-  - IPv6 `2600:1f24:66:c100::/56`
+  - IPv4 Secondaries `10.1.0.0/18` and `10.2.0.0/18`
+  - IPv6 `2600:1f24:66:c000::/56`
 - General VPC Tier:
   - IPv4 `192.168.0.0/20` (Class C Private Internet)
-  - IPv6 `2600:1f24:66:c200::/56`
+  - No IPv4 Secondaries
+  - IPv6 `2600:1f24:66:c100::/56`
 - CICD VPC Tier:
   - IPv4 `172.16.0.0/20` (Class B Private Internet)
-  - IPv6 `2600:1f24:66:c300::/56`
+  - IPv4 Secondaries: `172.19.0.0/18`
+  - IPv6 `2600:1f24:66:c200::/56`
 
-Example VPC-NG architecture subnets:
-![vpc-ng](https://jq1-io.s3.amazonaws.com/base/aws-vpc.png)
+Dual Stack architecture reference:
+- [dual stack ipv6 architectures for aws and hybrid networks](https://aws.amazon.com/blogs/networking-and-content-delivery/dual-stack-ipv6-architectures-for-aws-and-hybrid-networks/)
+- [dual stack vpc with multiple ipv6 cidr blocks](https://aws.amazon.com/blogs/networking-and-content-delivery/architect-dual-stack-amazon-vpc-with-multiple-ipv6-cidr-blocks/)
 
-The resulting architecture is a hub and spoke topology (zoom out):
+The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out):
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
 # Caveats
@@ -57,10 +61,10 @@ When modifying an AZ or VPCs in an existing configuration with a TGW Centralized
 **This will be a demo of the following:**
 - Configure `us-west-2a` and `us-west-2b` AZs in `app` VPC.
   - Launch `app-public` instance in public subnet.
-- Configure `us-west-2b` AZ with NATGW in `cicd`
-  - Launch `cicd-private` instance in private subnet.
 - Configure `us-west-2c` AZ in `general` VPC.
   - Launch `general-private` instance in private subnet.
+- Configure `us-west-2b` AZ with NATGW in `cicd`
+  - Launch `cicd-private` instance in private subnet.
 - Configure security groups for access across VPCs.
   - Allow ssh and ping.
 - Configure routing between all public and private subnets accross VPCs
@@ -110,7 +114,7 @@ Now we'll:
 - Launch instances in each enabled AZ for all VPCs.
 - Route between VPCs via TGW.
 ```
-$ terraform apply -target module.intra_vpc_security_group_rules -target module.ipv6 intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
+$ terraform apply -target module.intra_vpc_security_group_rules -target module.ipv6_intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
 ```
 or just `$ terraform apply`
 
@@ -123,25 +127,25 @@ $ ./scripts/get_instance_info.sh
 Example output:
 ```
 # module.vpcs["app"].aws_vpc.this
-    default_security_id =  "sg-0e7180da18aa954e0"
+    default_security_group_id =  "sg-0a9cf13b2fbbaebce"
 
 # aws_instance.instances["app-public"]
-    private_ip                           = "10.0.3.11"
-    public_ip                            = "54.202.147.110"
+    private_ip                           = "10.0.3.8"
+    public_ip                            = "54.202.27.173"
     ipv6_addresses                       = [
-        "2600:1f24:66:c100:f93:c866:1f12:9b2f",
+        "2600:1f24:66:c000:c173:5dde:e3da:e64f",
     ]
 
 # aws_instance.instances["general-private"]
-    private_ip                           = "192.168.10.39"
+    private_ip                           = "192.168.10.119"
     ipv6_addresses                       = [
-        "2600:1f24:66:c300:ba65:efb7:7ded:bf6a",
+        "2600:1f24:66:c100:61d5:285f:4b36:52af",
     ]
 
 # aws_instance.instances["cicd-private"]
-    private_ip                           = "172.16.5.104"
+    private_ip                           = "172.16.5.205"
     ipv6_addresses                       = [
-        "2600:1f24:66:c200:e0de:f65:4e07:7f66",
+        "2600:1f24:66:c200:8d7d:5ec:b717:df5c",
     ]
 
 # My Public IP
@@ -155,51 +159,65 @@ aws ec2 authorize-security-group-ingress --region us-west-2 --group-id  "sg-0e71
 
 Run the `awscli` command from the output above to add an inbound ssh rule from "My Public IP" to the default security group id of the App VPC.
 
-Next, ssh to the `app-public` instance public IP (ie `54.187.241.115`) using the EC2 key pair private key.
+Next, ssh to the `app-public` instance public IP (ie `54.202.27.173`) using the EC2 key pair private key.
 
 Then, ssh to the `private_ip` of the `general-private` instance, then ssh to `cicd-private`, then ssh back to `app-public`.
 
 IPv4:
 ```
-$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.147.110
+$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 
 [ec2-user@app-public ~]$ ping google.com # works! via igw
-[ec2-user@app-public ~]$ ping 192.168.10.39 # works! via tgw
-[ec2-user@app-public ~]$ ssh 192.168.10.39
+[ec2-user@app-public ~]$ ping 192.168.10.119 # works! via tgw
+[ec2-user@app-public ~]$ ssh 192.168.10.119
 
 [ec2-user@general-private ~]$ ping google.com # doesn't work! no natgw
-[ec2-user@general-private ~]$ ping 172.16.5.104 # works! via tgw
-[ec2-user@general-private ~]$ ssh 172.16.5.104
+[ec2-user@general-private ~]$ ping 172.16.5.205 # works! via tgw
+[ec2-user@general-private ~]$ ssh 172.16.5.205
 
 [ec2-user@cicd-private ~]$ ping google.com # works! via natgw
-[ec2-user@cicd-private ~]$ ping 10.0.3.11 # works! via tgw
-[ec2-user@cicd-private ~]$ ssh 10.0.3.11
+[ec2-user@cicd-private ~]$ ping 10.0.3.8 # works! via tgw
+[ec2-user@cicd-private ~]$ ssh 10.0.3.8
 
 [ec2-user@app-public ~]$
 ```
 
 IPv6:
-Note about client ipv6 address or fall back to
+Note - If you want to ssh (`-6` flag) to app-public's ipv6 address, your client
+must also have a ipv6 address and another inbound rule must added to the
+app vpc default security group id from the clien'ts ipv6 address. Here
+we'll ssh via IPv4 first then test IPv6 internally.
 ```
-$ ssh -6 -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.187.241.115 # need ipv6
-address
+$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 
 [ec2-user@app-public ~]$ ping6 google.com # works! via igw
-[ec2-user@app-public ~]$ ping6 2600:1f24:66:c300:ba65:efb7:7ded:bf6a # works! via tgw
-[ec2-user@app-public ~]$ ssh -6 2600:1f24:66:c300:ba65:efb7:7ded:bf6a
+[ec2-user@app-public ~]$ ping6 2600:1f24:66:c100:61d5:285f:4b36:52af # works! via tgw
+[ec2-user@app-public ~]$ ssh -6 2600:1f24:66:c100:61d5:285f:4b36:52af
 
-[ec2-user@general-private ~]$ ping google.com # doesn't work! not opted-in to eigw
-[ec2-user@general-private ~]$ ping6 2600:1f24:66:c200:e0de:f65:4e07:7f66 # works! via tgw
-[ec2-user@general-private ~]$ ssh -6 2600:1f24:66:c200:e0de:f65:4e07:7f66
+[ec2-user@general-private ~]$ ping6 google.com # doesn't work! not opted-in to eigw
+[ec2-user@general-private ~]$ ping6 2600:1f24:66:c200:8d7d:5ec:b717:df5c # works! via tgw
+[ec2-user@general-private ~]$ ssh -6 2600:1f24:66:c200:8d7d:5ec:b717:df5c
 
 [ec2-user@cicd-private ~]$ ping6 google.com # works! via eigw opt-in
-[ec2-user@cicd-private ~]$ ping6 2600:1f24:66:c100:f93:c866:1f12:9b2f # works! via tgw
-[ec2-user@cicd-private ~]$ ssh -6 2600:1f24:66:c100:f93:c866:1f12:9b2f
+[ec2-user@cicd-private ~]$ ping6 2600:1f24:66:c000:c173:5dde:e3da:e64f # works! via tgw
+[ec2-user@cicd-private ~]$ ssh -6 2600:1f24:66:c000:c173:5dde:e3da:e64f
 
 [ec2-user@app-public ~]$
 ```
 🔻 Trifecta Complete!!!
 
 **Clean Up**
-$ terraform destroy
+`$ terraform destroy`
 
+Important:
+TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
+
+You can Ctrl-C to kill the apply when it tries to delete the vpcs (last
+step in destroy) or wait until the apply timeout (it will fail). Then if you apply the vpcs again `terraform apply
+-target module.vpcs` then TF will clean up missing VPCs from state. But you'll have to
+wait until AWS releases deleted cidrs from IPAM if you want to create
+them again.
+
+Found [this]( https://github.com/hashicorp/terraform-provider-aws/issues/31211) bug report.
+
+It does appear aws not releasing the allocation quickly is normal behavior. I can delete the vpc with no failure in the console UI and the allocation is not deleted. So it is a TF AWS provider bug. the possible [workaround](https://github.com/hashicorp/terraform-provider-aws/pull/34628) has yet to be merged. no graceful vpc destroy when using ipam is painful.
