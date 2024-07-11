@@ -1,6 +1,5 @@
 # This TGW Centralized router module will attach all vpcs (attachment for each AZ) to one TGW
-# associate and propagate to a single route table
-# generate and add routes in each VPC to all other networks.
+# and route to each other
 module "centralized_router" {
   #source  = "JudeQuintana/centralized-router/aws"
   #version = "1.0.1"

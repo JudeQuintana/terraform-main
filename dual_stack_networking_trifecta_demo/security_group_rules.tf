@@ -1,6 +1,7 @@
 # This will create a sg rule for each vpc's intra-vpc security group allowing inbound-only ports from all other vpc networks (excluding itself).
 # Basically allowing ssh and ping communication across all VPCs.
-# intra_vpc_security_group_rules only works for ipv4, need to add ipv6 still
+
+# IPv4
 locals {
   intra_vpc_security_group_rules = [
     {
@@ -33,6 +34,7 @@ module "intra_vpc_security_group_rules" {
   }
 }
 
+# IPv6
 locals {
   ipv6_intra_vpc_security_group_rules = [
     {
