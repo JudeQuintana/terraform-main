@@ -1,11 +1,3 @@
-TODO:
-- updating this readme for ipv6 is still a work in progress and
-  incomplete
-- manually created ipam pool (advanced tier) in AWS UI
-- You need to make your own IPv6 IPAM pools since my AWS Account owns
-  these specific IPv6 CIDRs (ie subnet your own) so the demo will not
-  work as is with other AWS accounts.
-
 ## Networking Trifecta Demo
 
 # Goal
@@ -37,24 +29,12 @@ Dual Stack architecture reference:
 The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out):
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
-# Caveats
-The modules build resources that will cost some money but should be minimal for the demo.
-
-Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the public subnets labeled as special for the AZ and is used for VPC attachments when passed to a Centralized Router.
-
-No overlapping CIDR detection or validation since the AWS provider will take care of that.
-
-When modifying an AZ or VPCs in an existing configuration with a TGW Centralized Router:
-  - Adding an AZ or VPC.
-    - The VPCs must be applied first.
-    - Then apply Intra Security Groups Rules and TGW Centralized Router.
-  - Removing
-    - An AZ being removed must have it's (special) public subnet for the AZ manually removed (modified) from the TGW VPC attachment then wait until state goes from `Modifying` to `Available` before applying (destroying) the AZ.
-    - A VPC being removed must have it's TGW attachment manually deleted then wait until state goes from `Deleting` to `Deleted` before applying (destroying) the VPC.
-      - Then apply Centralized Router to clean up routes in other VPCs that were pointing to the VPC that was deleted.
-        - Terraform should detect the manually deleted resources for vpc attachment, route table assocition, route propagation, etc and remove them from state.
-      - Then apply Intra VPC Security Group Rule to clean up SG Rules for the deleted VPC.
-    - Full teardown (destroy) works fine.
+# Pre-reqs
+- manually created ipam pools (advanced tier) in AWS UI
+  - detail IPAM configuration here TODO
+- You need to make your own IPv6 IPAM pools since my AWS Account owns
+  these specific IPv6 CIDRs (ie subnet your own) so the demo will not
+  work as is with other AWS accounts.
 
 # Trifecta Demo Time
 
@@ -208,6 +188,25 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 
 **Clean Up**
 `$ terraform destroy`
+
+# Caveats
+The modules build resources that will cost some money but should be minimal for the demo.
+
+Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the public subnets labeled as special for the AZ and is used for VPC attachments when passed to a Centralized Router.
+
+No overlapping CIDR detection or validation since the AWS provider will take care of that.
+
+When modifying an AZ or VPCs in an existing configuration with a TGW Centralized Router:
+  - Adding an AZ or VPC.
+    - The VPCs must be applied first.
+    - Then apply Intra Security Groups Rules and TGW Centralized Router.
+  - Removing
+    - An AZ being removed must have it's (special) public subnet for the AZ manually removed (modified) from the TGW VPC attachment then wait until state goes from `Modifying` to `Available` before applying (destroying) the AZ.
+    - A VPC being removed must have it's TGW attachment manually deleted then wait until state goes from `Deleting` to `Deleted` before applying (destroying) the VPC.
+      - Then apply Centralized Router to clean up routes in other VPCs that were pointing to the VPC that was deleted.
+        - Terraform should detect the manually deleted resources for vpc attachment, route table assocition, route propagation, etc and remove them from state.
+      - Then apply Intra VPC Security Group Rule to clean up SG Rules for the deleted VPC.
+    - Full teardown (destroy) mostly works (see below).
 
 Important:
 TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
