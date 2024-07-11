@@ -13,17 +13,17 @@ echo
 
 echo '# aws_instance.instances["app-public"]'
 terraform state show 'aws_instance.instances["app-public"]' | grep -E 'public_ip.*=.*"|private_ip.*=.*"'
-terraform state show 'aws_instance.instances["app-public"]'|grep -A2 ipv6_addresses
+terraform state show 'aws_instance.instances["app-public"]' | grep -A2 ipv6_addresses
 echo
 
 echo '# aws_instance.instances["general-private"]'
 terraform state show 'aws_instance.instances["general-private"]' | grep -E 'private_ip.*=.*"'
-terraform state show 'aws_instance.instances["general-private"]'|grep -A2 ipv6_addresses
+terraform state show 'aws_instance.instances["general-private"]'| grep -A2 ipv6_addresses
 echo
 
 echo '# aws_instance.instances["cicd-private"]'
 terraform state show 'aws_instance.instances["cicd-private"]' | grep -E 'private_ip.*=.*"'
-terraform state show 'aws_instance.instances["cicd-private"]'|grep -A2 ipv6_addresses
+terraform state show 'aws_instance.instances["cicd-private"]' | grep -A2 ipv6_addresses
 echo
 
 echo '# My Public IP'

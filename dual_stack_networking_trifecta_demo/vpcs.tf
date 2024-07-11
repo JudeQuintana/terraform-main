@@ -43,6 +43,7 @@ locals {
       }
       azs = {
         a = {
+          #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" }
           ]
@@ -56,11 +57,12 @@ locals {
           ]
         }
         b = {
+          #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "cluster2", cidr = "10.0.16.0/24", ipv6_cidr = "2600:1f24:66:c006::/64" },
-            { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", },
+            { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64" },
             # special can be assigned to a secondary cidr subnet and be used as a vpc attachemnt when passed to centralized router
-            { name = "random3", cidr = "10.1.0.0/24", ipv6_cidr = "2600:1f24:66:c009::/64", special = true }
+            { name = "random3", cidr = "10.1.16.0/24", ipv6_cidr = "2600:1f24:66:c009::/64", special = true }
           ]
         }
       }
@@ -68,7 +70,7 @@ locals {
     {
       name = "general"
       ipv4 = {
-        network_cidr = "192.168.0.0/20"
+        network_cidr = "192.168.0.0/18"
         ipam_pool    = local.ipv4_ipam_pool
       }
       ipv6 = {
@@ -77,11 +79,13 @@ locals {
       }
       azs = {
         c = {
+          #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "db1", cidr = "192.168.10.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true }
+            { name = "db1", cidr = "192.168.10.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true },
+            { name = "db2", cidr = "192.168.11.0/24", ipv6_cidr = "2600:1f24:66:c101::/64" }
           ]
           public_subnets = [
-            { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64" },
+            { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64" }
           ]
         }
       }
@@ -89,8 +93,8 @@ locals {
     {
       name = "cicd"
       ipv4 = {
-        network_cidr    = "172.16.0.0/20"
-        secondary_cidrs = ["172.17.0.0/20"]
+        network_cidr    = "172.16.0.0/18"
+        secondary_cidrs = ["172.19.0.0/18"] # aws recommends not using 172.17.0.0/16
         ipam_pool       = local.ipv4_ipam_pool
       }
       ipv6 = {
@@ -99,13 +103,15 @@ locals {
       }
       azs = {
         b = {
-          eigw = true
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "jenkins1", cidr = "172.16.5.0/24", ipv6_cidr = "2600:1f24:66:c200::/64" }
+            { name = "jenkins1", cidr = "172.16.5.0/24", ipv6_cidr = "2600:1f24:66:c200::/64" },
+            { name = "experiment1", cidr = "172.19.5.0/24", ipv6_cidr = "2600:1f24:66:c202::/64" }
           ]
           public_subnets = [
             { name = "other", cidr = "172.16.8.0/28", ipv6_cidr = "2600:1f24:66:c207::/64", special = true },
-            #{ name = "natgw", cidr = "172.16.8.16/28", ipv6_cidr = "2600:1f24:66:c208::/64", natgw = true }
+            # build natgw in public subnet for private ipv4 subnets to route out igw per az
+            { name = "natgw", cidr = "172.16.16.16/28", ipv6_cidr = "2600:1f24:66:c208::/64", natgw = true }
           ]
         }
       }
