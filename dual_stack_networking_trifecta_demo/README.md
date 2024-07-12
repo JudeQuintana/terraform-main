@@ -19,6 +19,8 @@ VPC CIDR Allocations:
   - IPv4 Secondaries: `172.19.0.0/18`
   - IPv6 `2600:1f24:66:c200::/56`
 
+VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
+
 Dual Stack architecture reference:
 - [dual stack ipv6 architectures for aws and hybrid networks](https://aws.amazon.com/blogs/networking-and-content-delivery/dual-stack-ipv6-architectures-for-aws-and-hybrid-networks/)
 - [dual stack vpc with multiple ipv6 cidr blocks](https://aws.amazon.com/blogs/networking-and-content-delivery/architect-dual-stack-amazon-vpc-with-multiple-ipv6-cidr-blocks/)
@@ -203,24 +205,18 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 # Caveats
 The modules build resources that will cost some money but should be minimal for the demo.
 
-Even though you can delete subnets in a VPC, remember that the NAT Gateways get created in the public subnets labeled as special for the AZ and is used for VPC attachments when passed to a Centralized Router.
+No overlapping CIDR detection or validation.
 
-No overlapping CIDR detection or validation since the AWS provider will take care of that.
+NATGWs can be built within a public subnet (only one allowed per AZ) with `natgw = true` to route private IPv4 subnets in the same AZ to the internet.
 
-When modifying an AZ or VPCs in an existing configuration with a TGW Centralized Router:
-  - Adding an AZ or VPC.
-    - The VPCs must be applied first.
-    - Then apply Intra Security Groups Rules and TGW Centralized Router.
-  - Removing
-    - An AZ being removed must have it's (special) public subnet for the AZ manually removed (modified) from the TGW VPC attachment then wait until state goes from `Modifying` to `Available` before applying (destroying) the AZ.
-    - A VPC being removed must have it's TGW attachment manually deleted then wait until state goes from `Deleting` to `Deleted` before applying (destroying) the VPC.
-      - Then apply Centralized Router to clean up routes in other VPCs that were pointing to the VPC that was deleted.
-        - Terraform should detect the manually deleted resources for vpc attachment, route table assocition, route propagation, etc and remove them from state.
-      - Then apply Intra VPC Security Group Rule to clean up SG Rules for the deleted VPC.
-    - Full teardown (destroy) mostly works (see below).
+EIGW is similar to NATGW but for IPv6 subnets but there can only be EIGW per VPC so any AZ with `eigw = true` is opt-in
+for private IPv6 subnets per AZ to route to the internet.
+
+Centralized Router will generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
 
 Important:
-TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
+
+Full teardown (destroy) mostly works (see below). TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
 
 You can Ctrl-C to kill the apply when it tries to delete the vpcs (last
 step in destroy) or wait until the apply timeout (it will fail). Then if you apply the vpcs again `terraform apply

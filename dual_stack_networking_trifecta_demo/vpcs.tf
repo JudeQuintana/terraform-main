@@ -28,6 +28,7 @@ locals {
 
 # ipv4 and ipv6 must use an ipam pool
 # can start with ipv4 only and then add ipv6 later if needed.
+# vpcs with an ipv4 network cidr /18 provides /20 subnet for each AZ.
 locals {
   tiered_vpcs = [
     {
