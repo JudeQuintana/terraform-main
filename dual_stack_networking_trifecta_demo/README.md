@@ -1,7 +1,7 @@
 ## Networking Trifecta Demo
 
 # Goal
-Using the latest Terraform (v1.3+) and AWS Provider (v4.20.0+)
+Using the latest Terraform (v1.4+) and AWS Provider (v4.20.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918) and
 IPv6 with IPAM using a Transit Gateway.
 
@@ -28,9 +28,24 @@ Dual Stack architecture reference:
 The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out):
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
-# Pre-reqs
+# Trifecta Demo Time
+
+**This will be a demo of the following:**
+- Configure `us-west-2a` and `us-west-2b` AZs in `app` VPC.
+  - Launch `app-public` instance in public subnet.
+- Configure `us-west-2c` AZ in `general` VPC.
+  - Launch `general-private` instance in private subnet.
+- Configure `us-west-2b` AZ with NATGW in `cicd`
+  - Launch `cicd-private` instance in private subnet.
+- Configure security groups for access across VPCs.
+  - Allow ssh and ping.
+- Configure routing between all public and private subnets accross VPCs
+via TGW.
+- Verify connectivity with `t2.micro` EC2 instances.
+- Minimal assembly required.
+
+**Pre-requisites:**
 - Manually create ipam pools (advanced tier) in AWS UI
-  - detail IPAM configuration here TODO
 - You need to make your own IPv6 IPAM pools since my AWS Account owns
   these specific IPv6 CIDRs (ie subnet your own) so the demo will not
   work as is with other AWS accounts.
@@ -49,33 +64,11 @@ IPAM Configuration:
     - Provisioned CIDRs:
       - `2600:1f24:66:c000::/54`
 
-# Trifecta Demo Time
-
-**This will be a demo of the following:**
-- Configure `us-west-2a` and `us-west-2b` AZs in `app` VPC.
-  - Launch `app-public` instance in public subnet.
-- Configure `us-west-2c` AZ in `general` VPC.
-  - Launch `general-private` instance in private subnet.
-- Configure `us-west-2b` AZ with NATGW in `cicd`
-  - Launch `cicd-private` instance in private subnet.
-- Configure security groups for access across VPCs.
-  - Allow ssh and ping.
-- Configure routing between all public and private subnets accross VPCs
-via TGW.
-- Verify connectivity with `t2.micro` EC2 instances.
-- Minimal assembly required.
-
-**Pre-requisites:**
-- git
-- curl
-- Terraform 1.4.0+
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
 user read only permissions.
     - private key saved as `~/.ssh/my-ec2-key.pem` on local machine.
-    - must be user read only permssions `chmod 400 ~/.ssh/my-ec2-key.pem`
-- IPAM preconfigured with a pool that allows multiple IPv6 /56 addresses
-  for a VPC.
+    - must be user read only permssions `chmod 400 ~/.ssh/my-ec2-key.pem` for a VPC.
 
 **Assemble the Trifecta** by cloning the [Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/) repo.
 ```
