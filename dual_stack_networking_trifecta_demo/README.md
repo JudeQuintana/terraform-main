@@ -1,6 +1,6 @@
-## Networking Trifecta Demo
+# Dual Stack Networking Trifecta Demo
 
-# Goal
+## Goal
 Using the latest Terraform (v1.4+) and AWS Provider (v4.20.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918) and
 IPv6 with IPAM using a Transit Gateway.
@@ -28,7 +28,7 @@ Dual Stack architecture reference:
 The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out):
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
-# Trifecta Demo Time
+## Trifecta Demo Time
 
 **This will be a demo of the following:**
 - Configure `us-west-2a` and `us-west-2b` AZs in `app` VPC.
@@ -195,7 +195,7 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 **Clean Up**
 `$ terraform destroy`
 
-# Caveats
+## Caveats
 The modules build resources that will cost some money but should be minimal for the demo.
 
 No overlapping CIDR detection or validation.
