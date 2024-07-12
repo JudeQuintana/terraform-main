@@ -5,20 +5,17 @@ Using the latest Terraform (v1.3+) and AWS Provider (v4.20.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918) and
 IPv6 with IPAM using a Transit Gateway.
 
-Preq:
-- IPAM with IPv4 and IPv6 address pools
-
 VPC CIDR Allocations:
 - App VPC Tier:
-  - IPv4 `10.0.0.0/20` (Class A Private Internet)
+  - IPv4 `10.0.0.0/18` (Class A Private Internet)
   - IPv4 Secondaries `10.1.0.0/18` and `10.2.0.0/18`
   - IPv6 `2600:1f24:66:c000::/56`
 - General VPC Tier:
-  - IPv4 `192.168.0.0/20` (Class C Private Internet)
+  - IPv4 `192.168.0.0/18` (Class C Private Internet)
   - No IPv4 Secondaries
   - IPv6 `2600:1f24:66:c100::/56`
 - CICD VPC Tier:
-  - IPv4 `172.16.0.0/20` (Class B Private Internet)
+  - IPv4 `172.16.0.0/18` (Class B Private Internet)
   - IPv4 Secondaries: `172.19.0.0/18`
   - IPv6 `2600:1f24:66:c200::/56`
 
@@ -30,11 +27,25 @@ The resulting architecture is a ipv4 only or a dual stack hub and spoke topology
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
 # Pre-reqs
-- manually created ipam pools (advanced tier) in AWS UI
+- Manually create ipam pools (advanced tier) in AWS UI
   - detail IPAM configuration here TODO
 - You need to make your own IPv6 IPAM pools since my AWS Account owns
   these specific IPv6 CIDRs (ie subnet your own) so the demo will not
   work as is with other AWS accounts.
+
+IPAM Configuration:
+- Advanced Tier IPAM in `us-west-2` operating reigon.
+  - IPv4 Pool (private scope)
+    - Provisioned CIDRs:
+      - `10.0.0.0/18`
+      - `10.1.0.0/18`
+      - `10.2.0.0/18`
+      - `172.16.0.0/18`
+      - `172.19.0.0/18`
+      - `192.168.0.0/18`
+  - IPv6 Pool (public scope)
+    - Provisioned CIDRs:
+      - `2600:1f24:66:c000::/54`
 
 # Trifecta Demo Time
 
