@@ -207,10 +207,11 @@ The modules build resources that will cost some money but should be minimal for 
 
 No overlapping CIDR detection or validation.
 
-NATGWs can be built within a public subnet (only one allowed per AZ) with `natgw = true` to route private IPv4 subnets in the same AZ to the internet.
-
-EIGW is similar to NATGW but for IPv6 subnets but there can only be EIGW per VPC so any AZ with `eigw = true` is opt-in
+Tiered VPC-NG:
+- NATGWs can be built within a public subnet (only one allowed per AZ) with `natgw = true` to route private IPv4 subnets in the same AZ to the internet.
+- EIGW is similar to NATGW but for IPv6 subnets but there can only be EIGW per VPC so any AZ with `eigw = true` is opt-in
 for private IPv6 subnets per AZ to route to the internet.
+- IGW auto toggles based on if public subnets (ipv4 or ipv6) are defined.
 
 Centralized Router will generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
 
