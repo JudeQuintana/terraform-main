@@ -60,11 +60,13 @@ Notes:
  - There is no overlapping CIDR detection inter-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
 
 Updates:
- - New dual stack versions of Tiered VPC-NG and Centralized Router at
-   `v1.0.2`
+ - New dual stack versions of Tiered VPC-NG and Centralized Router at `v1.0.2`
    - Requires IPAM Pools for IPv4 and IPv6 cidrs. (Previous versions were IPv4 only.)
-   - New IPv6 Intra VPC Security Group Rule module.
+   - New `v1.0.1` version for IPv4 Intra VPC Security Group Rule module is updated to provide support for IPv4 secondary cidrs.
+   - New `v1.0.0` IPv6 Intra VPC Security Group Rule module.
    - New Dual Stack Terraform Networking Trifecta Demo.
+   - Now that the base IPv4 networking modules also supports IPv4 secondary cidrs and IPv6 cidrs with auto routing, I plan to build dual stack implementations for Full Mesh Trio, VPC peering deluxe, IPv6 version of Full Mesh Intra VPC Security Group Rules and then, eventually, Mega Mesh. Looks like it's going be a long haul.
+
 
  - Demos have been updated to use Tiered VPC-NG and Centralized Router
    at `v1.0.1`.

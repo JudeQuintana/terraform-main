@@ -236,5 +236,4 @@ New Module:
 
 ## Looking forward
 Requiring IPAM for for dual stack VPCs is ideal for when scaling your cidr allocations.
-Now that the base IPv4 networking modules also supports IPv4 secondary
-cidrs and IPv6 cidrs with auto routing, I'd like to build dual stack implementations for Full Mesh Trio, VPC peering deluxe, IPv6 version of Full Mesh Intra VPC Security Group Rules and then, eventually, Mega Mesh. Looks like it's going be a long haul.
+Now that the base IPv4 networking modules also supports IPv4 secondary cidrs and IPv6 cidrs with auto routing, I plan to build dual stack implementations for Full Mesh Trio, VPC peering deluxe, IPv6 version of Full Mesh Intra VPC Security Group Rules and then, eventually, Mega Mesh. Looks like it's going be a long haul.
