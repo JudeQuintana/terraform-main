@@ -196,21 +196,7 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 `$ terraform destroy`
 
 ## Caveats
-The modules build resources that will cost some money but should be minimal for the demo.
-
-No overlapping CIDR detection or validation.
-
-Tiered VPC-NG:
-- NATGWs can be built within a public subnet (only one allowed per AZ) with `natgw = true` to route private IPv4 subnets in the same AZ to the internet.
-- EIGW is similar to NATGW but for IPv6 subnets but there can only be EIGW per VPC so any AZ with `eigw = true` is opt-in
-for private IPv6 subnets per AZ to route to the internet.
-- IGW auto toggles based on if public subnets (ipv4 or ipv6) are defined.
-
-Centralized Router will generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
-
-Important:
-
-Full teardown (destroy) mostly works (see below). TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
+Full teardown (destroy) mostly works. TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
 
 You can Ctrl-C to kill the apply when it tries to delete the vpcs (last
 step in destroy) or wait until the apply timeout (it will fail). Then if you apply the vpcs again `terraform apply
@@ -221,3 +207,31 @@ them again.
 Found [this]( https://github.com/hashicorp/terraform-provider-aws/issues/31211) bug report.
 
 It does appear aws not releasing the allocation quickly is normal behavior. I can delete the vpc with no failure in the console UI and the allocation is not deleted. So it is a TF AWS provider bug. the possible [workaround](https://github.com/hashicorp/terraform-provider-aws/pull/34628) has yet to be merged. no graceful vpc destroy when using ipam is painful.
+The modules build resources that will cost some money but should be minimal for the demo.
+
+There is no overlapping CIDR detection or validation.
+
+## Version info
+Tiered VPC-NG `v1.0.2`:
+- Requires IPAM Pools for both IPv4 and IPv6 cidrs.
+  - Advanced Tier recommended.
+  - Can start with IPv4 only then add IPv6 at a later time, or start with both.
+- NATGWs can be built within a public subnet (only one allowed per AZ) with `natgw = true` to route private IPv4 subnets in the same AZ to the internet.
+- EIGW is similar to NATGW but for IPv6 subnets but there can only be EIGW per VPC so any AZ with `eigw = true` is opt-in
+for private IPv6 subnets per AZ to route to the internet.
+- IGW auto toggles based on if public subnets (ipv4 or ipv6) are defined.
+- `special = true` can be assigned to a secondary subnet cidr (public or private IPv4).
+  - Can be used as a vpc attachemnt when passed to centralized router.
+
+Centralized Router `v1.0.2`:
+- generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
+
+New Module:
+- IPv6 Intra VPC Security Group Rule
+ - IPv6 only and separate from the IPv4 version of Intra VPC Security
+   Group Rules.
+
+## Looking forward
+Requiring IPAM for for dual stack VPCs is ideal for when scaling your cidr allocations.
+Now that the base IPv4 networking modules also supports IPv4 secondary
+cidrs and IPv6 cidrs with auto routing, I'd like to build dual stack implementations for Full Mesh Trio, VPC peering deluxe, IPv6 version of Full Mesh Intra VPC Security Group Rules and then, eventually, Mega Mesh. Looks like it's going be a long haul.
