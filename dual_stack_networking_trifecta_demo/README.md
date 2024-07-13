@@ -225,6 +225,7 @@ for private IPv6 subnets per AZ to route to the internet.
 - IGW continues to auto toggles based on if public subnets (ipv4 or ipv6) are defined.
 - `special = true` can be assigned to a secondary subnet cidr (public or private).
   - Can be used as a vpc attachemnt when passed to centralized router.
+  - EIPs dont use a public pool and will continue to be AWS owned public IPv4 cidrs
 
 Centralized Router `v1.0.2`:
 - generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
