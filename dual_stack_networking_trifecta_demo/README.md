@@ -222,8 +222,8 @@ Tiered VPC-NG `v1.0.2`:
 - NATGWs can be built within a public subnet (only one allowed per AZ) with `natgw = true` to route private IPv4 subnets in the same AZ to the internet.
 - EIGW is similar to NATGW but for IPv6 subnets but there can only be EIGW per VPC so any AZ with `eigw = true` is opt-in
 for private IPv6 subnets per AZ to route to the internet.
-- IGW auto toggles based on if public subnets (ipv4 or ipv6) are defined.
-- `special = true` can be assigned to a secondary subnet cidr (public or private IPv4).
+- IGW continues to auto toggles based on if public subnets (ipv4 or ipv6) are defined.
+- `special = true` can be assigned to a secondary subnet cidr (public or private).
   - Can be used as a vpc attachemnt when passed to centralized router.
 
 Centralized Router `v1.0.2`:
