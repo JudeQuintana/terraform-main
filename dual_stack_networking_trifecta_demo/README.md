@@ -1,4 +1,7 @@
 # Dual Stack Networking Trifecta Demo
+- The dual stack version of the IPv4 only Networking Trifecta demo (tnt) with
+IPv6 via IPAM.
+- Demo does not work as-is because my AWS account owns these IPv6 CIDRs and you need to configure your own IPv4 and IPv6 cidr pools.
 
 ## Goal
 Using the latest Terraform (v1.4+) and AWS Provider (v4.20.0+)
@@ -45,7 +48,7 @@ via TGW.
 - Minimal assembly required.
 
 **Pre-requisites:**
-- Manually create ipam pools (advanced tier) in AWS UI
+- There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
 - You need to make your own IPv6 IPAM pools since my AWS Account owns
   these specific IPv6 CIDRs (ie subnet your own) so the demo will not
   work as is with other AWS accounts.
