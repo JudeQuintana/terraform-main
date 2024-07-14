@@ -10,7 +10,7 @@ variable "base_region" {
   default     = "us-west-2"
 }
 
-variable "base_ec2_instance_attributes" {
+variable "ec2_instances" {
   description = "base attributes for building in us-west-2"
   type = object({
     key_name      = string

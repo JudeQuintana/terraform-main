@@ -62,8 +62,8 @@ resource "aws_instance" "instances" {
   for_each = { for i in local.instances : i.name => i }
 
   ami                    = data.aws_ami.al2023.id
-  instance_type          = var.base_ec2_instance_attributes.instance_type
-  key_name               = var.base_ec2_instance_attributes.key_name
+  instance_type          = var.ec2_instances.instance_type
+  key_name               = var.ec2_instances.key_name
   subnet_id              = each.value.subnet_id
   vpc_security_group_ids = each.value.vpc_security_group_ids
   user_data              = <<EOF
