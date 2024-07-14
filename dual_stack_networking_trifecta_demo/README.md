@@ -29,6 +29,7 @@ Dual Stack architecture reference:
 - [dual stack vpc with multiple ipv6 cidr blocks](https://aws.amazon.com/blogs/networking-and-content-delivery/architect-dual-stack-amazon-vpc-with-multiple-ipv6-cidr-blocks/)
 
 The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out):
+Note: pic is old but VPCs in the demo will have /18
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
 ## Trifecta Demo Time
