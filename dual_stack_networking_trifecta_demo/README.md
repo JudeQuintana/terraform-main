@@ -197,16 +197,15 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 
 **Clean Up**
 `$ terraform destroy`
+- Full teardown (destroy) works for AWS provider 5.58.0 but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM like before (see below). Not sure exacly what the fix was.
 
 ## Caveats
-- Full teardown (destroy) mostly works. TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
-
-- You can Ctrl-C to kill the apply when it tries to delete the vpcs (last step in destroy) or wait until the apply timeout (it will fail). Then if you apply the vpcs again `terraform apply -target module.vpcs` then TF will clean up missing VPCs from state. But you'll have to
+- Full teardown (destroy) mostly works for AWS provider 5.51.1 and earlier. TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
+  - You can Ctrl-C to kill the apply when it tries to delete the vpcs (last step in destroy) or wait until the apply timeout (it will fail). Then if you apply the vpcs again `terraform apply -target module.vpcs` then TF will clean up missing VPCs from state. But you'll have to
 wait until AWS releases deleted cidrs from IPAM if you want to create them again.
+  - Found [this]( https://github.com/hashicorp/terraform-provider-aws/issues/31211) bug report.
 
-- Found [this]( https://github.com/hashicorp/terraform-provider-aws/issues/31211) bug report.
-
-- It does appear aws not releasing the allocation quickly is normal behavior. I can delete the vpc with no failure in the console UI and the allocation is not deleted. So it is a TF AWS provider bug. the possible [workaround](https://github.com/hashicorp/terraform-provider-aws/pull/34628) has yet to be merged. no graceful vpc destroy when using ipam is painful
+  - It does appear aws not releasing the allocation quickly is normal behavior. I can delete the vpc with no failure in the console UI and the allocation is not deleted. So it is a TF AWS provider bug. the possible [workaround](https://github.com/hashicorp/terraform-provider-aws/pull/34628) has yet to be merged. no graceful vpc destroy when using ipam is painful
 
 - The modules build resources that will cost some money but should be minimal for the demo.
 
