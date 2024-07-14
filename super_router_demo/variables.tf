@@ -4,18 +4,6 @@ variable "env_prefix" {
   default     = "test"
 }
 
-variable "base_region_usw2" {
-  description = "base region/same acct"
-  type        = string
-  default     = "us-west-2"
-}
-
-variable "cross_region_use1" {
-  description = "cross region/same acct"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "region_az_labels" {
   description = "Update this map with regions and AZs that will be in use for short name labeling"
   type        = map(string)

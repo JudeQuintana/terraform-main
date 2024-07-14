@@ -8,7 +8,7 @@ set -euo pipefail
 
 echo '# module.vpcs["app"].aws_vpc.this'
 app_vpc_default_sg=`terraform state show 'module.vpcs["app"].aws_vpc.this' | grep 'default_security_group_id' | cut -f2 -d '='`
-echo "    default_security_id = $app_vpc_default_sg"
+echo "    default_security_group_id = $app_vpc_default_sg"
 echo
 
 echo '# aws_instance.instances["app-public"]'

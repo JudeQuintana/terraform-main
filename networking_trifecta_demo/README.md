@@ -81,13 +81,14 @@ $ cd networking_trifecta_demo
 ```
 
 Update the `var.base_ec2_instance_attributes.key_name` in [variables.tf](https://github.com/JudeQuintana/terraform-main/blob/main/networking_trifecta_demo/variables.tf#L21) with the EC2 key pair name you're using for the `us-west-2` region (see pre-requisites above).
+
+Note: the AMI used is lookedup via data source
 ```
 # snippet
 variable "base_ec2_instance_attributes" {
   ...
   default = {
     key_name      = "my-ec2-key"            # EC2 key pair name to use when launching an instance
-    ami           = "ami-0518bb0e75d3619ca" # AWS Linux 2 us-west-2
     instance_type = "t2.micro"
   }
 }
@@ -119,7 +120,7 @@ $ ./scripts/get_instance_info.sh
 Example output:
 ```
 # module.vpcs["app"].aws_vpc.this
-    default_security_id =  "sg-12345678"
+    default_security_group_id =  "sg-12345678"
 
 # aws_instance.instances["app-public"]
     private_ip                           = "10.0.3.200"

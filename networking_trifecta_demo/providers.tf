@@ -5,5 +5,5 @@
 # Which is why I still use a default tags merging
 # pattern in each module.
 provider "aws" {
-  region = var.base_region
+  region = "us-west-2"
 }

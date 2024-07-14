@@ -13,13 +13,11 @@ variable "base_region" {
 variable "base_ec2_instance_attributes" {
   description = "base attributes for building in us-west-2"
   type = object({
-    ami           = string
     key_name      = string
     instance_type = string
   })
   default = {
-    key_name      = "my-ec2-key"            # EC2 key pair name to use when launching an instance in us-west-2
-    ami           = "ami-06efb824bfe850db6" # AWS Linux 2023 us-west-2 HVM 64-bit x86
+    key_name      = "my-ec2-key" # EC2 key pair name to use when launching an instance in us-west-2
     instance_type = "t2.micro"
   }
 }

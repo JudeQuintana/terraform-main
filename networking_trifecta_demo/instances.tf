@@ -38,6 +38,21 @@ locals {
   ]
 }
 
+data "aws_ami" "al2023" {
+  owners      = ["amazon"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-kernel-5.10-hvm-2.0.*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+}
+
 # The .ssh/config is forwarding the private key to any host
 # so you can easily ssh to each instance since instances are
 # ssh key only.
@@ -46,7 +61,7 @@ locals {
 resource "aws_instance" "instances" {
   for_each = { for i in local.instances : i.name => i }
 
-  ami                    = var.base_ec2_instance_attributes.ami
+  ami                    = data.aws_ami.al2023.id
   instance_type          = var.base_ec2_instance_attributes.instance_type
   key_name               = var.base_ec2_instance_attributes.key_name
   subnet_id              = each.value.subnet_id
