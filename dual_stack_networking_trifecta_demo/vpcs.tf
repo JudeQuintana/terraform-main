@@ -121,9 +121,8 @@ locals {
 }
 
 module "vpcs" {
-  #source  = "JudeQuintana/tiered-vpc-ng/aws"
-  #version = "1.0.1"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=ipv6-for-tiered-vpc-ng"
+  source  = "JudeQuintana/tiered-vpc-ng/aws"
+  version = "1.0.2"
 
   for_each = { for t in local.tiered_vpcs : t.name => t }
 
