@@ -30,7 +30,7 @@ Dual Stack architecture reference:
 
 The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out).
 Note: pic is old but VPCs in the demo will have /18s which allows for up
-to four /20s:
+to four /20s to use per AZ:
 
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
