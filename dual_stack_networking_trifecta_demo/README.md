@@ -1,10 +1,10 @@
 # Dual Stack Networking Trifecta Demo
-- The dual stack version of the IPv4 only Networking Trifecta demo (tnt) with
+- The dual stack version of the (IPv4 only) [Networking Trifecta demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo).
 IPv6 via IPAM.
 - Demo does not work as-is because my AWS account owns these IPv6 CIDRs and you need to configure your own IPv4 and IPv6 cidr pools.
 
 ## Goal
-Using the latest Terraform (v1.4+) and AWS Provider (v4.20.0+)
+Using the latest Terraform (v1.9.0+) and AWS Provider (v5.58.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918) and
 IPv6 with IPAM using a Transit Gateway.
 
@@ -28,8 +28,9 @@ Dual Stack architecture reference:
 - [dual stack ipv6 architectures for aws and hybrid networks](https://aws.amazon.com/blogs/networking-and-content-delivery/dual-stack-ipv6-architectures-for-aws-and-hybrid-networks/)
 - [dual stack vpc with multiple ipv6 cidr blocks](https://aws.amazon.com/blogs/networking-and-content-delivery/architect-dual-stack-amazon-vpc-with-multiple-ipv6-cidr-blocks/)
 
-The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out):
-Note: pic is old but VPCs in the demo will have /18s: 
+The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out).
+Note: pic is old but VPCs in the demo will have /18s which allows for up
+to four /20s:
 
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
@@ -51,8 +52,8 @@ via TGW.
 
 **Pre-requisites:**
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
-- You need to make your own IPv6 IPAM pools since my AWS Account owns
-  these specific IPv6 CIDRs (ie subnet your own) so the demo will not
+- You need to make your own IPv6 IPAM pools since my AWS Account has
+  allocations from these specific AWS owned IPv6 CIDRs (ie subnet your own) so the demo will not
   work as is with other AWS accounts.
 
 IPAM Configuration:
@@ -174,9 +175,9 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
 ```
 
 IPv6:
-Note - If you want to ssh (`-6` flag) to app-public's ipv6 address, your client
+Note - If you want to ssh (`-6` flag) to app-public's ipv6 address then your client
 must also have a ipv6 address and another inbound rule must added to the
-app vpc default security group id from the clien'ts ipv6 address. Here
+app vpc default security group from the client's ipv6 address. Here
 we'll ssh via IPv4 first then test IPv6 internally.
 ```
 $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
