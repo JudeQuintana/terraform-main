@@ -1,6 +1,5 @@
 # Dual Stack Networking Trifecta Demo
 - The dual stack version of the (IPv4 only) [Networking Trifecta demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo).
-IPv6 via IPAM.
 - Demo does not work as-is because my AWS account owns these IPv6 CIDRs and you need to configure your own IPv4 and IPv6 cidr pools.
 
 ## Goal
