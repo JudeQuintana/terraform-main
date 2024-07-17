@@ -13,6 +13,12 @@
 --=[ #StayUp ]=--
 ```
 
+## NEW Dual Stack TNT Architecture!
+[Dual Stack Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_networking_trifecta_demo)
+ - Compose a hub and spoke Transit Gateway topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) (at `v1.0.2`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) (at `v1.0.2`) modules.
+ - Requires IPAM Pools for IPv4 and IPv6 cidrs.
+ - Validate connectivity with EC2 instances.
+
 ## TNT Architecture!
 [Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
  - Compose a hub and spoke Transit Gateway topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) (at `v1.0.1`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) (at `v1.0.1`) modules.
@@ -37,12 +43,6 @@
  - Compose a Full Mesh Transit Gateway topology across 10 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) (at `v1.0.1`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) (at `v1.0.1`) and [Mega Mesh](https://github.com/JudeQuintana/terraform-aws-mega-mesh) (at `v1.0.0`) modules.
  - IPv4 only (no IPAM).
  - Validate connectivity with AWS Route Analyzer.
-
-## NEW Dual Stack TNT Architecture!
-[Dual Stack Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_networking_trifecta_demo)
- - Compose a hub and spoke Transit Gateway topology using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng) (at `v1.0.2`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router) (at `v1.0.2`) modules.
- - Requires IPAM Pools for IPv4 and IPv6 cidrs.
- - Validate connectivity with EC2 instances.
 
 ---
 Notes:
