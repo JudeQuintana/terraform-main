@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.base_region_usw2
+  region = "us-west-2"
 }
 
 provider "aws" {
