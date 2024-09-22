@@ -171,8 +171,8 @@ module "ipv6_intra_vpc_security_group_rules_usw2" {
 }
 
 module "ipv6_full_mesh_intra_vpc_security_group_rules" {
-  #source  = "JudeQuintana/full-mesh-intra-vpc-security-group-rules/aws"
-  #version = "1.0.1"
+  #source  = "JudeQuintana/ipv6-full-mesh-intra-vpc-security-group-rules/aws"
+  #version = "1.0.0"
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/ipv6_full_mesh_intra_vpc_security_group_rules?ref=dual-stack-full-mesh-trio"
 
   providers = {
