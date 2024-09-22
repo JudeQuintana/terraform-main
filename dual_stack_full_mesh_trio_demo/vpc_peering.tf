@@ -12,14 +12,18 @@ module "vpc_peering_deluxe_use1_general3_to_use2_app1" {
   env_prefix = var.env_prefix
   vpc_peering_deluxe = {
     local = {
-      vpc                          = lookup(module.vpcs_use1, "general3")
-      only_route_subnet_cidrs      = ["192.168.65.0/24"]
-      only_route_ipv6_subnet_cidrs = ["2600:1f28:3d:c400::/64"]
+      vpc = lookup(module.vpcs_use1, "general3")
+      only_route = {
+        subnet_cidrs      = ["192.168.65.0/24"]
+        ipv6_subnet_cidrs = ["2600:1f28:3d:c400::/64"]
+      }
     }
     peer = {
-      vpc                          = lookup(module.vpcs_use2, "app1")
-      only_route_subnet_cidrs      = ["172.16.128.0/24"]
-      only_route_ipv6_subnet_cidrs = ["2600:1f26:21:c004::/64"]
+      vpc = lookup(module.vpcs_use2, "app1")
+      only_route = {
+        subnet_cidrs      = ["172.16.128.0/24"]
+        ipv6_subnet_cidrs = ["2600:1f26:21:c004::/64"]
+      }
     }
   }
 }
