@@ -1,6 +1,6 @@
 locals {
   # allow all ssh and ping communication between all VPCs within each region's intra-vpc security group
-  intra_vpc_security_group_rules = [
+  security_group_rules = [
     {
       label     = "ssh"
       protocol  = "tcp"
@@ -14,6 +14,8 @@ locals {
       to_port   = 0
     }
   ]
+
+  intra_vpc_security_group_rules = { for r in local.security_group_rules : r.label => r }
 }
 
 module "intra_vpc_security_group_rules_use1" {
@@ -24,7 +26,7 @@ module "intra_vpc_security_group_rules_use1" {
     aws = aws.use1
   }
 
-  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  for_each = local.intra_vpc_security_group_rules
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -42,7 +44,7 @@ module "intra_vpc_security_group_rules_use2" {
     aws = aws.use2
   }
 
-  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  for_each = local.intra_vpc_security_group_rules
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -60,7 +62,7 @@ module "intra_vpc_security_group_rules_usw2" {
     aws = aws.usw2
   }
 
-  for_each = { for r in local.intra_vpc_security_group_rules : r.label => r }
+  for_each = local.intra_vpc_security_group_rules
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -99,7 +101,7 @@ module "full_mesh_intra_vpc_security_group_rules" {
 
 # IPv6
 locals {
-  ipv6_intra_vpc_security_group_rules = [
+  ipv6_security_group_rules = [
     {
       label     = "ssh6"
       protocol  = "tcp"
@@ -113,6 +115,8 @@ locals {
       to_port   = -1
     }
   ]
+
+  ipv6_intra_vpc_security_group_rules = { for r in local.ipv6_security_group_rules : r.label => r }
 }
 
 module "ipv6_intra_vpc_security_group_rules_use1" {
@@ -123,7 +127,7 @@ module "ipv6_intra_vpc_security_group_rules_use1" {
     aws = aws.use1
   }
 
-  for_each = { for r in local.ipv6_intra_vpc_security_group_rules : r.label => r }
+  for_each = local.ipv6_intra_vpc_security_group_rules
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -142,7 +146,7 @@ module "ipv6_intra_vpc_security_group_rules_use2" {
     aws = aws.use2
   }
 
-  for_each = { for r in local.ipv6_intra_vpc_security_group_rules : r.label => r }
+  for_each = local.ipv6_intra_vpc_security_group_rules
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
@@ -160,7 +164,7 @@ module "ipv6_intra_vpc_security_group_rules_usw2" {
     aws = aws.usw2
   }
 
-  for_each = { for r in local.ipv6_intra_vpc_security_group_rules : r.label => r }
+  for_each = local.ipv6_intra_vpc_security_group_rules
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
