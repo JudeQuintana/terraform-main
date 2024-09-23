@@ -52,7 +52,6 @@ locals {
           public_subnets = [
             { name = "random1", cidr = "10.0.66.0/28", ipv6_cidr = "2600:1f28:3d:c001::/64", special = true },
             { name = "haproxy1", cidr = "10.0.67.64/26", ipv6_cidr = "2600:1f28:3d:c002::/64" }
-
           ]
         }
         b = {
@@ -61,7 +60,7 @@ locals {
           ]
           public_subnets = [
             { name = "random2", cidr = "10.0.72.0/28", ipv6_cidr = "2600:1f28:3d:c004::/64", special = true },
-            { name = "haproxy2", cidr = "10.0.73.64/26", ipv6_cidr = "2600:1f28:3d:c005::/64", },
+            { name = "haproxy2", cidr = "10.0.73.64/26", ipv6_cidr = "2600:1f28:3d:c005::/64" },
             #secondary subnet
             { name = "other1", cidr = "10.1.64.0/24", ipv6_cidr = "2600:1f28:3d:c006::/64" }
           ]
@@ -86,7 +85,7 @@ locals {
           ]
           public_subnets = [
             { name = "random2", cidr = "192.168.67.0/28", ipv6_cidr = "2600:1f28:3d:c401::/64", special = true },
-            { name = "haproxy1", cidr = "192.168.68.64/26", ipv6_cidr = "2600:1f28:3d:c402::/64" },
+            { name = "haproxy1", cidr = "192.168.68.64/26", ipv6_cidr = "2600:1f28:3d:c402::/64" }
           ]
         }
         c = {
@@ -96,7 +95,7 @@ locals {
           public_subnets = [
             { name = "random3", cidr = "192.168.71.0/28", ipv6_cidr = "2600:1f28:3d:c404::/64", special = true },
             { name = "haproxy3", cidr = "192.168.72.64/26", ipv6_cidr = "2600:1f28:3d:c405::/64" },
-            #secondary subnet
+            # secondary subnet
             { name = "haproxy2", cidr = "192.168.128.0/24", ipv6_cidr = "2600:1f28:3d:c406::/64" }
           ]
         }

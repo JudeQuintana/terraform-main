@@ -66,8 +66,8 @@ locals {
           private_subnets = [
             { name = "cluster2", cidr = "10.0.16.0/24", ipv6_cidr = "2600:1f24:66:c006::/64" },
             { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", special = true },
-            #secondary subnet
-            { name = "random3", cidr = "10.1.0.0/24", ipv6_cidr = "2600:1f24:66:c009::/64", }
+            # secondary subnet
+            { name = "random3", cidr = "10.1.0.0/24", ipv6_cidr = "2600:1f24:66:c009::/64" }
           ]
         }
       }
@@ -92,7 +92,7 @@ locals {
           ]
           public_subnets = [
             { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64" },
-            #secondary subnet
+            # secondary subnet
             { name = "other3", cidr = "192.168.144.0/24", ipv6_cidr = "2600:1f24:66:c109::/64" }
           ]
         }

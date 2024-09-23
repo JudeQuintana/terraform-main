@@ -47,13 +47,12 @@ locals {
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "jenkins1", cidr = "172.16.5.0/24", ipv6_cidr = "2600:1f26:21:c001::/64" },
-            #{ name = "experiment1", cidr = "172.19.5.0/24", ipv6_cidr = "2600:1f26:21:c202::/64" }
+            # secondary cidr
+            { name = "experiment1", cidr = "172.16.128.0/24", ipv6_cidr = "2600:1f26:21:c004::/64" }
           ]
           public_subnets = [
             { name = "other", cidr = "172.16.8.0/28", ipv6_cidr = "2600:1f26:21:c002::/64", special = true },
-            { name = "other2", cidr = "172.16.16.16/28", ipv6_cidr = "2600:1f26:21:c003::/64" },
-            #secondary cidr
-            { name = "other3", cidr = "172.16.128.0/24", ipv6_cidr = "2600:1f26:21:c004::/64" },
+            { name = "other2", cidr = "172.16.16.16/28", ipv6_cidr = "2600:1f26:21:c003::/64" }
           ]
         }
       }
@@ -73,7 +72,6 @@ locals {
         a = {
           private_subnets = [
             { name = "artifacts2", cidr = "172.16.65.0/24", ipv6_cidr = "2600:1f26:21:c101::/64" }
-
           ]
           public_subnets = [
             { name = "random1", cidr = "172.16.66.0/28", ipv6_cidr = "2600:1f26:21:c102::/64", special = true }
@@ -87,7 +85,6 @@ locals {
             { name = "random2", cidr = "172.16.68.0/28", ipv6_cidr = "2600:1f26:21:c104::/64" },
             #secondary cidr
             { name = "random3", cidr = "172.16.144.0/24", ipv6_cidr = "2600:1f26:21:c105::/64" }
-
           ]
         }
       }
