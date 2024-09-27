@@ -21,7 +21,7 @@ module "vpc_peering_deluxe_use1_general3_to_use2_app1" {
     peer = {
       vpc = lookup(module.vpcs_use2, "app1")
       only_route = {
-        subnet_cidrs      = ["172.16.128.0/24"]
+        subnet_cidrs      = ["172.16.68.0/28"]
         ipv6_subnet_cidrs = ["2600:1f26:21:c004::/64"]
       }
     }

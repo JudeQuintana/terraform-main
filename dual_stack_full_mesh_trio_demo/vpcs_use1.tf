@@ -105,8 +105,9 @@ locals {
 }
 
 module "vpcs_use1" {
-  source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.2"
+  #source  = "JudeQuintana/tiered-vpc-ng/aws"
+  #version = "1.0.2"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
 
   providers = {
     aws = aws.use1

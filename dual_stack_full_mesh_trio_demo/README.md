@@ -16,3 +16,7 @@
   - `terraform apply -target module.full_mesh_trio`
 
 Note: combine steps 3 through 5 with: `terraform apply`
+
+Tear down:
+ - `terraform destroy`
+

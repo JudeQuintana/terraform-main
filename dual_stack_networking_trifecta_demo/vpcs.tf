@@ -2,7 +2,7 @@
 data "aws_vpc_ipam_pool" "ipv4" {
   filter {
     name   = "description"
-    values = ["ipv4-test"]
+    values = ["ipv4-test-usw2"]
   }
   filter {
     name   = "address-family"
@@ -13,7 +13,7 @@ data "aws_vpc_ipam_pool" "ipv4" {
 data "aws_vpc_ipam_pool" "ipv6" {
   filter {
     name   = "description"
-    values = ["ipv6-test"]
+    values = ["ipv6-test-usw2"]
   }
   filter {
     name   = "address-family"
@@ -24,18 +24,17 @@ data "aws_vpc_ipam_pool" "ipv6" {
 locals {
   ipv4_ipam_pool = data.aws_vpc_ipam_pool.ipv4
   ipv6_ipam_pool = data.aws_vpc_ipam_pool.ipv6
-}
 
-# ipv4 and ipv6 must use an ipam pool
-# can start with ipv4 only and then add ipv6 later if needed.
-# vpcs with an ipv4 network cidr /18 provides /20 subnet for each AZ.
-locals {
+  # ipv4 and ipv6 must use an ipam pool
+  # can start with ipv4 only and then add ipv6 later if needed.
+  # vpcs with an ipv4 network cidr /18 provides /20 subnet for each AZ.
+
   tiered_vpcs = [
     {
       name = "app"
       ipv4 = {
         network_cidr    = "10.0.0.0/18"
-        secondary_cidrs = ["10.1.0.0/18", "10.2.0.0/18"]
+        secondary_cidrs = ["10.1.0.0/20", "10.2.0.0/20"]
         ipam_pool       = local.ipv4_ipam_pool
       }
       ipv6 = {
@@ -63,7 +62,7 @@ locals {
             { name = "cluster2", cidr = "10.0.16.0/24", ipv6_cidr = "2600:1f24:66:c006::/64" },
             { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64" },
             # special can be assigned to a secondary cidr subnet and be used as a vpc attachemnt when passed to centralized router
-            { name = "random3", cidr = "10.1.16.0/24", ipv6_cidr = "2600:1f24:66:c009::/64", special = true }
+            { name = "random3", cidr = "10.1.5.0/24", ipv6_cidr = "2600:1f24:66:c009::/64", special = true }
           ]
         }
       }
@@ -95,7 +94,7 @@ locals {
       name = "cicd"
       ipv4 = {
         network_cidr    = "172.16.0.0/18"
-        secondary_cidrs = ["172.19.0.0/18"] # aws recommends not using 172.17.0.0/16
+        secondary_cidrs = ["172.19.0.0/20"] # aws recommends not using 172.17.0.0/16
         ipam_pool       = local.ipv4_ipam_pool
       }
       ipv6 = {
@@ -118,11 +117,14 @@ locals {
       }
     }
   ]
+
 }
 
 module "vpcs" {
-  source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.2"
+  #source  = "JudeQuintana/tiered-vpc-ng/aws"
+  #version = "1.0.2"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
+
 
   for_each = { for t in local.tiered_vpcs : t.name => t }
 

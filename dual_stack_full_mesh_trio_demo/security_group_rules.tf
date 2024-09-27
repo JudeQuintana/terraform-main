@@ -120,8 +120,9 @@ locals {
 }
 
 module "ipv6_intra_vpc_security_group_rules_use1" {
-  source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
-  version = "1.0.0"
+  #source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
+  #version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/ipv6_intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
 
   providers = {
     aws = aws.use1
@@ -139,8 +140,10 @@ module "ipv6_intra_vpc_security_group_rules_use1" {
 
 
 module "ipv6_intra_vpc_security_group_rules_use2" {
-  source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
-  version = "1.0.0"
+  #source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
+  #version = "1.0.0"
+  #source = "/Users/jude/projects/terraform-modules/networking/ipv6_intra_vpc_security_group_rule_for_tiered_vpc_ng"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/ipv6_intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
 
   providers = {
     aws = aws.use2
@@ -157,8 +160,9 @@ module "ipv6_intra_vpc_security_group_rules_use2" {
 }
 
 module "ipv6_intra_vpc_security_group_rules_usw2" {
-  source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
-  version = "1.0.0"
+  #source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
+  #version = "1.0.0"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/ipv6_intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
 
   providers = {
     aws = aws.usw2

@@ -34,25 +34,30 @@ locals {
     {
       name = "app1"
       ipv4 = {
-        network_cidr    = "172.16.0.0/18"
-        secondary_cidrs = ["172.16.128.0/20"]
+        network_cidr    = "172.16.64.0/18"
+        secondary_cidrs = ["172.16.192.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_use2
       }
       ipv6 = {
-        network_cidr = "2600:1f26:21:c000::/56"
-        ipam_pool    = local.ipv6_ipam_pool_use2
+        network_cidr    = "2600:1f26:21:c000::/56"
+        secondary_cidrs = ["2600:1f26:21:c400::/56"]
+        ipam_pool       = local.ipv6_ipam_pool_use2
       }
       azs = {
         b = {
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "jenkins1", cidr = "172.16.5.0/24", ipv6_cidr = "2600:1f26:21:c001::/64" },
+            { name = "jenkins1", cidr = "172.16.65.0/24", ipv6_cidr = "2600:1f26:21:c001::/64" },
             # secondary cidr
-            { name = "experiment1", cidr = "172.16.128.0/24", ipv6_cidr = "2600:1f26:21:c004::/64" }
+            { name = "experiment1", cidr = "172.16.192.0/24", ipv6_cidr = "2600:1f26:21:c004::/64" }
           ]
           public_subnets = [
-            { name = "other", cidr = "172.16.8.0/28", ipv6_cidr = "2600:1f26:21:c002::/64", special = true },
-            { name = "other2", cidr = "172.16.16.16/28", ipv6_cidr = "2600:1f26:21:c003::/64" }
+            { name = "other", cidr = "172.16.68.0/28", ipv6_cidr = "2600:1f26:21:c002::/64", special = true },
+            { name = "other2", cidr = "172.16.76.16/28", ipv6_cidr = "2600:1f26:21:c003::/64" },
+            # ipv6 secondary cidr
+            { name = "test1", cidr = "172.16.77.32/28", ipv6_cidr = "2600:1f26:21:c400::/60" },
+            #ipv4 secondary cidr and  ipv6 secondary cidr
+            { name = "test2", cidr = "172.16.194.0/24", ipv6_cidr = "2600:1f26:21:c410::/60" }
           ]
         }
       }
@@ -60,8 +65,8 @@ locals {
     {
       name = "general1"
       ipv4 = {
-        network_cidr    = "172.16.64.0/18"
-        secondary_cidrs = ["172.16.144.0/20"]
+        network_cidr    = "172.16.128.0/18"
+        secondary_cidrs = ["172.16.208.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_use2
       }
       ipv6 = {
@@ -71,20 +76,20 @@ locals {
       azs = {
         a = {
           private_subnets = [
-            { name = "artifacts2", cidr = "172.16.65.0/24", ipv6_cidr = "2600:1f26:21:c101::/64" }
+            { name = "artifacts2", cidr = "172.16.129.0/24", ipv6_cidr = "2600:1f26:21:c101::/64" }
           ]
           public_subnets = [
-            { name = "random1", cidr = "172.16.66.0/28", ipv6_cidr = "2600:1f26:21:c102::/64", special = true }
+            { name = "random1", cidr = "172.16.131.0/28", ipv6_cidr = "2600:1f26:21:c102::/64", special = true }
           ]
         }
         c = {
           private_subnets = [
-            { name = "jenkins2", cidr = "172.16.67.0/24", ipv6_cidr = "2600:1f26:21:c103::/64", special = true }
+            { name = "jenkins2", cidr = "172.16.132.0/24", ipv6_cidr = "2600:1f26:21:c103::/64", special = true }
           ]
           public_subnets = [
-            { name = "random2", cidr = "172.16.68.0/28", ipv6_cidr = "2600:1f26:21:c104::/64" },
-            #secondary cidr
-            { name = "random3", cidr = "172.16.144.0/24", ipv6_cidr = "2600:1f26:21:c105::/64" }
+            { name = "random2", cidr = "172.16.133.0/28", ipv6_cidr = "2600:1f26:21:c104::/64" },
+            # secondary cidr
+            { name = "random3", cidr = "172.16.208.0/24", ipv6_cidr = "2600:1f26:21:c105::/64" }
           ]
         }
       }
@@ -93,8 +98,9 @@ locals {
 }
 
 module "vpcs_use2" {
-  source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.2"
+  #source  = "JudeQuintana/tiered-vpc-ng/aws"
+  #version = "1.0.2"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
 
   providers = {
     aws = aws.use2
