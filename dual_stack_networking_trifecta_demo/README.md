@@ -3,23 +3,26 @@
 - Demo does not work as-is because my AWS account owns these IPv6 CIDRs and you need to configure your own IPv4 and IPv6 cidr pools.
 
 ## Goal
-Using the latest Terraform (v1.9.0+) and AWS Provider (v5.58.0+)
+Using the latest Terraform (v1.9.0+) and AWS Provider (v5.61.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918) and
 IPv6 with IPAM using a Transit Gateway.
 
 VPC CIDR Allocations:
 - App VPC Tier:
-  - IPv4 `10.0.0.0/18` (Class A Private Internet)
-  - IPv4 Secondaries `10.1.0.0/18` and `10.2.0.0/18`
-  - IPv6 `2600:1f24:66:c000::/56`
+  - IPv4: `10.0.0.0/18` (Class A Private Internet)
+  - IPv4 Secondaries: `10.1.0.0/20`
+  - IPv6: `2600:1f24:66:c000::/56`
+  - IPv6 Secondaries: `2600:1f24:66:c800::/56`
 - General VPC Tier:
-  - IPv4 `192.168.0.0/18` (Class C Private Internet)
+  - IPv4: `192.168.0.0/18` (Class C Private Internet)
   - No IPv4 Secondaries
-  - IPv6 `2600:1f24:66:c100::/56`
+  - IPv6: `2600:1f24:66:c100::/56`
+  - No IPv6 Secondaries
 - CICD VPC Tier:
-  - IPv4 `172.16.0.0/18` (Class B Private Internet)
-  - IPv4 Secondaries: `172.19.0.0/18`
-  - IPv6 `2600:1f24:66:c200::/56`
+  - IPv4: `172.16.0.0/18` (Class B Private Internet)
+  - IPv4 Secondaries: `172.19.0.0/20`
+  - IPv6: `2600:1f24:66:c200::/56`
+  - IPv6 Secondaries: `2600:1f24:66:c600::/56`
 
 VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
 
@@ -60,14 +63,18 @@ IPAM Configuration:
   - IPv4 Pool (private scope)
     - Provisioned CIDRs:
       - `10.0.0.0/18`
-      - `10.1.0.0/18`
-      - `10.2.0.0/18`
+      - `10.1.0.0/20`
       - `172.16.0.0/18`
-      - `172.19.0.0/18`
+      - `172.19.0.0/20`
       - `192.168.0.0/18`
   - IPv6 Pool (public scope)
     - Provisioned CIDRs:
-      - `2600:1f24:66:c000::/54`
+      - `2600:1f24:66:c000::/56`
+      - `2600:1f24:66:c100::/56`
+      - `2600:1f24:66:c200::/56`
+      - `2600:1f24:66:c600::/56`
+      - `2600:1f24:66:c800::/56`
+2600:1f24:66:c200::/56
 
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have

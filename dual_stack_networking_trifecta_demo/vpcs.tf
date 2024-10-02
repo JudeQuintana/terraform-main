@@ -34,18 +34,23 @@ locals {
       name = "app"
       ipv4 = {
         network_cidr    = "10.0.0.0/18"
-        secondary_cidrs = ["10.1.0.0/20", "10.2.0.0/20"]
+        secondary_cidrs = ["10.1.0.0/20"]
         ipam_pool       = local.ipv4_ipam_pool
       }
       ipv6 = {
-        network_cidr = "2600:1f24:66:c000::/56"
-        ipam_pool    = local.ipv6_ipam_pool
+        network_cidr    = "2600:1f24:66:c000::/56"
+        secondary_cidrs = ["2600:1f24:66:c800::/56"]
+        ipam_pool       = local.ipv6_ipam_pool
       }
       azs = {
         a = {
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" }
+            { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" },
+            # secondary ipv6 cidr
+            { name = "another2", cidr = "10.0.14.0/24", ipv6_cidr = "2600:1f24:66:c810::/60" },
+            # secondary cidr  and secondary ipv6 cidr
+            { name = "another3", cidr = "10.1.15.0/24", ipv6_cidr = "2600:1f24:66:c820::/60" }
           ]
           # Enable a NAT Gateway for all private subnets in the same AZ
           # by adding the `natgw = true` attribute to any public subnet
@@ -98,15 +103,18 @@ locals {
         ipam_pool       = local.ipv4_ipam_pool
       }
       ipv6 = {
-        network_cidr = "2600:1f24:66:c200::/56"
-        ipam_pool    = local.ipv6_ipam_pool
+        network_cidr    = "2600:1f24:66:c200::/56"
+        secondary_cidrs = ["2600:1f24:66:c600::/56"]
+        ipam_pool       = local.ipv6_ipam_pool
       }
       azs = {
         b = {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "jenkins1", cidr = "172.16.5.0/24", ipv6_cidr = "2600:1f24:66:c200::/64" },
-            { name = "experiment1", cidr = "172.19.5.0/24", ipv6_cidr = "2600:1f24:66:c202::/64" }
+            { name = "experiment1", cidr = "172.19.5.0/24", ipv6_cidr = "2600:1f24:66:c202::/64" },
+            # secondary ipv6 cidr
+            { name = "experiment2", cidr = "172.19.9.0/24", ipv6_cidr = "2600:1f24:66:c602::/64" }
           ]
           public_subnets = [
             { name = "other", cidr = "172.16.8.0/28", ipv6_cidr = "2600:1f24:66:c207::/64", special = true },
