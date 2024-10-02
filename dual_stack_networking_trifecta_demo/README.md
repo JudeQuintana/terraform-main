@@ -1,6 +1,7 @@
 # Dual Stack Networking Trifecta Demo
 - The dual stack version of the (IPv4 only) [Networking Trifecta demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo).
-- Demo does not work as-is because my AWS account owns these IPv6 CIDRs and you need to configure your own IPv4 and IPv6 cidr pools.
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account. You'll need to configure your own IPv4 and IPv6 cidr pools.
+- Both IPv4 and IPv6 secondary cidrs are supported.
 
 ## Goal
 Using the latest Terraform (v1.9.0+) and AWS Provider (v5.61.0+)
@@ -28,12 +29,8 @@ VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs)
 
 Dual Stack architecture reference:
 - [dual stack ipv6 architectures for aws and hybrid networks](https://aws.amazon.com/blogs/networking-and-content-delivery/dual-stack-ipv6-architectures-for-aws-and-hybrid-networks/)
-- [dual stack vpc with multiple ipv6 cidr blocks](https://aws.amazon.com/blogs/networking-and-content-delivery/architect-dual-stack-amazon-vpc-with-multiple-ipv6-cidr-blocks/)
 
-The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out).
-Note: pic is old but VPCs in the demo will have /18s which allows for up
-to four /20s to use per AZ:
-
+The resulting architecture is a ipv4 only or a dual stack hub and spoke topology (zoom out). old pic:
 ![tnt](https://jq1-io.s3.amazonaws.com/tnt/tnt.png)
 
 ## Trifecta Demo Time
@@ -70,7 +67,7 @@ IPAM Configuration:
   - IPv6 Pool (public scope)
     - Provisioned CIDRs:
       - `2600:1f24:66:c000::/52`
-      - note: all `/56` IPv6 cidrs are under `52`
+      - note: all `/56` IPv6 cidrs are under `/52`
 
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
