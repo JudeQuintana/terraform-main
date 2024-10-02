@@ -214,7 +214,11 @@ wait until AWS releases deleted cidrs from IPAM if you want to create them again
 - There is no overlapping CIDR detection or validation.
 
 ## Version info
-Tiered VPC-NG `v1.0.2`:
+Tiered VPC-NG `v1.0.3`:
+- support for IPv6 secondary cidrs
+- aws provider `>=5.61` required
+
+`v1.0.2`:
 - Requires IPAM Pools for both IPv4 and IPv6 cidrs.
   - Advanced Tier recommended.
   - Can start with IPv4 only then add IPv6 at a later time, or start with both.
@@ -226,7 +230,11 @@ for private IPv6 subnets per AZ to route to the internet.
   - Can be used as a vpc attachemnt when passed to centralized router.
   - EIPs dont use a public pool and will continue to be AWS owned public IPv4 cidrs
 
-Centralized Router `v1.0.2`:
+Centralized Router `v1.0.3`:
+- support for IPv6 secondary cidrs
+- aws provider `>=5.61` required
+
+`v1.0.2`:
 - generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
 
 New Module:
