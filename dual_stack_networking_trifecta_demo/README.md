@@ -7,7 +7,7 @@ Using the latest Terraform (v1.9.0+) and AWS Provider (v5.61.0+)
 to route between 3 VPCs with different IPv4 CIDR ranges (RFC 1918) and
 IPv6 with IPAM using a Transit Gateway.
 
-VPC CIDR Allocations:
+VPC CIDRs:
 - App VPC Tier:
   - IPv4: `10.0.0.0/18` (Class A Private Internet)
   - IPv4 Secondaries: `10.1.0.0/20`
@@ -69,12 +69,8 @@ IPAM Configuration:
       - `192.168.0.0/18`
   - IPv6 Pool (public scope)
     - Provisioned CIDRs:
-      - `2600:1f24:66:c000::/56`
-      - `2600:1f24:66:c100::/56`
-      - `2600:1f24:66:c200::/56`
-      - `2600:1f24:66:c600::/56`
-      - `2600:1f24:66:c800::/56`
-2600:1f24:66:c200::/56
+      - `2600:1f24:66:c000::/52`
+      - note: all `/56` IPv6 cidrs are under `52`
 
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
