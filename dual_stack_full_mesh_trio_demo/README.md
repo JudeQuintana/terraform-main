@@ -24,6 +24,7 @@ Routing and peering validation with AWS Route Analyzer:
   - Select new global network -> go to `Transit Gateways` -> `Register
     Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
   - Go to `Transit gateway network` -> `Route Analyzer`
+
   - IPv4:
     - Cross-Region Test 1 (use1a to use2c)
       - Source:
@@ -56,6 +57,42 @@ Routing and peering validation with AWS Route Analyzer:
         - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
         - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app3-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
         - IP Address: `10.1.64.4` (`other1` public subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+
+  - IPv6:
+    - Cross-Region Test 1 (use1a to use2c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general3-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
+        - IP Address: `2600:1f28:3d:c402:0000:0000:0000:0002` (`haproxy1` public subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-magento-use2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general1-use2 <-> TEST-centralized-router-magneto-use2` (VPC)
+        - IP Address: `2600:1f26:21:c103:0000:0000:0000:0003` (`jenkins2` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 2 (use2b to usw2c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-magneto-use2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-use2 <-> TEST-centralized-router-magneto-use2` (VPC)
+        - IP Address:
+          `2600:1f26:21:c003:0000:0000:0000:0004` (`other2` public subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
+        - IP Address: `2600:1f24:66:c101:0000:0000:0000:0005` (`db2` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 3 (usw2b to use1b)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app2-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
+        - IP Address: `2600:1f24:66:c006:0000:0000:0000:0006` (`cluster2` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app3-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
+        - IP Address: `2600:1f28:3d:c006:0000:0000:0000:0007` (`other1` public subnet)
       - Select `Run Route Analysis`
         - Forward and Return Paths should both have a `Connected` status.
 
