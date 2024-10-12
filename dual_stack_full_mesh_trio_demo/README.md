@@ -17,6 +17,50 @@
 
 Note: combine steps 3 through 5 with: `terraform apply`
 
+Routing and peering validation with AWS Route Analyzer:
+- Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
+  - Create global network -> `next`
+    - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
+  - Select new global network -> go to `Transit Gateways` -> `Register
+    Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
+  - Go to `Transit gateway network` -> `Route Analyzer`
+  - IPv4:
+    - Cross-Region Test 1 (use1a to use2c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general3-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
+        - IP Address: `192.168.68.70` (`haproxy1` public subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-magento-use2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general1-use2 <-> TEST-centralized-router-magneto-use2` (VPC)
+        - IP Address: `172.16.132.6` (`jenkins2` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 2 (use2b to usw2c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-magneto-use2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-use2 <-> TEST-centralized-router-magneto-use2` (VPC)
+        - IP Address: `172.16.76.21` (`other2` public subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
+        - IP Address: `192.168.11.11` (`db2` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 3 (usw2b to use1b)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-arch-angel-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app2-usw2 <-> TEST-centralized-router-arch-angel-usw2` (VPC)
+        - IP Address: `10.0.16.16` (`cluster2` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-mystique-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app3-use1 <-> TEST-centralized-router-mystique-use1` (VPC)
+        - IP Address: `10.1.64.4` (`other1` public subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+
+Several other routes can be validated, try them out!
+
 Tear down:
  - `terraform destroy`
 
