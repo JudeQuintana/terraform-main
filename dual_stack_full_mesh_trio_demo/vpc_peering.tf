@@ -3,6 +3,7 @@ module "vpc_peering_deluxe_use1_general3_to_use2_app1" {
   #source  = "JudeQuintana/vpc-peering-deluxe/aws"
   #version = "1.0.1"
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering_deluxe?ref=dual-stack-full-mesh-trio"
+  #source = "/Users/jude/projects/terraform-modules/networking/vpc_peering_deluxe"
 
   providers = {
     aws.local = aws.use1
@@ -33,6 +34,7 @@ module "vpc_peering_deluxe_usw2_app2_to_usw2_general2" {
   #source  = "JudeQuintana/vpc-peering-deluxe/aws"
   #version = "1.0.1"
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/vpc_peering_deluxe?ref=dual-stack-full-mesh-trio"
+  #source = "/Users/jude/projects/terraform-modules/networking/vpc_peering_deluxe"
 
   providers = {
     aws.local = aws.usw2
