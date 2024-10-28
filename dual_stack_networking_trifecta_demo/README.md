@@ -1,7 +1,8 @@
 # Dual Stack Networking Trifecta Demo
 - The dual stack version of the (IPv4 only) [Networking Trifecta demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo).
-- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account. You'll need to configure your own IPv4 and IPv6 cidr pools.
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account. You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
 - Both IPv4 and IPv6 secondary cidrs are supported.
+- Start with IPv4 only and add IPv6 at a later time or start with both.
 
 ## Goal
 Using the latest Terraform (v1.9.0+) and AWS Provider (v5.61.0+)
@@ -66,8 +67,11 @@ IPAM Configuration:
       - `192.168.0.0/18`
   - IPv6 Pool (public scope)
     - Provisioned CIDRs:
-      - `2600:1f24:66:c000::/52`
-      - note: all `/56` IPv6 cidrs are under `/52`
+    - `2600:1f24:66:c000::/56`
+    - `2600:1f24:66:c100::/56`
+    - `2600:1f24:66:c200::/56`
+    - `2600:1f24:66:c600::/56`
+    - `2600:1f24:66:c800::/56`
 
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
@@ -75,7 +79,7 @@ user read only permissions.
     - private key saved as `~/.ssh/my-ec2-key.pem` on local machine.
     - must be user read only permssions `chmod 400 ~/.ssh/my-ec2-key.pem` for a VPC.
 
-**Assemble the Trifecta** by cloning the [Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/) repo.
+**Assemble the Trifecta** by cloning the [Dual Stack Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/) repo.
 ```
 $ git clone git@github.com:JudeQuintana/terraform-main.git
 $ cd dual_stack_networking_trifecta_demo

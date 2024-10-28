@@ -1,4 +1,5 @@
 # cross region peering, only route specific subnets across peering connection
+# not as cost effective vs using transit gateway but doable
 module "vpc_peering_deluxe_use1_general3_to_use2_app1" {
   #source  = "JudeQuintana/vpc-peering-deluxe/aws"
   #version = "1.0.1"
@@ -29,7 +30,8 @@ module "vpc_peering_deluxe_use1_general3_to_use2_app1" {
   }
 }
 
-## inter region vpc peering, route all subnets across peering connection
+# inter region vpc peering, route all subnets across peering connection
+# more cost effective vs using transit gateway
 module "vpc_peering_deluxe_usw2_app2_to_usw2_general2" {
   #source  = "JudeQuintana/vpc-peering-deluxe/aws"
   #version = "1.0.1"

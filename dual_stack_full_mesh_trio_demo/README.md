@@ -1,4 +1,30 @@
 # Dual Stack Full Mesh Trio Demo
+- This is the dual stack version of the (IPv4 only) [Full Mesh Trio demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo).
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account. You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
+- Both IPv4 and IPv6 secondary cidrs are supported.
+- Can start with IPv4 only and add IPv6 at a later time or start with both.
+
+VPC CIDRs:
+- App VPC Tier:
+  - IPv4: `10.0.0.0/18` (Class A Private Internet)
+  - IPv4 Secondaries: `10.1.0.0/20`
+  - IPv6: `2600:1f24:66:c000::/56`
+  - IPv6 Secondaries: `2600:1f24:66:c800::/56`
+- General VPC Tier:
+  - IPv4: `192.168.0.0/18` (Class C Private Internet)
+  - No IPv4 Secondaries
+  - IPv6: `2600:1f24:66:c100::/56`
+  - No IPv6 Secondaries
+- CICD VPC Tier:
+  - IPv4: `172.16.0.0/18` (Class B Private Internet)
+  - IPv4 Secondaries: `172.19.0.0/20`
+  - IPv6: `2600:1f24:66:c200::/56`
+  - IPv6 Secondaries: `2600:1f24:66:c600::/56`
+
+VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
+
+The resulting architecture is a ipv4 only or a dual stack full mesh topology across 3 regions:
+![dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/dual-stack-full-mesh-trio.png)
 
 1. It begins:
   - `terraform init`

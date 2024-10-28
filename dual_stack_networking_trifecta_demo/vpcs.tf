@@ -125,7 +125,6 @@ locals {
       }
     }
   ]
-
 }
 
 module "vpcs" {
