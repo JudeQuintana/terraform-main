@@ -65,7 +65,7 @@ IPAM Configuration:
       - `172.16.0.0/18`
       - `172.19.0.0/20`
       - `192.168.0.0/18`
-  - IPv6 Pool (public scope)
+  - IPv6 Pool (public scope and subpool of a regional pool `2600:1f24:66:c000::/52`)
     - Provisioned CIDRs:
     - `2600:1f24:66:c000::/56`
     - `2600:1f24:66:c100::/56`
@@ -236,6 +236,10 @@ for private IPv6 subnets per AZ to route to the internet.
 
 Centralized Router `v1.0.3`:
 - support for IPv6 secondary cidrs
+- TGW routes for vpc attachments are now static by default instead of
+  route propagation.
+  - route propagation can be toggled with `route_propagation = true` but
+    the default is false.
 - aws provider `>=5.61` required
 
 `v1.0.2`:

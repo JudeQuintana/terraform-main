@@ -6,17 +6,17 @@
 
 VPC CIDRs:
 - App VPC Tier:
-  - IPv4: `10.0.0.0/18` (Class A Private Internet)
+  - IPv4: `10.0.0.0/18`
   - IPv4 Secondaries: `10.1.0.0/20`
   - IPv6: `2600:1f24:66:c000::/56`
   - IPv6 Secondaries: `2600:1f24:66:c800::/56`
 - General VPC Tier:
-  - IPv4: `192.168.0.0/18` (Class C Private Internet)
+  - IPv4: `192.168.0.0/18`
   - No IPv4 Secondaries
   - IPv6: `2600:1f24:66:c100::/56`
   - No IPv6 Secondaries
 - CICD VPC Tier:
-  - IPv4: `172.16.0.0/18` (Class B Private Internet)
+  - IPv4: `172.16.0.0/18`
   - IPv4 Secondaries: `172.19.0.0/20`
   - IPv6: `2600:1f24:66:c200::/56`
   - IPv6 Secondaries: `2600:1f24:66:c600::/56`
