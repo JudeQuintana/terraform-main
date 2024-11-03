@@ -245,10 +245,12 @@ Centralized Router `v1.0.3`:
 `v1.0.2`:
 - generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
 
-New Module:
-- IPv6 Intra VPC Security Group Rule
- - IPv6 only and separate from the IPv4 version of Intra VPC Security
-   Group Rules.
+
+IPv6 Intra VPC Security Group Rule `v1.0.1`:
+- Support for IPv6 secondary cidrs
+
+`v1.0.0`:
+  - IPv6 only and separate from the IPv4 version of Intra VPC Security Group Rules.
 
 ## Looking forward
 Requiring IPAM for for dual stack VPCs is ideal for when scaling your cidr allocations.
