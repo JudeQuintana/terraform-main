@@ -5,26 +5,61 @@
 - Can start with IPv4 only and add IPv6 at a later time or start with both.
 
 VPC CIDRs:
-- App VPC Tier:
-  - IPv4: `10.0.0.0/18`
-  - IPv4 Secondaries: `10.1.0.0/20`
-  - IPv6: `2600:1f24:66:c000::/56`
-  - IPv6 Secondaries: `2600:1f24:66:c800::/56`
-- General VPC Tier:
-  - IPv4: `192.168.0.0/18`
-  - No IPv4 Secondaries
-  - IPv6: `2600:1f24:66:c100::/56`
-  - No IPv6 Secondaries
-- CICD VPC Tier:
-  - IPv4: `172.16.0.0/18`
-  - IPv4 Secondaries: `172.19.0.0/20`
-  - IPv6: `2600:1f24:66:c200::/56`
-  - IPv6 Secondaries: `2600:1f24:66:c600::/56`
+- `us-east-2`
+  - App1 VPC Tier:
+    - IPv4: `172.16.64.0/18`
+    - IPv4 Secondaries: `172.16.192.0/20`
+    - IPv6: `2600:1f26:21:c000::/56`
+    - IPv6 Secondaries: `2600:1f26:21:c400::/56`
+  - General1 VPC Tier:
+    - IPv4: `172.16.128.0/18`
+    - IPv4 Secondaries: `172.16.208.0/20`
+    - IPv6: `2600:1f26:21:c100::/56`
+    - No IPv6 Secondaries
+
+- `us-west-2`
+  - App2 VPC Tier:
+    - IPv4: `10.0.0.0/18`
+    - IPv4 Secondaries: `10.1.0.0/20`
+    - IPv6: `2600:1f24:66:c000::/56`
+    - No IPv6 Secondaries
+  - General2 VPC Tier:
+    - IPv4: `192.168.0.0/18`
+    - IPv4 Secondaries: `192.168.144.0/20`
+    - IPv6: `2600:1f24:66:c100::/56`
+    - No IPv6 Secondaries
+
+- `us-east-1`
+  - App3 VPC Tier:
+    - IPv4: `10.0.64.0/18`
+    - IPv4 Secondaries: `10.1.64.0/20`
+    - IPv6: `2600:1f28:3d:c000::/56`
+    - No IPv6 Secondaries
+  - General3 VPC Tier:
+    - IPv4: `192.168.64.0/18`
+    - IPv4 Secondaries: `192.168.128.0/20`
+    - IPv6: `2600:1f28:3d:c400::/56`
+    - No IPv6 Secondaries
 
 VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
 
 The resulting architecture is a ipv4 only or a dual stack full mesh topology across 3 regions:
 ![dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/dual-stack-full-mesh-trio.png)
+
+IPAM Configuration
+- There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
+- You need to make your own IPv6 IPAM pools since my AWS Account has allocations from these specific AWS owned IPv6 CIDRs so the demo will not work as is with other AWS accounts.
+
+- Advanced Tier IPAM in `us-west-2` operating reigon.
+  - `us-west-2` (ipam locale)
+      - IPv4 Pool (private scope)
+        - Provisioned CIDRs:
+          - 
+  - IPv6 regional pool (public scope)
+    - 
+      - IPv6 subpool (public scope)
+        - Provisioned CIDRs:
+        - 
 
 1. It begins:
   - `terraform init`

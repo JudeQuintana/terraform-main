@@ -52,12 +52,10 @@ via TGW.
 
 **Pre-requisites:**
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
-- You need to make your own IPv6 IPAM pools since my AWS Account has
-  allocations from these specific AWS owned IPv6 CIDRs (ie subnet your own) so the demo will not
-  work as is with other AWS accounts.
+- You need to make your own IPv6 IPAM pools since my AWS Account has allocations from these specific AWS owned IPv6 CIDRs so the demo will not work as is with other AWS accounts.
 
 IPAM Configuration:
-- Advanced Tier IPAM in `us-west-2` operating reigon.
+- Advanced Tier IPAM in `us-west-2` operating reigon (locale).
   - IPv4 Pool (private scope)
     - Provisioned CIDRs:
       - `10.0.0.0/18`
@@ -65,13 +63,15 @@ IPAM Configuration:
       - `172.16.0.0/18`
       - `172.19.0.0/20`
       - `192.168.0.0/18`
-  - IPv6 Pool (public scope and subpool of a regional pool `2600:1f24:66:c000::/52`)
-    - Provisioned CIDRs:
-    - `2600:1f24:66:c000::/56`
-    - `2600:1f24:66:c100::/56`
-    - `2600:1f24:66:c200::/56`
-    - `2600:1f24:66:c600::/56`
-    - `2600:1f24:66:c800::/56`
+  - IPv6 regional pool (public scope)
+    - `2600:1f24:66:c000::/52`
+      - IPv6 subpool (public scope)
+        - Provisioned CIDRs:
+        - `2600:1f24:66:c000::/56`
+        - `2600:1f24:66:c100::/56`
+        - `2600:1f24:66:c200::/56`
+        - `2600:1f24:66:c600::/56`
+        - `2600:1f24:66:c800::/56`
 
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have

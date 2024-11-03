@@ -1,4 +1,5 @@
 # ipam was set up manually (advanced tier)
+# main ipam in usw2 with a pool for usw2 locale
 data "aws_vpc_ipam_pool" "ipv4_usw2" {
   provider = aws.usw2
 
