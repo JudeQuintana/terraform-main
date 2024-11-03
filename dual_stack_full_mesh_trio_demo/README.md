@@ -50,16 +50,53 @@ IPAM Configuration
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
 - You need to make your own IPv6 IPAM pools since my AWS Account has allocations from these specific AWS owned IPv6 CIDRs so the demo will not work as is with other AWS accounts.
 
-- Advanced Tier IPAM in `us-west-2` operating reigon.
+- Advanced Tier IPAM in `us-east-2`, `us-west-2`, `us-east-1` and operating reigons.
+  - In this demo, ipam pools for all locales are managed in the `us-west-2` region via AWS Console UI.
+  - No IPv4 regional pools at the moment.
+  - IPv6 subpools need a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
+  - `us-east-2` (ipam locale)
+    - IPv4 Pool (private scope)
+      - Provisioned CIDRs:
+        - `172.16.64.0/18`
+        - `172.16.128.0/18`
+        - `172.16.192.0/20`
+        - `172.16.208.0/20`
+    - IPv6 regional pool (public scope)
+      - `2600:1f26:21:c000::/52`
+        - IPv6 subpool (public scope)
+          - Provisioned CIDRs:
+            - `2600:1f26:21:c000::/56`
+            - `2600:1f26:21:c100::/56`
+            - `2600:1f26:21:c400::/56`
+
   - `us-west-2` (ipam locale)
-      - IPv4 Pool (private scope)
-        - Provisioned CIDRs:
-          - 
-  - IPv6 regional pool (public scope)
-    - 
-      - IPv6 subpool (public scope)
-        - Provisioned CIDRs:
-        - 
+    - IPv4 Pool (private scope)
+      - Provisioned CIDRs:
+        - `10.0.0.0/18`
+        - `10.1.0.0/20`
+        - `192.168.0.0/18`
+        - `192.168.144.0/20`
+    - IPv6 regional pool (public scope)
+      - `2600:1f24:66:c000::/52`
+        - IPv6 subpool (public scope)
+          - Provisioned CIDRs:
+            - `2600:1f24:66:c000::/56`
+            - `2600:1f24:66:c100::/56`
+
+  - `us-east-1` (ipam locale)
+    - IPv4 Pool (private scope)
+      - Provisioned CIDRs:
+        - `10.0.64.0/18`
+        - `10.1.64.0/20`
+        - `192.168.64.0/18`
+        - `192.168.128.0/20`
+    - IPv6 regional pool (public scope)
+      - `2600:1f28:3d:c000::/52`
+        - IPv6 subpool (public scope)
+          - Provisioned CIDRs:
+            - `2600:1f28:3d:c000::/56`
+            - `2600:1f28:3d:c400::/56`
+
 
 1. It begins:
   - `terraform init`

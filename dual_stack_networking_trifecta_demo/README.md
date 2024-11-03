@@ -56,22 +56,25 @@ via TGW.
 
 IPAM Configuration:
 - Advanced Tier IPAM in `us-west-2` operating reigon (locale).
-  - IPv4 Pool (private scope)
-    - Provisioned CIDRs:
-      - `10.0.0.0/18`
-      - `10.1.0.0/20`
-      - `172.16.0.0/18`
-      - `172.19.0.0/20`
-      - `192.168.0.0/18`
-  - IPv6 regional pool (public scope)
-    - `2600:1f24:66:c000::/52`
-      - IPv6 subpool (public scope)
+  - No IPv4 regional pool at the moment.
+  - IPv6 subpool needs a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
+  - `us-east-2` (ipam locale)
+    - IPv4 Pool (private scope)
         - Provisioned CIDRs:
-        - `2600:1f24:66:c000::/56`
-        - `2600:1f24:66:c100::/56`
-        - `2600:1f24:66:c200::/56`
-        - `2600:1f24:66:c600::/56`
-        - `2600:1f24:66:c800::/56`
+          - `10.0.0.0/18`
+          - `10.1.0.0/20`
+          - `172.16.0.0/18`
+          - `172.19.0.0/20`
+          - `192.168.0.0/18`
+    - IPv6 regional pool (public scope)
+      - `2600:1f24:66:c000::/52`
+        - IPv6 subpool (public scope)
+          - Provisioned CIDRs:
+          - `2600:1f24:66:c000::/56`
+          - `2600:1f24:66:c100::/56`
+          - `2600:1f24:66:c200::/56`
+          - `2600:1f24:66:c600::/56`
+          - `2600:1f24:66:c800::/56`
 
 - Pre-configured AWS credentials
   - An AWS EC2 Key Pair should already exist in the `us-west-2` region and the private key should have
