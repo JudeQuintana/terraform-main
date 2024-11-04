@@ -1,7 +1,8 @@
 # Dual Stack Full Mesh Trio Demo
-- Dual stack Full Mesh Transit Gateway across 3 regions
+- Dual stack VPCs with IPAM and Full Mesh Transit Gateway across 3 regions
 - This is the dual stack version of the (IPv4 only) [Full Mesh Trio demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo).
-- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account. You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
+- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
 - Both IPv4 and IPv6 secondary cidrs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
 
