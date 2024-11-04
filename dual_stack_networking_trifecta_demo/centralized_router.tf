@@ -2,10 +2,8 @@
 # and route to each other for the VPC IPv4 network cidrs, IPv4 secondary cidrs and IPv6 cidrs.
 # hub and spoke
 module "centralized_router" {
-  #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.0.2"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
-  #source = "/Users/jude/projects/terraform-modules/networking/transit_gateway_centralized_router_for_tiered_vpc_ng"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.0.3"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels

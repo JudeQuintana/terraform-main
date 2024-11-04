@@ -14,7 +14,8 @@
 ```
 ## NEW Dual Stack Full Mesh Trio!
 [Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_full_mesh_trio_demo/README.md)
- - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.3) (at `v1.0.3`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.3) (at `v1.0.3`) modules.
+ - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.3) (at `v1.0.3`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.3) (at `v1.0.3`)  and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v1.0.1) (at `v1.0.1`) modules
+ - Includes an VPC peering examples within a full mesh configuration used high traffic workloads to save on cost for inter-region using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Validate connectivity with Route Anlyzer.
 
@@ -39,7 +40,7 @@
 ## Full Mesh Trio!
 [Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo/README.md)
  - Compose a Full Mesh Transit Gateway across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/v1.0.1) (at `v1.0.1`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/v1.0.1) (at `v1.0.1`) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v1.0.0) (at `v1.0.0`) modules.
- - Includes an VPC peering examples within a full mesh configuration for high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.0) module (at `v1.0.0`).
+ - Includes an VPC peering examples within a full mesh configuration for high traffic workloads to save on cost for intra-region using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.0) module (at `v1.0.0`).
  - IPv4 only (no IPAM).
  - Validate connectivity with AWS Route Analyzer.
 
@@ -60,7 +61,6 @@ Notes:
    - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules) (IPv4 only)
    - [IPv6 Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule) (IPv6 only, for use with dual stack VPCs)
    - New [IPv6 Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
-`networking/ipv6_full_mesh_intra_vpc_security_group_rules/README.md`
    - TODO: Mega Mesh Intra VPC Security Group Rules
  - The Centralized Router module is an implementation of the [AWS Centralized Router concept](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-centralized-router.html) but without VPN Gateway or Direct Connect, only VPCs.
   - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)

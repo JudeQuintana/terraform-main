@@ -52,9 +52,8 @@ locals {
 }
 
 module "ipv6_intra_vpc_security_group_rules" {
-  #source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
-  #version = "1.0.0"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/ipv6_intra_vpc_security_group_rule_for_tiered_vpc_ng?ref=dual-stack-full-mesh-trio"
+  source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
+  version = "1.0.1"
 
   for_each = { for r in local.ipv6_intra_vpc_security_group_rules : r.label => r }
 
