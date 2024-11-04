@@ -98,7 +98,7 @@ IPAM Configuration
             - `2600:1f28:3d:c000::/56`
             - `2600:1f28:3d:c400::/56`
 
-
+Build Dual Stack Full Mesh Trio
 1. It begins:
   - `terraform init`
 
