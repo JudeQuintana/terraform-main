@@ -50,24 +50,22 @@
  - IPv4 only (no IPAM).
  - Validate connectivity with AWS Route Analyzer.
 
----
 Notes:
- - Sometimes I'll blog about ideas at [jq1.io](https://jq1.io).
- - All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
- - The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
- - All demos include an example of generating security group rules for inter-region and cross-region VPCs for each TGW configuration.
-   - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule) (IPv4 only)
-   - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules) (IPv4 only)
-   - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules) (IPv4 only)
-   - [IPv6 Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule) (IPv6 only, for use with dual stack VPCs)
-   - New [IPv6 Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
-   - TODO: Mega Mesh Intra VPC Security Group Rules
- - The Centralized Router module is an implementation of the [AWS Centralized Router concept](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-centralized-router.html) but without VPN Gateway or Direct Connect, only VPCs.
-  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
+- Sometimes I'll blog about ideas at [jq1.io](https://jq1.io).
+- All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
+- The most useful modules are [published](https://registry.terraform.io/namespaces/JudeQuintana) to the Public Terraform Registry.
+- All demos include an example of generating security group rules for inter-region and cross-region VPCs for each TGW configuration.
+  - [Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule) (IPv4 only)
+  - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules) (IPv4 only)
+  - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules) (IPv4 only)
+  - [IPv6 Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule) (IPv6 only, for use with dual stack VPCs)
+  - New [IPv6 Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
+  - TODO: Mega Mesh Intra VPC Security Group Rules
+- The Centralized Router module is an implementation of the [AWS Centralized Router concept](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-centralized-router.html) but without VPN Gateway or Direct Connect, only VPCs.
+ - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
- - There is no overlapping CIDR detection inter-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
-
- - Visual inspiration to spice up the concept:
+- There is no overlapping CIDR detection inter-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
+- Visual inspiration to spice up the concept:
    - https://twitter.com/MAKIO135/status/1378469836305666055
    - https://twitter.com/MAKIO135/status/1380634991818911746
    - https://twitter.com/MAKIO135/status/1379931304863657984
