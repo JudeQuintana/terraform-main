@@ -255,6 +255,3 @@ IPv6 Intra VPC Security Group Rule `v1.0.1`:
 `v1.0.0`:
   - IPv6 only and separate from the IPv4 version of Intra VPC Security Group Rules.
 
-## Looking forward
-Requiring IPAM for for dual stack VPCs is ideal for when scaling your cidr allocations.
-Now that the base IPv4 networking modules also supports IPv4 secondary cidrs and IPv6 cidrs with auto routing, I plan to build dual stack implementations for Full Mesh Trio, VPC peering deluxe, IPv6 version of Full Mesh Intra VPC Security Group Rules and then, eventually, Mega Mesh. Looks like it's going be a long haul.
