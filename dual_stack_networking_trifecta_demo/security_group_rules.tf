@@ -53,7 +53,7 @@ locals {
 
 module "ipv6_intra_vpc_security_group_rules" {
   source  = "JudeQuintana/ipv6-intra-vpc-security-group-rule/aws"
-  version = "1.0.0"
+  version = "1.0.1"
 
   for_each = { for r in local.ipv6_intra_vpc_security_group_rules : r.label => r }
 
