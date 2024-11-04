@@ -199,4 +199,4 @@ Several other routes can be validated, try them out!
 
 Tear down:
  - `terraform destroy`
-
+   - Full teardown (destroy) works for AWS provider 5.61.0 but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy.
