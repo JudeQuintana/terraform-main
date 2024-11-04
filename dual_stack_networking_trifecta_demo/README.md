@@ -242,7 +242,7 @@ Centralized Router `v1.0.3`:
 - support for IPv6 secondary cidrs
 - TGW routes for vpc attachments are now static by default instead of
   route propagation.
-  - route propagation can be toggled with `route_propagation = true` but
+  - route propagation can be toggled with `propagate_routes = true` but
     the default is false.
 - aws provider `>=5.61` required
 
