@@ -1,12 +1,10 @@
 # Dual Stack Full Mesh Trio Demo
 - Dual stack VPCs with IPAM and Full Mesh Transit Gateway across 3 regions
 - This is the dual stack version of the (IPv4 only) [Full Mesh Trio demo](https://github.com/JudeQuintana/terraform-main/tree/main/full_mesh_trio_demo).
-- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
-- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
 - Both IPv4 and IPv6 secondary cidrs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
 
-VPC CIDRs:
+### VPC CIDRs
 - `us-east-2`
   - App1 VPC Tier:
     - IPv4: `172.16.64.0/18`
@@ -48,10 +46,10 @@ VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs)
 The resulting architecture is a ipv4 only or a dual stack full mesh topology across 3 regions:
 ![dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/dual-stack-full-mesh-trio.png)
 
-IPAM Configuration
+### IPAM Configuration
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
-- You need to make your own IPv6 IPAM pools since my AWS Account has allocations from these specific AWS owned IPv6 CIDRs so the demo will not work as is with other AWS accounts.
-
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
+- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
 - Advanced Tier IPAM in `us-east-2`, `us-west-2`, `us-east-1` and operating reigons.
   - In this demo, ipam pools for all locales are managed in the `us-west-2` region via AWS Console UI.
   - No IPv4 regional pools at the moment.
@@ -99,7 +97,7 @@ IPAM Configuration
             - `2600:1f28:3d:c000::/56`
             - `2600:1f28:3d:c400::/56`
 
-Build Dual Stack Full Mesh Trio
+### Build Dual Stack Full Mesh Trio
 1. It begins:
   - `terraform init`
 
@@ -117,7 +115,7 @@ Build Dual Stack Full Mesh Trio
 
 Note: combine steps 3 through 5 with: `terraform apply`
 
-Routing and peering validation with AWS Route Analyzer:
+### Routing and peering validation with AWS Route Analyzer
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
@@ -198,6 +196,6 @@ Routing and peering validation with AWS Route Analyzer:
 
 Several other routes can be validated, try them out!
 
-Tear down:
+### Tear down
  - `terraform destroy`
    - Full teardown (destroy) works for AWS provider 5.61.0 but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy.
