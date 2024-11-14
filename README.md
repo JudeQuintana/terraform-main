@@ -66,9 +66,3 @@
  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
 - There is no overlapping CIDR detection inter-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
-- Visual inspiration to spice up the concept:
-   - https://twitter.com/MAKIO135/status/1378469836305666055
-   - https://twitter.com/MAKIO135/status/1380634991818911746
-   - https://twitter.com/MAKIO135/status/1379931304863657984
-   - https://twitter.com/MAKIO135/status/1404543066724253699
-   - https://twitter.com/MAKIO135/status/1368340867803660289
