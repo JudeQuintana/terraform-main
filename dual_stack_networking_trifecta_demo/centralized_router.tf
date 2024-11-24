@@ -3,7 +3,7 @@
 # hub and spoke
 module "centralized_router" {
   source  = "JudeQuintana/centralized-router/aws"
-  version = "1.0.3"
+  version = "1.0.4"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
