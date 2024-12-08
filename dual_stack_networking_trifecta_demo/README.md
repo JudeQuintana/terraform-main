@@ -263,7 +263,7 @@ for private IPv6 subnets per AZ to route to the internet.
   - EIPs dont use a public pool and will continue to be AWS owned public IPv4 cidrs
 
 Centralized Router `v1.0.4`:
-- ability to switch between a blackhole route and a static route that have the same cidr/ipv6\_cidr for vpc attachments.
+- ability to gracefully switch between a blackhole route and a static route that have the same cidr/ipv6\_cidr for vpc attachments.
 
 `v1.0.3`:
 - support for IPv6 secondary cidrs
