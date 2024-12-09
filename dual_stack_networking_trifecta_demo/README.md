@@ -101,9 +101,13 @@ variable "base_ec2_instance_attributes" {
 }
 ```
 
-The VPCs must be applied first:
+It begins:
 ```
 $ terraform init
+```
+
+The VPCs must be applied first:
+```
 $ terraform apply -target module.vpcs
 ```
 
@@ -126,25 +130,31 @@ $ ./scripts/get_instance_info.sh
 Example output:
 ```
 # module.vpcs["app"].aws_vpc.this
-    default_security_group_id =  "sg-0a9cf13b2fbbaebce"
+    default_security_group_id =  "sg-0ee7dde9d18507107"
 
 # aws_instance.instances["app-public"]
-    private_ip                           = "10.0.3.8"
-    public_ip                            = "54.202.27.173"
+    private_ip                           = "10.0.3.6"
+    public_ip                            = "18.237.6.16"
     ipv6_addresses                       = [
-        "2600:1f24:66:c000:c173:5dde:e3da:e64f",
+        "2600:1f24:66:c000:dc86:f548:a37e:ffed",
+    ]
+
+# aws_instance.instances["app-isolated"]
+    private_ip                           = "10.1.13.151"
+    ipv6_addresses                       = [
+        "2600:1f24:66:c85c:1267:484b:a051:67d2",
     ]
 
 # aws_instance.instances["general-private"]
-    private_ip                           = "192.168.10.119"
+    private_ip                           = "192.168.10.52"
     ipv6_addresses                       = [
-        "2600:1f24:66:c100:61d5:285f:4b36:52af",
+        "2600:1f24:66:c100:2cda:88a8:d513:160b",
     ]
 
 # aws_instance.instances["cicd-private"]
-    private_ip                           = "172.16.5.205"
+    private_ip                           = "172.16.5.189"
     ipv6_addresses                       = [
-        "2600:1f24:66:c200:8d7d:5ec:b717:df5c",
+        "2600:1f24:66:c200:fd3d:d0b8:2aa3:71ca",
     ]
 
 # My Public IP
@@ -153,61 +163,76 @@ XX.XX.XX.XX
 # If you have awscli configured follow the instructions below otherwise you have to do it manually in the AWS console
 # AWS CLI Command to copy ("q" to exit returned output):
 
-aws ec2 authorize-security-group-ingress --region us-west-2 --group-id  "sg-0e7180da18aa954e0" --protocol tcp --port 22 --cidr XX.XX.XX.XX/32
+aws ec2 authorize-security-group-ingress --region us-west-2 --group-id  "sg-0ee7dde9d18507107" --protocol tcp --port 22 --cidr XX.XX.XX.XX/32
 ```
 
 Run the `awscli` command from the output above to add an inbound ssh rule from "My Public IP" to the default security group id of the App VPC.
 
-Next, ssh to the `app-public` instance public IP (ie `54.202.27.173`) using the EC2 key pair private key.
+Next, ssh to the `app-public` instance public IP (ie `18.237.6.16`) using the EC2 key pair private key.
 
 Then, ssh to the `private_ip` of the `general-private` instance, then ssh to `cicd-private`, then ssh back to `app-public`.
 
 IPv4:
 ```
-$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
+$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@18.237.6.16
 
 [ec2-user@app-public ~]$ ping google.com # works! via igw
-[ec2-user@app-public ~]$ ping 192.168.10.119 # works! via tgw
-[ec2-user@app-public ~]$ ssh 192.168.10.119
+[ec2-user@app-public ~]$ ping 192.168.10.52 # works! via tgw
+[ec2-user@app-public ~]$ ssh 192.168.10.52
 
 [ec2-user@general-private ~]$ ping google.com # doesn't work! no natgw
 [ec2-user@general-private ~]$ ping 172.16.5.205 # works! via tgw
 [ec2-user@general-private ~]$ ssh 172.16.5.205
 
 [ec2-user@cicd-private ~]$ ping google.com # works! via natgw
-[ec2-user@cicd-private ~]$ ping 10.0.3.8 # works! via tgw
-[ec2-user@cicd-private ~]$ ssh 10.0.3.8
+[ec2-user@cicd-private ~]$ ping 10.0.3.6 # works! via tgw
+[ec2-user@cicd-private ~]$ ssh 10.0.3.6
 
 [ec2-user@app-public ~]$
 ```
 
 IPv6:
-Note - If you want to ssh (`-6` flag) to app-public's ipv6 address then your client
+Note - If you want to ssh (`-6` flag) to `app-public`'s ipv6 address then your client
 must also have a ipv6 address and another inbound rule must added to the
 app vpc default security group from the client's ipv6 address. Here
 we'll ssh via IPv4 first then test IPv6 internally.
 ```
-$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@54.202.27.173
+$ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@18.237.6.16
 
 [ec2-user@app-public ~]$ ping6 google.com # works! via igw
-[ec2-user@app-public ~]$ ping6 2600:1f24:66:c100:61d5:285f:4b36:52af # works! via tgw
-[ec2-user@app-public ~]$ ssh -6 2600:1f24:66:c100:61d5:285f:4b36:52af
+[ec2-user@app-public ~]$ ping6 2600:1f24:66:c100:2cda:88a8:d513:160b # works! via tgw
+[ec2-user@app-public ~]$ ssh -6 2600:1f24:66:c100:2cda:88a8:d513:160b
 
 [ec2-user@general-private ~]$ ping6 google.com # doesn't work! not opted-in to eigw
-[ec2-user@general-private ~]$ ping6 2600:1f24:66:c200:8d7d:5ec:b717:df5c # works! via tgw
-[ec2-user@general-private ~]$ ssh -6 2600:1f24:66:c200:8d7d:5ec:b717:df5c
+[ec2-user@general-private ~]$ ping6 2600:1f24:66:c200:fd3d:d0b8:2aa3:71ca # works! via tgw
+[ec2-user@general-private ~]$ ssh -6 2600:1f24:66:c200:fd3d:d0b8:2aa3:71ca
 
 [ec2-user@cicd-private ~]$ ping6 google.com # works! via eigw opt-in
-[ec2-user@cicd-private ~]$ ping6 2600:1f24:66:c000:c173:5dde:e3da:e64f # works! via tgw
-[ec2-user@cicd-private ~]$ ssh -6 2600:1f24:66:c000:c173:5dde:e3da:e64f
+[ec2-user@cicd-private ~]$ ping6 2600:1f24:66:c000:dc86:f548:a37e:ffed # works! via tgw
+[ec2-user@cicd-private ~]$ ssh -6 2600:1f24:66:c000:dc86:f548:a37e:ffed
 
 [ec2-user@app-public ~]$
 ```
 🔻 Trifecta Complete!!!
 
+Isolated subnets:
+- Are private subnets in a route table with no routes.
+- They can only have inter-vpc communication but not to other VPCs even
+ when the VPC is in a full mesh configuration.
+
+Example:
+```
+[ec2-user@app-public ~]$ ping 10.1.13.151 # works!
+...
+[ec2-user@general-private ~]$ ping 10.1.13.151 # doesn't work!
+...
+[ec2-user@app-isolated ~]$ ping 10.0.3.6 # works!
+[ec2-user@app-isolated ~]$ ping 192.168.10.52 # doesn't work
+```
+
 **Clean Up**
 `$ terraform destroy`
-- Full teardown (destroy) works for AWS provider 5.61.0 but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM like before (see below). Not sure exactly what the fix was.
+- Full teardown (destroy) works for AWS provider 5.61.0+ but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM like before (see below). Not sure exactly what the fix was.
 
 ## Caveats
 - Full teardown (destroy) mostly works for AWS provider 5.51.1 and earlier. TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
@@ -222,7 +247,10 @@ wait until AWS releases deleted cidrs from IPAM if you want to create them again
 - There is no overlapping CIDR detection or validation.
 
 ## Version info
-Tiered VPC-NG `v1.0.3`:
+Tiered VPC-NG `v1.0.4`:
+- support for dual stack isolated subnets
+
+`v1.0.3`:
 - support for IPv6 secondary cidrs
 - aws provider `>=5.61` required
 
@@ -239,7 +267,7 @@ for private IPv6 subnets per AZ to route to the internet.
   - EIPs dont use a public pool and will continue to be AWS owned public IPv4 cidrs
 
 Centralized Router `v1.0.4`:
-- ability to switch between a blackhole route and a static route that have the same cidr/ipv6\_cidr for vpc attachments.
+- ability to gracefully switch between a blackhole route and a static route that have the same cidr/ipv6\_cidr for vpc attachments.
 
 `v1.0.3`:
 - support for IPv6 secondary cidrs
@@ -251,11 +279,4 @@ Centralized Router `v1.0.4`:
 
 `v1.0.2`:
 - generate routes for VPCs with IPv4 network cidrs, IPv4 secondary cidrs, and IPv6 cidrs.
-
-
-IPv6 Intra VPC Security Group Rule `v1.0.1`:
-- Support for IPv6 secondary cidrs
-
-`v1.0.0`:
-  - IPv6 only and separate from the IPv4 version of Intra VPC Security Group Rules.
 

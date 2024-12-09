@@ -16,6 +16,16 @@ locals {
       ]
     },
     {
+      # app-isolated
+      name = format("%s-isolated", local.tiered_vpc_names.app)
+      # lookup the private subnet id for the 'jenkins1' subnet in AZ 'b' for the 'cicd' VPC
+      subnet_id = lookup(lookup(module.vpcs, local.tiered_vpc_names.app).isolated_subnet_name_to_subnet_id, "hidden1")
+      vpc_security_group_ids = [
+        lookup(module.vpcs, local.tiered_vpc_names.app).default_security_group_id,
+        lookup(module.vpcs, local.tiered_vpc_names.app).intra_vpc_security_group_id
+      ]
+    },
+    {
       # cicd-private
       name = format("%s-private", local.tiered_vpc_names.cicd)
       # lookup the private subnet id for the 'jenkins1' subnet in AZ 'b' for the 'cicd' VPC

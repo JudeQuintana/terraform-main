@@ -49,6 +49,10 @@ locals {
       }
       azs = {
         a = {
+          isolated_subnets = [
+            # secondary cidr
+            { name = "hidden1", cidr = "10.1.13.0/24", ipv6_cidr = "2600:1f24:66:c050::/60" }
+          ]
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" }
@@ -104,7 +108,7 @@ locals {
 
 module "vpcs_usw2" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.3"
+  version = "1.0.4"
 
   providers = {
     aws = aws.usw2

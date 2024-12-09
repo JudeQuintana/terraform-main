@@ -44,6 +44,10 @@ locals {
       }
       azs = {
         a = {
+          isolated_subnets = [
+            # secondary cidr
+            { name = "hidden1", cidr = "10.1.13.0/24", ipv6_cidr = "2600:1f24:66:c850::/60" }
+          ]
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" },
@@ -53,8 +57,8 @@ locals {
             { name = "another3", cidr = "10.1.15.0/24", ipv6_cidr = "2600:1f24:66:c820::/60" }
           ]
           # Enable a NAT Gateway for all private subnets in the same AZ
-          # by adding the `natgw = true` attribute to any public subnet
-          # `special` and `natgw` can also be enabled together on a public subnet
+          # by adding the "natgw = true" attribute to any public subnet
+          # "special" and "natgw" can also be enabled together on a public subnet
           public_subnets = [
             { name = "random1", cidr = "10.0.3.0/28", ipv6_cidr = "2600:1f24:66:c000::/64" },
             { name = "haproxy1", cidr = "10.0.4.0/26", ipv6_cidr = "2600:1f24:66:c001::/64" },
@@ -129,7 +133,7 @@ locals {
 
 module "vpcs" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.3"
+  version = "1.0.4"
 
   for_each = { for t in local.tiered_vpcs : t.name => t }
 
