@@ -181,8 +181,8 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@18.237.6.16
 [ec2-user@app-public ~]$ ssh 192.168.10.52
 
 [ec2-user@general-private ~]$ ping google.com # doesn't work! no natgw
-[ec2-user@general-private ~]$ ping 172.16.5.205 # works! via tgw
-[ec2-user@general-private ~]$ ssh 172.16.5.205
+[ec2-user@general-private ~]$ ping 172.16.5.189 # works! via tgw
+[ec2-user@general-private ~]$ ssh 172.16.5.189
 
 [ec2-user@cicd-private ~]$ ping google.com # works! via natgw
 [ec2-user@cicd-private ~]$ ping 10.0.3.6 # works! via tgw
