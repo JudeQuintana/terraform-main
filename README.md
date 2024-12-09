@@ -14,14 +14,14 @@
 ```
 ## NEW Dual Stack Full Mesh Trio!
 [Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_full_mesh_trio_demo/README.md)
- - Compose a dual stack Full Mesh Transit Gateway across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.3) (at `v1.0.3`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.4) (at `v1.0.4`)  and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v1.0.1) (at `v1.0.1`) modules
+ - Compose a dual stack Full Mesh Transit Gateway across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.4) (at `v1.0.4`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.4) (at `v1.0.4`)  and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v1.0.1) (at `v1.0.1`) modules.
  - Includes an VPC peering examples within a full mesh configuration used high traffic workloads to save on cost for inter-region using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Validate connectivity with Route Anlyzer.
 
 ## Dual Stack TNT Architecture!
 [Dual Stack Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_networking_trifecta_demo/README.md)
- - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.3) (at `v1.0.3`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.4) (at `v1.0.4`) modules.
+ - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.4) (at `v1.0.4`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.4) (at `v1.0.4`) modules.
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Validate connectivity with EC2 instances.
 
