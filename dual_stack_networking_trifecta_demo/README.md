@@ -101,9 +101,13 @@ variable "base_ec2_instance_attributes" {
 }
 ```
 
-The VPCs must be applied first:
+It begins:
 ```
 $ terraform init
+```
+
+The VPCs must be applied first:
+```
 $ terraform apply -target module.vpcs
 ```
 
