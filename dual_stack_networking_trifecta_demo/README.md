@@ -227,7 +227,8 @@ Example:
 [ec2-user@general-private ~]$ ping 10.1.13.151 # doesn't work!
 ...
 [ec2-user@app-isolated ~]$ ping 10.0.3.6 # works!
-[ec2-user@app-isolated ~]$ ping 192.168.10.52 # doesn't work
+[ec2-user@app-isolated ~]$ ping 192.168.10.52 # doesn't work!
+[ec2-user@app-isolated ~]$ ping google.com # doesn't work!
 ```
 
 **Clean Up**
