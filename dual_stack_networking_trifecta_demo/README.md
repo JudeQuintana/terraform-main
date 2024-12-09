@@ -103,12 +103,12 @@ variable "base_ec2_instance_attributes" {
 
 It begins:
 ```
-$ terraform init
+terraform init
 ```
 
 The VPCs must be applied first:
 ```
-$ terraform apply -target module.vpcs
+terraform apply -target module.vpcs
 ```
 
 Now we'll:
@@ -117,7 +117,7 @@ Now we'll:
 - Launch instances in each enabled AZ for all VPCs.
 - Route between VPCs via TGW.
 ```
-$ terraform apply -target module.intra_vpc_security_group_rules -target module.ipv6_intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
+terraform apply -target module.intra_vpc_security_group_rules -target module.ipv6_intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
 ```
 or just `$ terraform apply`
 
@@ -232,7 +232,7 @@ Example:
 ```
 
 **Clean Up**
-`$ terraform destroy`
+`terraform destroy`
 - Full teardown (destroy) works for AWS provider 5.61.0+ but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM like before (see below). Not sure exactly what the fix was.
 
 ## Caveats

@@ -25,10 +25,7 @@ locals {
   ipv4_ipam_pool = data.aws_vpc_ipam_pool.ipv4
   ipv6_ipam_pool = data.aws_vpc_ipam_pool.ipv6
 
-  # ipv4 and ipv6 must use an ipam pool
-  # can start with ipv4 only and then add ipv6 later if needed.
   # vpcs with an ipv4 network cidr /18 provides /20 subnet for each AZ.
-
   tiered_vpcs = [
     {
       name = "app"
