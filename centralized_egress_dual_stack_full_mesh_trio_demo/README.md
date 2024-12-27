@@ -4,7 +4,7 @@
   - Both IPv4 and IPv6 secondary cidrs are supported.
   - No network firewall.
   - Start with IPv4 only and add IPv6 at a later time or start with both.
-  - Tested with Terraform v1.5.7 so it should also work with OpenTofu.
+  - Should also work with OpenTofu.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
   - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
 - AWS general reference: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
@@ -90,6 +90,7 @@ Imporant notes:
   public subnets (if configured with `special = true`) will have access to VPC in the Centralized Router regional mesh.
 - If there are VPCs configured with centralized egress, other VPCs can be added with out having to be
   configured for centralized egress but it makes sense that it probably should and can easily opt-in.
+- It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true`.
 - Isolated subnets within an AZ only has access to subnets with in the VPC across it's AZs but no access to or from other AZs in the mesh.
 
 ### Decentralized IPv6 Egress

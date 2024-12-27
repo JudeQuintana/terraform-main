@@ -139,7 +139,7 @@ module "vpcs" {
   tiered_vpc       = each.value
 }
 
-output "vpc_natgw_eips_per_az" {
+output "vpcs_natgw_eips_per_az" {
   value = { for v in module.vpcs : v.name => v.public_natgw_az_to_eip }
 }
 
