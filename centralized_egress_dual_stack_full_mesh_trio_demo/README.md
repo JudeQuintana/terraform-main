@@ -1,7 +1,6 @@
-# Centralized IPv4 Egress and Decentrized IPv6 Egress Demo
-- Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions.
-  - Taking a more cost effective approach to Dual Stack Full Mesh Trio Demo
-- A demonstration of how scaling centralized ipv4 egress in code can be a subset behavior from minimal configuration of tiered vpc-ng and centralized router within a full mesh topology.
+# Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions.
+- Taking a more cost effective approach to [Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_full_mesh_trio_demo)
+  - A demonstration of how scaling centralized ipv4 egress in code can be a subset behavior from minimal configuration of tiered vpc-ng and centralized router.
   - Both IPv4 and IPv6 secondary cidrs are supported.
   - No network firewall.
   - Start with IPv4 only and add IPv6 at a later time or start with both.
