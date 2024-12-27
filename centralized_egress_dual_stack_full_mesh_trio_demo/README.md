@@ -1,4 +1,4 @@
-# Dual Stack Full Mesh Trio with Centralized IPv4 Egress and Decentrized IPv6 Egress Demo
+# Centralized IPv4 Egress and Decentrized IPv6 Egress Demo
 - Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions.
   - Taking a more cost effective approach to Dual Stack Full Mesh Trio Demo
 - A demonstration of how scaling centralized ipv4 egress in code can be a subset behavior from minimal configuration of tiered vpc-ng and centralized router within a full mesh topology.
