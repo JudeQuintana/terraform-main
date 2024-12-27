@@ -41,10 +41,6 @@ locals {
       }
       azs = {
         a = {
-          isolated_subnets = [
-            # secondary cidr
-            { name = "hidden1", cidr = "10.1.13.0/24", ipv6_cidr = "2600:1f24:66:c850::/60" }
-          ]
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" },
@@ -60,6 +56,10 @@ locals {
             { name = "random1", cidr = "10.0.3.0/28", ipv6_cidr = "2600:1f24:66:c000::/64" },
             { name = "haproxy1", cidr = "10.0.4.0/26", ipv6_cidr = "2600:1f24:66:c001::/64" },
             { name = "other", cidr = "10.0.10.0/28", ipv6_cidr = "2600:1f24:66:c002::/64", special = true }
+          ]
+          isolated_subnets = [
+            # secondary cidr
+            { name = "hidden1", cidr = "10.1.13.0/24", ipv6_cidr = "2600:1f24:66:c850::/60" }
           ]
         }
         b = {
@@ -87,8 +87,8 @@ locals {
         c = {
           #eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "db1", cidr = "192.168.10.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true },
-            { name = "db2", cidr = "192.168.11.0/24", ipv6_cidr = "2600:1f24:66:c101::/64" }
+            { name = "util2", cidr = "192.168.10.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true },
+            { name = "util1", cidr = "192.168.11.0/24", ipv6_cidr = "2600:1f24:66:c101::/64" }
           ]
           public_subnets = [
             { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64" }
@@ -130,7 +130,7 @@ locals {
 
 module "vpcs" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.4"
+  version = "1.0.5"
 
   for_each = { for t in local.tiered_vpcs : t.name => t }
 

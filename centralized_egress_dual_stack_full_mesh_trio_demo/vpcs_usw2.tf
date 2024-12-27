@@ -42,6 +42,9 @@ locals {
         network_cidr    = "10.0.0.0/18"
         secondary_cidrs = ["10.1.0.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_usw2
+        centralized_egress = {
+          private = true
+        }
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c000::/56"
@@ -49,13 +52,10 @@ locals {
       }
       azs = {
         a = {
-          #eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "another", cidr = "10.0.9.0/24", ipv6_cidr = "2600:1f24:66:c008::/64" }
           ]
-          # Enable a NAT Gateway for all private subnets in the same AZ
-          # by adding the `natgw = true` attribute to any public subnet
-          # `special` and `natgw` can also be enabled together on a public subnet
           public_subnets = [
             { name = "random1", cidr = "10.0.3.0/28", ipv6_cidr = "2600:1f24:66:c000::/64" },
             { name = "haproxy1", cidr = "10.0.4.0/26", ipv6_cidr = "2600:1f24:66:c001::/64" },
@@ -63,16 +63,20 @@ locals {
           ]
           isolated_subnets = [
             # secondary cidr
-            { name = "hidden1", cidr = "10.1.13.0/24", ipv6_cidr = "2600:1f24:66:c050::/60" }
+            { name = "db1", cidr = "10.1.13.0/24", ipv6_cidr = "2600:1f24:66:c050::/60" }
           ]
         }
         b = {
-          #eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "cluster2", cidr = "10.0.16.0/24", ipv6_cidr = "2600:1f24:66:c006::/64" },
             { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", special = true },
+            #{ name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", },
             # secondary subnet
-            { name = "random3", cidr = "10.1.0.0/24", ipv6_cidr = "2600:1f24:66:c009::/64" }
+          ]
+          isolated_subnets = [
+            # secondary cidr
+            { name = "db2", cidr = "10.1.0.0/24", ipv6_cidr = "2600:1f24:66:c009::/64" }
           ]
         }
       }
@@ -83,22 +87,33 @@ locals {
         network_cidr    = "192.168.0.0/18"
         secondary_cidrs = ["192.168.144.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_usw2
+        centralized_egress = {
+          central = true
+        }
       }
       ipv6 = {
         network_cidr = "2600:1f24:66:c100::/56"
         ipam_pool    = local.ipv6_ipam_pool_usw2
       }
       azs = {
-        c = {
-          #eigw = true # opt-in ipv6 private subnets to route out eigw per az
+        a = {
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "util2", cidr = "192.168.10.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true },
             { name = "util1", cidr = "192.168.11.0/24", ipv6_cidr = "2600:1f24:66:c101::/64" }
           ]
           public_subnets = [
-            { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64" },
+            { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64", natgw = true },
+          ]
+        }
+        b = {
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          private_subnets = [
+            { name = "cluster5", cidr = "192.168.13.0/24", ipv6_cidr = "2600:1f24:66:c102::/64", special = true }
+          ]
+          public_subnets = [
             # secondary subnet
-            { name = "other3", cidr = "192.168.144.0/24", ipv6_cidr = "2600:1f24:66:c109::/64" }
+            { name = "other3", cidr = "192.168.144.0/24", ipv6_cidr = "2600:1f24:66:c109::/64", natgw = true }
           ]
         }
       }
@@ -119,5 +134,9 @@ module "vpcs_usw2" {
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
   tiered_vpc       = each.value
+}
+
+output "vpc_usw2_natgw_eips_per_az" {
+  value = { for v in module.vpcs_usw2 : v.name => v.public_natgw_az_to_eip }
 }
 

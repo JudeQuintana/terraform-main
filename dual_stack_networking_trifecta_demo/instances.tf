@@ -89,4 +89,8 @@ EOF
   tags = {
     Name = each.value.name
   }
+
+  lifecycle {
+    ignore_changes = [ami]
+  }
 }
