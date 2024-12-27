@@ -248,7 +248,19 @@ wait until AWS releases deleted cidrs from IPAM if you want to create them again
 - There is no overlapping CIDR detection or validation.
 
 ## Version info
-Tiered VPC-NG `v1.0.4`:
+
+Tiered VPC-NG `v1.0.5`:
+- support for centralized egress modes when passed to centralized router
+  - `central = true` makes VPC the egress VPC
+  - `private = true` makes VPC opt in to route private subnet traffic out the egress VPC per AZ
+  - outputs for each mode
+- new `output.public_natgw_az_to_eip` map of natgw eip per az
+- better validation on private and public subnets that have `special = true` attribute set per AZ
+  - allows for more fexible building and destroying AZs for the VPC.
+- AWS ref: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
+- New [Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo)
+
+`v1.0.4`:
 - support for dual stack isolated subnets
 
 `v1.0.3`:
@@ -267,7 +279,21 @@ for private IPv6 subnets per AZ to route to the internet.
   - Can be used as a vpc attachemnt when passed to centralized router.
   - EIPs dont use a public pool and will continue to be AWS owned public IPv4 cidrs
 
-Centralized Router `v1.0.4`:
+Centralized Router `v1.0.5`:
+- support for VPC centralized egress modes when passed to centralized router with validation
+  - when a VPC has `central = true` create `0.0.0.0/0` route on tgw route table
+  - when a VPC has `private = true` create `0.0.0.0/0` route on all private subnet route tables.
+- It is no longer required for a VPC's AZ to have a private or public subnet with `special = true` but
+  if there are subnets with `special = true` then it must be either 1 private or 1 public subnet that has it
+  configured per AZ (validation enforced).
+- Any VPC that has a private or public subnet with `special = true`, that subnet will be used as
+  the VPC attachment for it's AZ when passed to Centralized Router.
+- If the VPC does not have any AZs with private or public subnet with `special = true` it will be removed
+- AWS ref: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
+- New [Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo)
+  from the Centralized Router.
+
+`v1.0.4`:
 - ability to gracefully switch between a blackhole route and a static route that have the same cidr/ipv6\_cidr for vpc attachments.
 
 `v1.0.3`:
