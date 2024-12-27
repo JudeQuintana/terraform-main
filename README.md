@@ -13,7 +13,7 @@
 --=[ #StayUp ]=--
 ```
 ## NEW Centralized Egress Dual Stack Full Mesh Trio!
-[Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress/dual_stack_full_mesh_trio_demo/README.md)
+[Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo/README.md)
  - Compose a Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.5) (at `v1.0.5`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.5) (at `v1.0.5`)  and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v1.0.1) (at `v1.0.1`) modules.
  - Includes an VPC peering examples within a full mesh configuration used high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
