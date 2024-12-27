@@ -8,7 +8,6 @@
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
   - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
 - AWS general reference: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
-  - Setup is not exactly like the linked architecture since I'm not using multiple route tables, only one.
 
 ### Centralized IPv4 Egress
 Egress VPC:
