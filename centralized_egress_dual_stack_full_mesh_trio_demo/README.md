@@ -242,7 +242,8 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
             - `2600:1f28:3d:c400::/56`
 
 ### Build Demo
-1. It begins: - `terraform init`
+1. It begins:
+  - `terraform init`
 
 2. Apply Tiered-VPCs (must exist before Centralized Routers, VPC Peering Deluxe and Full Mesh Intra VPC Security Group Rules):
   - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
