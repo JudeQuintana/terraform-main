@@ -79,8 +79,7 @@ locals {
         secondary_cidrs = ["172.16.208.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_use2
         centralized_egress = {
-          central   = true
-          remove_az = true
+          central = true
         }
       }
       ipv6 = {
