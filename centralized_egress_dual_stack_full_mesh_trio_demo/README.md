@@ -3,6 +3,7 @@
   - A demonstration of how scaling centralized ipv4 egress in code can be a subset behavior from minimal configuration of tiered vpc-ng and centralized router.
   - Both IPv4 and IPv6 secondary cidrs are supported.
   - No network firewall.
+  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
   - Start with IPv4 only and add IPv6 at a later time or start with both.
   - Should also work with OpenTofu.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
