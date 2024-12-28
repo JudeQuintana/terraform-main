@@ -114,12 +114,10 @@ AZ and VPC removal:
 - There are times where an AZ or a VPC will need to be decomissioned.
 - If an AZ is removed in the code that has a subnet with `special = true` then the subnet deletion will timeout.
 - In order to safely remove the AZ:
-  - `special = true` must be removed from the subnet and terraform apply the VPC(s) first.
-    - this will isolate the AZ from regional mesh even though the AZ has
-      route tables still pointing to other VPCs.
+  - `special = true` must be removed from the subnet and terraform apply the VPC(s) first
+    - Then apply Centralized Router to remove the sunbet from the VPC attachment.
+    - This will isolate the AZ from regional mesh even though the AZ has route tables still pointing to other VPCs.
   - Remove AZ from the VPC and terraform apply VPCs again
-  - Then apply Centralized Router and Full Mesh Trio to keep the
-    regional and cross regional mesh updated.
   - Can be done for any VPC except if the VPC has the centralized egress
     `central = true` configuration.
     - The egress VPC validation will block removing an AZ
@@ -138,13 +136,12 @@ AZ and VPC removal:
 ```
 
 - Safely remove a VPC:
-  - Remove `special = true` from each subnet that has it per AZ and appy VPCs first.
-  - Apply Centralized Router and Full mesh Trio modules to remove the
-    VPC routes from the regional and cross regional mesh.
+  - Remove `special = true` from all subnets that have it set per AZ and apply VPCs first.
+  - Apply Centralized Router and Full mesh Trio modules to remove the VPC routes from the regional and cross regional mesh.
     - When there are no vpc attachements (`special = true`) on a VPC when passed to Centralized Router,
       the VPC and TGW routes will be removed from the regional mesh.
   - Apply VPC peering deluxe to update any subnet routing for the peering.
-  - remove VPC from code and apply VPCs to delete.
+  - Remove VPC from code and apply VPCs to delete.
 
 ---
 ## Begin Demo
