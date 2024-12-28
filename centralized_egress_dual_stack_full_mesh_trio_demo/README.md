@@ -140,8 +140,8 @@ AZ and VPC removal:
   - Apply Centralized Router and Full mesh Trio modules to remove the VPC routes from the regional and cross regional mesh.
     - When there are no vpc attachements (`special = true`) on a VPC when passed to Centralized Router,
       the VPC and TGW routes will be removed from the regional mesh.
-  - Apply VPC peering deluxe to update any subnet routing for the peering.
   - Remove VPC from code and apply VPCs to delete.
+  - Apply VPC peering deluxe to update any subnet routing for the peering.
 
 ---
 ## Begin Demo
