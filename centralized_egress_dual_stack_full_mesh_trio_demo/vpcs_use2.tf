@@ -50,13 +50,13 @@ locals {
         a = {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "jenkins1", cidr = "172.16.65.0/24", ipv6_cidr = "2600:1f26:21:c001::/64" },
+            { name = "jenkins1", cidr = "172.16.65.0/24", ipv6_cidr = "2600:1f26:21:c001::/64" }
           ]
           public_subnets = [
             { name = "other", cidr = "172.16.68.0/28", ipv6_cidr = "2600:1f26:21:c002::/64", special = true },
             { name = "other2", cidr = "172.16.76.16/28", ipv6_cidr = "2600:1f26:21:c003::/64" },
             # ipv6 secondary cidr
-            { name = "test1", cidr = "172.16.77.32/28", ipv6_cidr = "2600:1f26:21:c400::/60" },
+            { name = "test1", cidr = "172.16.77.32/28", ipv6_cidr = "2600:1f26:21:c400::/60" }
           ]
         }
         c = {

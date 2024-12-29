@@ -70,9 +70,7 @@ locals {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "cluster2", cidr = "10.0.16.0/24", ipv6_cidr = "2600:1f24:66:c006::/64" },
-            { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", special = true },
-            #{ name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", },
-            # secondary subnet
+            { name = "random2", cidr = "10.0.17.0/24", ipv6_cidr = "2600:1f24:66:c007::/64", special = true }
           ]
           isolated_subnets = [
             # secondary cidr
@@ -103,7 +101,7 @@ locals {
             { name = "util1", cidr = "192.168.11.0/24", ipv6_cidr = "2600:1f24:66:c101::/64" }
           ]
           public_subnets = [
-            { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64", natgw = true },
+            { name = "other2", cidr = "192.168.14.0/28", ipv6_cidr = "2600:1f24:66:c108::/64", natgw = true }
           ]
         }
         b = {
