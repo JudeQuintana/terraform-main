@@ -249,7 +249,10 @@ wait until AWS releases deleted cidrs from IPAM if you want to create them again
 
 ## Version info
 
-Tiered VPC-NG `v1.0.5`:
+Tiered VPC-NG `v1.0.6`:
+- minor: public_az_to_subnet_cidrs and isolated_az_to_subnet_cidrs logic not needed but is required for private_az_to_subnet_cidrs because it is used for route table resource creation.
+
+`v1.0.5`:
 - support for centralized egress modes when passed to centralized router
   - `central = true` makes VPC the egress VPC
   - `private = true` makes VPC opt in to route private subnet traffic out the egress VPC per AZ
@@ -279,7 +282,10 @@ for private IPv6 subnets per AZ to route to the internet.
   - Can be used as a vpc attachemnt when passed to centralized router.
   - EIPs dont use a public pool and will continue to be AWS owned public IPv4 cidrs
 
-Centralized Router `v1.0.5`:
+Centralized Router `v1.0.6`:
+- remove legacy output vpc.routes. will rebuild super router at a later time but no need to keep this around.
+
+`v1.0.5`:
 - support for VPC centralized egress modes when passed to centralized router with validation
   - when a VPC has `central = true` create `0.0.0.0/0` route on tgw route table
   - when a VPC has `private = true` create `0.0.0.0/0` route on all private subnet route tables.
