@@ -91,7 +91,7 @@ Imporant notes:
   public subnets (if configured with `special = true`) will have access to VPC in the Centralized Router regional mesh.
 - If there are VPCs configured with centralized egress, other VPCs can be added with out having to be
   configured for centralized egress but it makes sense that it probably should and can easily opt-in.
-- It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true`.
+- It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true` but it does matter for `central = true`.
 - Isolated subnets within an AZ only has access to subnets with in the VPC across it's AZs but no access to or from other AZs in the mesh.
 
 ### Decentralized IPv6 Egress
@@ -118,6 +118,8 @@ AZ and VPC removal:
     - Then apply Centralized Router to remove the sunbet from the VPC attachment.
     - This will isolate the AZ from regional mesh even though the AZ has route tables still pointing to other VPCs.
   - Remove AZ from the VPC and terraform apply VPCs again
+    - removing an AZ can also be an example egress VPC AZ fail over
+      depending on configuration.
   - Can be done for any VPC except if the VPC has the centralized egress
     `central = true` configuration.
     - The egress VPC validation will block removing an AZ
