@@ -114,7 +114,7 @@ locals {
 
 module "vpcs_use2" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.6"
+  version = "1.0.7"
 
   providers = {
     aws = aws.use2

@@ -7,7 +7,7 @@
   - Start with IPv4 only and add IPv6 at a later time or start with both.
   - Should also work with OpenTofu.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
-  - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
+  - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
 - AWS general reference: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
 
 ### Centralized IPv4 Egress

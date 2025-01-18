@@ -4,6 +4,7 @@
 - Both IPv4 and IPv6 secondary cidrs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
+- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
 
 ### VPC CIDRs
 - `us-east-2`

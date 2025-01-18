@@ -130,7 +130,7 @@ locals {
 
 module "vpcs" {
   source  = "JudeQuintana/tiered-vpc-ng/aws"
-  version = "1.0.6"
+  version = "1.0.7"
 
   for_each = { for t in local.tiered_vpcs : t.name => t }
 
