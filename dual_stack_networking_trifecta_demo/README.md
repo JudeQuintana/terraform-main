@@ -1,7 +1,7 @@
 # Dual Stack Networking Trifecta Demo
 - The dual stack version of the (IPv4 only) [Networking Trifecta demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo).
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
-- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
+- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
 - Both IPv4 and IPv6 secondary cidrs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
 
@@ -236,20 +236,15 @@ Example:
 - Full teardown (destroy) works for AWS provider 5.61.0+ but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM like before (see below). Not sure exactly what the fix was.
 
 ## Caveats
-- Full teardown (destroy) mostly works for AWS provider 5.51.1 and earlier. TF AWS Provider has a bug when a VPC is using an IPv6 allocation from IPAM Advanced Tier. When the VPC is being deleted via Terraform it will time out 15+ min to get a failed apply with `Error: waiting for EC2 VPC IPAM Pool Allocation delete: found resource`. However when actual behavior is that the VPC is deleted but ends up being a failed TF apply with ipam errors. AWS wont release the ipv6 cidr allocations right away (30+ min w/ advanced tier, 24hrs+ with free tier) because it thinks the vpc still exists. Not allowed to manually delete the cidr allocation via console or api so can not release or reuse the allocation until AWS decides to auto release them.
-  - You can Ctrl-C to kill the apply when it tries to delete the vpcs (last step in destroy) or wait until the apply timeout (it will fail). Then if you apply the vpcs again `terraform apply -target module.vpcs` then TF will clean up missing VPCs from state. But you'll have to
-wait until AWS releases deleted cidrs from IPAM if you want to create them again.
-  - Found [this]( https://github.com/hashicorp/terraform-provider-aws/issues/31211) bug report.
-
-  - It does appear aws not releasing the allocation quickly is normal behavior. I can delete the vpc with no failure in the console UI and the allocation is not deleted. So it is a TF AWS provider bug. the possible [workaround](https://github.com/hashicorp/terraform-provider-aws/pull/34628) has yet to be merged. no graceful vpc destroy when using ipam is painful
-
 - The modules build resources that will cost some money but should be minimal for the demo.
-
 - There is no overlapping CIDR detection or validation.
 
 ## Version info
 
-Tiered VPC-NG `v1.0.6`:
+Tiered VPC-NG `v1.0.7`:
+- tag individual private, public or isolated subnets. useful for kubernetes clusters. Not demonstrated in this demo but it is available.
+
+`v1.0.6`:
 - minor: public_az_to_subnet_cidrs and isolated_az_to_subnet_cidrs logic not needed but is required for private_az_to_subnet_cidrs because it is used for route table resource creation.
 
 `v1.0.5`:
