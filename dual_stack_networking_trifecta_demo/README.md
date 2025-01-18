@@ -233,7 +233,7 @@ Example:
 
 **Clean Up**
 `terraform destroy`
-- Full teardown (destroy) works for AWS provider 5.61.0+ but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM like before (see below). Not sure exactly what the fix was.
+- Full teardown (destroy) works for AWS provider 5.61.0+ but the VPC destroy in the last step will take about 10-30 min to finish deleting cleanly after waiting for AWS to release IPAM pool CIDRs without error. Now you can immediately rebuild with the same cidrs after the destroy without waiting for IPAM.
 
 ## Caveats
 - The modules build resources that will cost some money but should be minimal for the demo.
