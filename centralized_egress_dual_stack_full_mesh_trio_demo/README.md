@@ -151,55 +151,55 @@ AZ and VPC removal:
 
 ### VPC CIDRs
 - `us-east-2`
-  - App1 VPC Tier:
+  - App1 VPC Tier (`private = true`):
     - IPv4: `172.16.64.0/18`
     - IPv4 Secondaries: `172.16.192.0/20`
     - IPv6: `2600:1f26:21:c000::/56`
     - IPv6 Secondaries: `2600:1f26:21:c400::/56`
-  -  Infra1 VPC Tier:
+  -  Infra1 VPC Tier (`private = true`):
     - IPv4: ``
     - IPv4 Secondaries: ``
     - IPv6: ``
     - IPv6 Secondaries: ``
-  - General1 VPC Tier:
+  - General1 VPC Tier (`central = true`):
     - IPv4: `172.16.128.0/18`
     - IPv4 Secondaries: `172.16.208.0/20`
     - IPv6: `2600:1f26:21:c100::/56`
-    - No IPv6 Secondaries
+    - IPv6 Secondaries: None
 
 - `us-west-2`
-  - App2 VPC Tier:
+  - App2 VPC Tier (`private = true`):
     - IPv4: `10.0.0.0/18`
     - IPv4 Secondaries: `10.1.0.0/20`
     - IPv6: `2600:1f24:66:c000::/56`
-    - No IPv6 Secondaries
-  - Infra2 VPC Tier:
-    - IPv4: ``
-    - IPv4 Secondaries: ``
-    - IPv6: ``
-    - IPv6 Secondaries: ``
-  - General2 VPC Tier:
+    - IPv6 Secondaries: None
+  - Infra2 VPC Tier (`private = true`):
+    - IPv4: `10.2.0.0/18 `
+    - IPv4 Secondaries: `10.2.64.0/20`
+    - IPv6: `2600:1f24:66:ca00::/56`
+    - IPv6 Secondaries: `2600:1f24:66:cd00::/56`
+  - General2 VPC Tier (`central = true`):
     - IPv4: `192.168.0.0/18`
     - IPv4 Secondaries: `192.168.144.0/20`
     - IPv6: `2600:1f24:66:c100::/56`
-    - No IPv6 Secondaries
+    - IPv6 Secondaries: None
 
 - `us-east-1`
-  - App3 VPC Tier:
+  - App3 VPC Tier (`private = true`):
     - IPv4: `10.0.64.0/18`
     - IPv4 Secondaries: `10.1.64.0/20`
     - IPv6: `2600:1f28:3d:c000::/56`
-    - No IPv6 Secondaries
-  - Infra3 VPC Tier:
+    - IPv6 Secondaries: None
+  - Infra3 VPC Tier (`private = true`):
     - IPv4: ``
     - IPv4 Secondaries: ``
     - IPv6: ``
     - IPv6 Secondaries: ``
-  - General3 VPC Tier:
+  - General3 VPC Tier (`central = true`):
     - IPv4: `192.168.64.0/18`
     - IPv4 Secondaries: `192.168.128.0/20`
     - IPv6: `2600:1f28:3d:c400::/56`
-    - No IPv6 Secondaries
+    - IPv6 Secondaries: None
 
 VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
 
@@ -234,6 +234,8 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
       - Provisioned CIDRs:
         - `10.0.0.0/18`
         - `10.1.0.0/20`
+        - `10.2.0.0/18 `
+        - `10.2.64.0/20`
         - `192.168.0.0/18`
         - `192.168.144.0/20`
     - IPv6 regional pool (public scope)
@@ -242,6 +244,8 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
           - Provisioned CIDRs:
             - `2600:1f24:66:c000::/56`
             - `2600:1f24:66:c100::/56`
+            - `2600:1f24:66:ca00::/56`
+            - `2600:1f24:66:cd00::/56`
 
   - `us-east-1` (ipam locale)
     - IPv4 Pool (private scope)
