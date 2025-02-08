@@ -102,7 +102,7 @@ locals {
             { name = "", cidr = "", ipv6_cidr = "" }
           ]
         }
-        b = {
+        c = {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "", cidr = "", ipv6_cidr = "" },
