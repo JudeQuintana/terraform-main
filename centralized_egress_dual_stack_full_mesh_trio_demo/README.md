@@ -9,6 +9,7 @@
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
   - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
 - AWS general reference: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
+- Example single region potential cost breakdown: https://awstip.com/centralized-egress-traffic-via-the-shared-nat-gateway-in-a-multi-account-aws-environment-3b682d8737ca
 
 ### Centralized IPv4 Egress
 Egress VPC:
@@ -65,25 +66,25 @@ Or traffic is load balance between more than one egress VPC AZ NATGW if there ar
 
 Relative AZ example:
 ```
-egress vpc
+egress vpc (`central = true`)
 - AZ `a` NATGW
 - AZ `c` NATGW
 
-vpc A (opted into centralized egress with `private = true`)
-- private subnets AZ `a` -> traffic routes out of egress VPC AZ `a`
-- private subnets AZ `c` -> traffic routes out of egress VPC AZ `c`
+vpc A (`private = true`)
+- private subnets AZ `a` -> traffic routes out of egress VPC AZ `a` NATGW
+- private subnets AZ `c` -> traffic routes out of egress VPC AZ `c` NATGW
 ```
 
 Non-relative AZ example:
 ```
-egress vpc
+egress vpc (`central = true`)
 - AZ `a` NATGW
 - AZ `b` NATGW
 
 vpc B (opted into centralized egress with `private = true`)
-- private subnets AZ `a` -> traffic routes out of egress VPC AZ `a`
-- private subnets AZ `b` -> traffic routes out of egress VPC AZ `b`
-- private subnets AZ `c` -> traffic route is "load balanced" between egress VPC AZ `a` and `b`
+- private subnets AZ `a` -> traffic routes out of egress VPC AZ `a` NATGW
+- private subnets AZ `b` -> traffic routes out of egress VPC AZ `b` NATGW
+- private subnets AZ `c` -> traffic route is "load balanced" between egress VPC AZ `a` and `b` NATGWs
 ```
 
 Imporant notes:
@@ -155,6 +156,11 @@ AZ and VPC removal:
     - IPv4 Secondaries: `172.16.192.0/20`
     - IPv6: `2600:1f26:21:c000::/56`
     - IPv6 Secondaries: `2600:1f26:21:c400::/56`
+  -  Infra1 VPC Tier:
+    - IPv4: ``
+    - IPv4 Secondaries: ``
+    - IPv6: ``
+    - IPv6 Secondaries: ``
   - General1 VPC Tier:
     - IPv4: `172.16.128.0/18`
     - IPv4 Secondaries: `172.16.208.0/20`
@@ -167,6 +173,11 @@ AZ and VPC removal:
     - IPv4 Secondaries: `10.1.0.0/20`
     - IPv6: `2600:1f24:66:c000::/56`
     - No IPv6 Secondaries
+  - Infra2 VPC Tier:
+    - IPv4: ``
+    - IPv4 Secondaries: ``
+    - IPv6: ``
+    - IPv6 Secondaries: ``
   - General2 VPC Tier:
     - IPv4: `192.168.0.0/18`
     - IPv4 Secondaries: `192.168.144.0/20`
@@ -179,6 +190,11 @@ AZ and VPC removal:
     - IPv4 Secondaries: `10.1.64.0/20`
     - IPv6: `2600:1f28:3d:c000::/56`
     - No IPv6 Secondaries
+  - Infra3 VPC Tier:
+    - IPv4: ``
+    - IPv4 Secondaries: ``
+    - IPv6: ``
+    - IPv6 Secondaries: ``
   - General3 VPC Tier:
     - IPv4: `192.168.64.0/18`
     - IPv4 Secondaries: `192.168.128.0/20`

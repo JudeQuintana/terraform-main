@@ -73,6 +73,49 @@ locals {
       }
     },
     {
+      name = "infra1"
+      ipv4 = {
+        network_cidr    = ""
+        secondary_cidrs = [""]
+        ipam_pool       = local.ipv4_ipam_pool_use2
+        centralized_egress = {
+          private = true
+        }
+      }
+      ipv6 = {
+        network_cidr = ""
+        ipam_pool    = local.ipv6_ipam_pool_use2
+      }
+      azs = {
+        a = {
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          private_subnets = [
+            { name = "", cidr = "", ipv6_cidr = "" }
+          ]
+          public_subnets = [
+            { name = "", cidr = "", ipv6_cidr = "" },
+            { name = "", cidr = "", ipv6_cidr = "" },
+            { name = "", cidr = "", ipv6_cidr = "", special = true }
+          ]
+          isolated_subnets = [
+            # secondary cidr
+            { name = "", cidr = "", ipv6_cidr = "" }
+          ]
+        }
+        b = {
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          private_subnets = [
+            { name = "", cidr = "", ipv6_cidr = "" },
+            { name = "", cidr = "", ipv6_cidr = "", special = true }
+          ]
+          isolated_subnets = [
+            # secondary cidr
+            { name = "", cidr = "", ipv6_cidr = "" }
+          ]
+        }
+      }
+    },
+    {
       name = "general1"
       ipv4 = {
         network_cidr    = "172.16.128.0/18"
