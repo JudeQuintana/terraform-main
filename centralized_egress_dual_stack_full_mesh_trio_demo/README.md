@@ -191,10 +191,10 @@ AZ and VPC removal:
     - IPv6: `2600:1f28:3d:c000::/56`
     - IPv6 Secondaries: None
   - Infra3 VPC Tier (`private = true`):
-    - IPv4: ``
-    - IPv4 Secondaries: ``
-    - IPv6: ``
-    - IPv6 Secondaries: ``
+    - IPv4: `172.18.0.0/18`
+    - IPv4 Secondaries: `172.18.64.0/20`
+    - IPv6: `2600:1f28:3d:c700::/56`
+    - IPv6 Secondaries: `2600:1f28:3d:c800::/56`
   - General3 VPC Tier (`central = true`):
     - IPv4: `192.168.64.0/18`
     - IPv4 Secondaries: `192.168.128.0/20`
@@ -258,12 +258,16 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
         - `10.1.64.0/20`
         - `192.168.64.0/18`
         - `192.168.128.0/20`
+        - `172.18.0.0/18`
+        - `172.18.64.0/20`
     - IPv6 regional pool (public scope)
       - `2600:1f28:3d:c000::/52`
         - IPv6 subpool (public scope)
           - Provisioned CIDRs:
             - `2600:1f28:3d:c000::/56`
             - `2600:1f28:3d:c400::/56`
+            - `2600:1f28:3d:c700::/56`
+            - `2600:1f28:3d:c800::/56`
 
 ### Build Demo
 1. It begins:
