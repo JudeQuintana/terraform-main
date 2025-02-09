@@ -157,10 +157,10 @@ AZ and VPC removal:
     - IPv6: `2600:1f26:21:c000::/56`
     - IPv6 Secondaries: `2600:1f26:21:c400::/56`
   -  Infra1 VPC Tier (`private = true`):
-    - IPv4: ``
-    - IPv4 Secondaries: ``
-    - IPv6: ``
-    - IPv6 Secondaries: ``
+    - IPv4: `192.168.192.0/18`
+    - IPv4 Secondaries: `192.168.160.0/20`
+    - IPv6: `2600:1f26:21:c900::/56`
+    - IPv6 Secondaries: None
   - General1 VPC Tier (`central = true`):
     - IPv4: `172.16.128.0/18`
     - IPv4 Secondaries: `172.16.208.0/20`
@@ -221,6 +221,9 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
         - `172.16.128.0/18`
         - `172.16.192.0/20`
         - `172.16.208.0/20`
+        - `192.168.192.0/18`
+        - `192.168.160.0/20`
+
     - IPv6 regional pool (public scope)
       - `2600:1f26:21:c000::/52`
         - IPv6 subpool (public scope)
@@ -228,6 +231,7 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
             - `2600:1f26:21:c000::/56`
             - `2600:1f26:21:c100::/56`
             - `2600:1f26:21:c400::/56`
+            - `2600:1f26:21:c900::/56`
 
   - `us-west-2` (ipam locale)
     - IPv4 Pool (private scope)

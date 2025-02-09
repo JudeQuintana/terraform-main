@@ -75,15 +75,15 @@ locals {
     {
       name = "infra1"
       ipv4 = {
-        network_cidr    = ""
-        secondary_cidrs = [""]
+        network_cidr    = "192.168.192.0/18"
+        secondary_cidrs = ["192.168.160.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_use2
         centralized_egress = {
           private = true
         }
       }
       ipv6 = {
-        network_cidr = ""
+        network_cidr = "2600:1f26:21:c900::/56"
         ipam_pool    = local.ipv6_ipam_pool_use2
       }
       azs = {
