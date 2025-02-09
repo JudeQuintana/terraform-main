@@ -91,7 +91,7 @@ locals {
         a = {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "haproxy5", cidr = "172.18.0.0/24	", ipv6_cidr = "2600:1f28:3d:c700::/64" }
+            { name = "haproxy5", cidr = "172.18.0.0/24", ipv6_cidr = "2600:1f28:3d:c700::/64" }
           ]
           public_subnets = [
             { name = "edge3", cidr = "172.18.3.0/24", ipv6_cidr = "2600:1f28:3d:c703::/64" },
