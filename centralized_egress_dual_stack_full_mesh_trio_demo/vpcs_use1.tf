@@ -91,27 +91,26 @@ locals {
         a = {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "", cidr = "", ipv6_cidr = "" }
+            { name = "haproxy5", cidr = "172.18.0.0/24	", ipv6_cidr = "2600:1f28:3d:c700::/64" }
           ]
           public_subnets = [
-            { name = "", cidr = "", ipv6_cidr = "" },
-            { name = "", cidr = "", ipv6_cidr = "" },
-            { name = "", cidr = "", ipv6_cidr = "", special = true }
+            { name = "edge3", cidr = "172.18.3.0/24", ipv6_cidr = "2600:1f28:3d:c703::/64" },
+            { name = "edge4", cidr = "172.18.4.0/24", ipv6_cidr = "2600:1f28:3d:c705::/64", special = true }
           ]
           isolated_subnets = [
-            # secondary cidr
-            { name = "", cidr = "", ipv6_cidr = "" }
+            # ipv6 secondary cidr
+            { name = "db11", cidr = "172.18.9.0/24", ipv6_cidr = "2600:1f28:3d:c880::/60" }
           ]
         }
         b = {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
-            { name = "", cidr = "", ipv6_cidr = "" },
-            { name = "", cidr = "", ipv6_cidr = "", special = true }
+            { name = "util4", cidr = "172.18.12.0/24", ipv6_cidr = "2600:1f28:3d:c708::/64" },
+            { name = " util5", cidr = "172.18.15.0/24", ipv6_cidr = "2600:1f28:3d:c70a::/64", special = true }
           ]
           isolated_subnets = [
             # secondary cidr
-            { name = "", cidr = "", ipv6_cidr = "" }
+            { name = "db12", cidr = "172.18.67.0/24", ipv6_cidr = "2600:1f28:3d:c70c::/64" }
           ]
         }
       }
