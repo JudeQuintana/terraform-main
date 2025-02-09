@@ -223,7 +223,6 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
         - `172.16.208.0/20`
         - `192.168.192.0/18`
         - `192.168.160.0/20`
-
     - IPv6 regional pool (public scope)
       - `2600:1f26:21:c000::/52`
         - IPv6 subpool (public scope)
