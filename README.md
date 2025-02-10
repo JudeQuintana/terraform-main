@@ -58,6 +58,12 @@
  - Validate connectivity with AWS Route Analyzer.
 
 ---
+### Useful Tools
+- [IPv4 Subnet Calculator](https://visualsubnetcalc.com/#)
+- [IPv6 Subnet Calculator](https://subnettingpractice.com/ipv6-subnet-calculator.html)
+- `brew install ipcalc`
+
+---
 ### Notes
 - Sometimes I'll blog about ideas at [jq1.io](https://jq1.io).
 - All modules are first developed in the [terraform-modules](https://github.com/JudeQuintana/terraform-modules) repo.
