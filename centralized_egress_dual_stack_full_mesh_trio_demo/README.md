@@ -204,7 +204,7 @@ AZ and VPC removal:
 VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
 
 The resulting architecture is a centralized ipv4 egress and decentralized ipv6 egress in a dual stack full mesh topology across 3 regions:
-![dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/dual-stack-full-mesh-trio.png)
+![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio.png)
 
 ### IPAM Configuration
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
