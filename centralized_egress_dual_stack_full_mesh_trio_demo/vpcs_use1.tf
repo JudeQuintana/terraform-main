@@ -106,7 +106,7 @@ locals {
           eigw = true # opt-in ipv6 private subnets to route out eigw per az
           private_subnets = [
             { name = "util4", cidr = "172.18.12.0/24", ipv6_cidr = "2600:1f28:3d:c708::/64" },
-            { name = " util5", cidr = "172.18.15.0/24", ipv6_cidr = "2600:1f28:3d:c70a::/64", special = true }
+            { name = "util5", cidr = "172.18.15.0/24", ipv6_cidr = "2600:1f28:3d:c70a::/64", special = true }
           ]
           isolated_subnets = [
             # secondary cidr

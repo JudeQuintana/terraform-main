@@ -214,6 +214,7 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
   - In this demo, ipam pools for all locales are managed in the `us-west-2` region via AWS Console UI.
   - No IPv4 regional pools at the moment.
   - IPv6 subpools need a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
+
   - `us-east-2` (ipam locale)
     - IPv4 Pool (private scope)
       - Provisioned CIDRs:
