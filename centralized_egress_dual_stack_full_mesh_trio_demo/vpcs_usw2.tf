@@ -80,6 +80,49 @@ locals {
       }
     },
     {
+      name = "infra2"
+      ipv4 = {
+        network_cidr    = "10.2.0.0/18"
+        secondary_cidrs = ["10.2.64.0/20"]
+        ipam_pool       = local.ipv4_ipam_pool_usw2
+        centralized_egress = {
+          private = true
+        }
+      }
+      ipv6 = {
+        network_cidr    = "2600:1f24:66:ca00::/56"
+        secondary_cidrs = ["2600:1f24:66:cd00::/56"]
+        ipam_pool       = local.ipv6_ipam_pool_usw2
+      }
+      azs = {
+        a = {
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          private_subnets = [
+            { name = "util4", cidr = "10.2.0.0/24", ipv6_cidr = "2600:1f24:66:ca00::/64" }
+          ]
+          public_subnets = [
+            { name = "edge1", cidr = "10.2.6.0/24", ipv6_cidr = "2600:1f24:66:ca01::/64" },
+            { name = "edge2", cidr = "10.2.7.0/24", ipv6_cidr = "2600:1f24:66:ca02::/64", special = true }
+          ]
+          isolated_subnets = [
+            # ipv6 secondary cidr
+            { name = "db4", cidr = "10.2.10.0/28", ipv6_cidr = "2600:1f24:66:cd10::/60" }
+          ]
+        }
+        b = {
+          eigw = true # opt-in ipv6 private subnets to route out eigw per az
+          private_subnets = [
+            { name = "ngnix1", cidr = "10.2.9.0/24", ipv6_cidr = "2600:1f24:66:ca1b::/64" },
+            { name = "nginx2", cidr = "10.2.11.0/24", ipv6_cidr = "2600:1f24:66:ca1c::/64", special = true }
+          ]
+          isolated_subnets = [
+            # secondary cidr
+            { name = "db6", cidr = "10.2.65.0/24", ipv6_cidr = "2600:1f24:66:ca1d::/64" }
+          ]
+        }
+      }
+    },
+    {
       name = "general2"
       ipv4 = {
         network_cidr    = "192.168.0.0/18"
