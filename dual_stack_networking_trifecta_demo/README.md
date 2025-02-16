@@ -54,6 +54,7 @@ via TGW.
 **Pre-requisites:**
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
 - You need to make your own IPv6 IPAM pools since my AWS Account has allocations from these specific AWS owned IPv6 CIDRs so the demo will not work as is with other AWS accounts.
+- Note: VPC subnet attribute `special` is synonymous with VPC attachment for the Centralized Router TGW.
 
 IPAM Configuration:
 - Advanced Tier IPAM in `us-west-2` operating reigon (locale).

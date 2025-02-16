@@ -59,10 +59,10 @@ Validation will enforce
 
 Centralized Router will add the `0.0.0.0/0` -> `tgw-id` route to the private subnet route tables per AZ.
 
-However, if there is no relative AZ with NATGW in the egress VPC, the private subnet
+However, if there is no relative AZ with a NATGW in the egress VPC, the private subnet
 traffic will route out of a cross AZ NATGW (if any) in the egress VPC.
 
-Or traffic is load balance between more than one egress VPC AZ NATGW if there are many AZ but there is no relative AZ to the opt-in VPC.
+Or traffic is load balance between more than one cross AZ NATGW if there are many AZs but no relative AZ NATGW.
 
 Relative AZ example:
 ```
@@ -87,13 +87,13 @@ vpc B (opted into centralized egress with `private = true`)
 - private subnets AZ `c` -> traffic route is "load balanced" between egress VPC AZ `a` and `b` NATGWs
 ```
 
-Imporant notes:
+Important notes:
+- VPC subnet attribute `special` is synonymous with VPC attachment for the Centralized Router TGW.
 - Each VPC configured with centralized egress `central = true` or `private = true`, the private and
   public subnets (if configured with `special = true`) will have access to VPC in the Centralized Router regional mesh.
-- If there are VPCs configured with centralized egress, other VPCs can be added with out having to be
-  configured for centralized egress but it makes sense that it probably should and can easily opt-in.
+- Other VPCs can be added with out having to be configured for centralized egress but it makes sense that it probably should and can easily opt-in.
 - It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true` but it does matter for `central = true`.
-- Isolated subnets within an AZ only has access to subnets with in the VPC across it's AZs but no access to or from other AZs in the mesh.
+- Isolated subnets only have access to subnets within the VPC (across AZs) but no access to other VPC AZs in the mesh.
 
 ### Decentralized IPv6 Egress
 If a VPC's AZ is configured with private subnet IPv6 cidrs then you can
@@ -105,11 +105,11 @@ Important to remember:
 - Always apply VPC configuration first, then Centralized Router, Full Mesh Trio, and VPC Peering deluxe modules to keep state consistent.
 - It is no longer required for a VPC's AZ to have a private or public subnet with `special = true` but
   if there are subnets with `special = true` then it must be either 1 private or 1 public subnet that has it
-  configured per AZ (validation enforced).
+  configured per AZ (validation enforced for Tiered VPC-NG `v1.0.5+`).
 - Any VPC that has a private or public subnet with `special = true`, that subnet will be used as
   the VPC attachment for it's AZ when passed to Centralized Router.
 - If the VPC does not have any AZs with private or public subnet with `special = true` it will be removed
-  from the Centralized Router regional mesh and subsequently the cross regional mesh (full mesh trio) and vpc peering (vpc peering deluxe).
+  from the Centralized Router regional mesh and subsequently the cross regional mesh (full mesh trio) and vpc peering (vpc peering deluxe) when applied.
 
 AZ and VPC removal:
 - There are times where an AZ or a VPC will need to be decomissioned.
