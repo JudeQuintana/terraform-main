@@ -75,7 +75,7 @@ vpc A (`private = true`)
 - private subnets AZ `c` -> traffic routes out of egress VPC AZ `c` NATGW
 ```
 
-Non-relative AZ example:
+Non-relative AZ example (not as cost effective due to cross AZ traffic):
 ```
 egress vpc (`central = true`)
 - AZ `a` NATGW
