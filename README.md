@@ -10,7 +10,7 @@
 
 --=[ AwS CLouD NeTWoRkiNg SuiTE 3000 ]=--
 
---=[ Build and scale cloud network topologies from base components in AWS ]=--
+--=[ Build and scale cloud network topologies from base components in AWS and Terraform ]=--
 
 --=[ #StayUp ]=--
 ```
