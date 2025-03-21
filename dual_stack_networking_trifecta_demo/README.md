@@ -60,14 +60,15 @@ IPAM Configuration:
 - Advanced Tier IPAM in `us-west-2` operating reigon (locale).
   - No IPv4 regional pool at the moment.
   - IPv6 subpool needs a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
-  - `us-east-2` (ipam locale)
+  - `us-west-2` (ipam locale)
     - IPv4 Pool (private scope)
-        - Provisioned CIDRs:
-          - `10.0.0.0/18`
-          - `10.1.0.0/20`
-          - `172.16.0.0/18`
-          - `172.19.0.0/20`
-          - `192.168.0.0/18`
+      - Description: `ipv4-test-usw2`
+      - Provisioned CIDRs:
+        - `10.0.0.0/18`
+        - `10.1.0.0/20`
+        - `172.16.0.0/18`
+        - `172.19.0.0/20`
+        - `192.168.0.0/18`
     - IPv6 regional pool (public scope)
       - `2600:1f24:66:c000::/52`
         - IPv6 subpool (public scope)

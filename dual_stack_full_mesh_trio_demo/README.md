@@ -58,6 +58,7 @@ The resulting architecture is a ipv4 only or a dual stack full mesh topology acr
   - IPv6 subpools need a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
   - `us-east-2` (ipam locale)
     - IPv4 Pool (private scope)
+      - Description: `ipv4-test-use2`
       - Provisioned CIDRs:
         - `172.16.64.0/18`
         - `172.16.128.0/18`
@@ -73,6 +74,7 @@ The resulting architecture is a ipv4 only or a dual stack full mesh topology acr
 
   - `us-west-2` (ipam locale)
     - IPv4 Pool (private scope)
+      - Description: `ipv4-test-usw2`
       - Provisioned CIDRs:
         - `10.0.0.0/18`
         - `10.1.0.0/20`
@@ -87,6 +89,7 @@ The resulting architecture is a ipv4 only or a dual stack full mesh topology acr
 
   - `us-east-1` (ipam locale)
     - IPv4 Pool (private scope)
+      - Description: `ipv4-test-use1`
       - Provisioned CIDRs:
         - `10.0.64.0/18`
         - `10.1.64.0/20`
