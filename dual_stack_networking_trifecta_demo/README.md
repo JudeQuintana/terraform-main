@@ -218,7 +218,7 @@ $ ssh -i ~/.ssh/my-ec2-key.pem -A ec2-user@18.237.6.16
 
 Isolated subnets:
 - Are private subnets in a route table with no routes.
-- They can only have inter-vpc communication but not to other VPCs even
+- They can only have intra-vpc communication but not to other VPCs even
  when the VPC is in a full mesh configuration.
 
 Example:
