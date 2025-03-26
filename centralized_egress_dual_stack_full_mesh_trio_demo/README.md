@@ -228,6 +228,7 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
     - IPv6 regional pool (public scope)
       - `2600:1f26:21:c000::/52`
         - IPv6 subpool (public scope)
+          - Description: `ipv6-test-use2`
           - Provisioned CIDRs:
             - `2600:1f26:21:c000::/56`
             - `2600:1f26:21:c100::/56`
@@ -247,6 +248,7 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
     - IPv6 regional pool (public scope)
       - `2600:1f24:66:c000::/52`
         - IPv6 subpool (public scope)
+          - Description: `ipv6-test-usw2`
           - Provisioned CIDRs:
             - `2600:1f24:66:c000::/56`
             - `2600:1f24:66:c100::/56`
@@ -266,6 +268,7 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
     - IPv6 regional pool (public scope)
       - `2600:1f28:3d:c000::/52`
         - IPv6 subpool (public scope)
+          - Description: `ipv6-test-use1`
           - Provisioned CIDRs:
             - `2600:1f28:3d:c000::/56`
             - `2600:1f28:3d:c400::/56`

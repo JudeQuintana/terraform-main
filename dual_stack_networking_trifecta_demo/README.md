@@ -72,6 +72,7 @@ IPAM Configuration:
     - IPv6 regional pool (public scope)
       - `2600:1f24:66:c000::/52`
         - IPv6 subpool (public scope)
+          - Description: `ipv6-test-usw2`
           - Provisioned CIDRs:
           - `2600:1f24:66:c000::/56`
           - `2600:1f24:66:c100::/56`
