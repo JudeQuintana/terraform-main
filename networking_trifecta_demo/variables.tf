@@ -4,12 +4,6 @@ variable "env_prefix" {
   default     = "test"
 }
 
-variable "base_region" {
-  description = "base region"
-  type        = string
-  default     = "us-west-2"
-}
-
 variable "ec2_instances" {
   description = "base attributes for building in us-west-2"
   type = object({
