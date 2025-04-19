@@ -5,9 +5,7 @@ locals {
 }
 
 resource "aws_vpc_endpoint" "s3_apne1" {
-  providers = {
-    aws = aws.apne1
-  }
+  provider = aws.apne1
 
   for_each = module.vpcs_apne1
 
@@ -18,9 +16,7 @@ resource "aws_vpc_endpoint" "s3_apne1" {
 }
 
 resource "aws_vpc_endpoint" "s3_apse1" {
-  providers = {
-    aws = aws.apse1
-  }
+  provider = aws.apse1
 
   for_each = module.vpcs_apse1
 
@@ -31,9 +27,7 @@ resource "aws_vpc_endpoint" "s3_apse1" {
 }
 
 resource "aws_vpc_endpoint" "s3_cac1" {
-  providers = {
-    aws = aws.cac1
-  }
+  provider = aws.cac1
 
   for_each = module.vpcs_cac1
 
@@ -44,9 +38,7 @@ resource "aws_vpc_endpoint" "s3_cac1" {
 }
 
 resource "aws_vpc_endpoint" "s3_euc1" {
-  providers = {
-    aws = aws.euc1
-  }
+  provider = aws.euc1
 
   for_each = module.vpcs_euc1
 
@@ -57,9 +49,7 @@ resource "aws_vpc_endpoint" "s3_euc1" {
 }
 
 resource "aws_vpc_endpoint" "s3_euw1" {
-  providers = {
-    aws = aws.euw1
-  }
+  provider = aws.euw1
 
   for_each = module.vpcs_euw1
 
@@ -70,9 +60,7 @@ resource "aws_vpc_endpoint" "s3_euw1" {
 }
 
 resource "aws_vpc_endpoint" "s3_sae1" {
-  providers = {
-    aws = aws.sae1
-  }
+  provider = aws.sae1
 
   for_each = module.vpcs_sae1
 
@@ -83,9 +71,7 @@ resource "aws_vpc_endpoint" "s3_sae1" {
 }
 
 resource "aws_vpc_endpoint" "s3_use1" {
-  providers = {
-    aws = aws.use1
-  }
+  provider = aws.use1
 
   for_each = module.vpcs_use1
 
@@ -96,9 +82,7 @@ resource "aws_vpc_endpoint" "s3_use1" {
 }
 
 resource "aws_vpc_endpoint" "s3_use2" {
-  providers = {
-    aws = aws.use2
-  }
+  provider = aws.use2
 
   for_each = module.vpcs_use2
 
@@ -109,9 +93,7 @@ resource "aws_vpc_endpoint" "s3_use2" {
 }
 
 resource "aws_vpc_endpoint" "s3_usw1" {
-  providers = {
-    aws = aws.usw1
-  }
+  provider = aws.usw1
 
   for_each = module.vpcs_usw1
 
@@ -122,9 +104,7 @@ resource "aws_vpc_endpoint" "s3_usw1" {
 }
 
 resource "aws_vpc_endpoint" "s3_usw2" {
-  providers = {
-    aws = aws.usw2
-  }
+  provider = aws.usw2
 
   for_each = module.vpcs_usw2
 

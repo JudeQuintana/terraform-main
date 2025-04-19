@@ -5,9 +5,7 @@ locals {
 }
 
 resource "aws_vpc_endpoint" "s3_use1" {
-  providers = {
-    aws = aws.use1
-  }
+  provider = aws.use1
 
   for_each = module.vpcs_use1
 
@@ -18,9 +16,7 @@ resource "aws_vpc_endpoint" "s3_use1" {
 }
 
 resource "aws_vpc_endpoint" "s3_use2" {
-  providers = {
-    aws = aws.use2
-  }
+  provider = aws.use2
 
   for_each = module.vpcs_use2
 
@@ -31,9 +27,7 @@ resource "aws_vpc_endpoint" "s3_use2" {
 }
 
 resource "aws_vpc_endpoint" "s3_usw2" {
-  providers = {
-    aws = aws.usw2
-  }
+  provider = aws.usw2
 
   for_each = module.vpcs_usw2
 
