@@ -109,9 +109,9 @@ It begins:
 terraform init
 ```
 
-The VPCs must be applied first:
+Apply the VPCs (must be applied first) and S3 Gateway:
 ```
-terraform apply -target module.vpcs
+terraform apply -target module.vpcs -target aws_vpc_endpoint.s3
 ```
 
 Now we'll:
