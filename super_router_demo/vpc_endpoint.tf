@@ -2,7 +2,7 @@
 locals {
   vpc_endpoint_service_name_fmt = "com.amazonaws.%s.s3"
   vpc_endpoint_type             = "Gateway"
-  vpcs_use1_all                 = { for this in merge(module.vpcs_use1, module.vpc_another_use1) : this.name => this }
+  vpcs_use1_all                 = merge(module.vpcs_use1, module.vpc_another_use1)
 }
 
 resource "aws_vpc_endpoint" "s3" {
@@ -19,7 +19,7 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 locals {
-  vpcs_usw2_all = { for this in merge(module.vpcs_usw2, module.vpc_another_usw2) : this.name => this }
+  vpcs_usw2_all = merge(module.vpcs_usw2, module.vpc_another_usw2)
 }
 
 resource "aws_vpc_endpoint" "s3" {
