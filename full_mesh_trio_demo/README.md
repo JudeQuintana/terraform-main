@@ -34,7 +34,7 @@ This demo will be creating 6 VPCs (2 in each region) and 3 TGWs (1 in each regio
 1. It begins:
   - `terraform init`
 
-2. Apply Tiered-VPCs (must exist before Centralized Routers, VPC Peering Deluxe and Full Mesh Intra VPC Security Group Rules):
+2. Apply VPCs (must exist before Centralized Routers) and S3 Gateways:
   - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2 -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_use2 -target aws_vpc_endpoint.s3_usw2`
 
 3. Apply Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.

@@ -22,7 +22,7 @@ Mega Mesh == (Full Mesh Trio)² + 1
 1. It begins
   - `terraform init`
 
-2. Build VPCs (must exist before centralized routers and mega mesh)
+2. Build VPCs (must exist before centralized routers and mega mesh) and S3 Gateways:
   - `terraform apply -target module.vpcs_use1 -target module.vpcs_usw1 -target module.vpcs_euc1 -target module.vpcs_euw1 -target module.vpcs_apne1 -target module.vpcs_apse1 -target module.vpcs_cac1 -target module.vpcs_sae1 -target module.vpcs_use2 -target module.vpcs_usw2 -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_usw1 -target aws_vpc_endpoint.s3_euc1 -target aws_vpc_endpoint.s3_euw1 -target aws_vpc_endpoint.s3_apne1 -target aws_vpc_endpoint.s3_apse1 -target aws_vpc_endpoint.s3_cac1 -target aws_vpc_endpoint.s3_sae1 -target aws_vpc_endpoint.s3_use2 -target aws_vpc_endpoint.s3_usw2`
 
 3. Build Centralized Routers
