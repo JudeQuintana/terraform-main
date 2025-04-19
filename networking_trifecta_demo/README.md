@@ -94,10 +94,10 @@ variable "base_ec2_instance_attributes" {
 }
 ```
 
-The VPCs must be applied first:
+Apply VPCs (must be applied first) and S3 Gateways:
 ```
 $ terraform init
-$ terraform apply -target module.vpcs
+$ terraform apply -target module.vpcs -target aws_vpc_endpoint.s3
 ```
 
 Now we'll:
