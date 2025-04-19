@@ -1,10 +1,7 @@
 # at scale we're saving money right here
-locals {
-  vpcs = { for this in module.vpcs : this.name => this }
-}
 
 resource "aws_vpc_endpoint" "s3" {
-  for_each = local.vpcs
+  for_each = module.vpcs
 
   vpc_id            = each.value.id
   service_name      = format("com.amazonaws.%s.s3", each.value.region)
