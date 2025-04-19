@@ -4,7 +4,7 @@ locals {
   vpc_endpoint_type             = "Gateway"
 }
 
-resource "aws_vpc_endpoint" "s3_use2" {
+resource "aws_vpc_endpoint" "s3_use1" {
   providers = {
     aws = aws.use1
   }
