@@ -1,8 +1,8 @@
+# at scale we're saving money right here
 locals {
   vpcs = { for this in module.vpcs : this.name => this }
 }
 
-# at scale we're saving money right here
 resource "aws_vpc_endpoint" "s3" {
   for_each = local.vpcs
 
