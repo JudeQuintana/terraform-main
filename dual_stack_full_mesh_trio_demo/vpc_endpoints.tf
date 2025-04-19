@@ -4,7 +4,7 @@ locals {
   vpc_endpoint_type             = "Gateway"
 }
 
-resource "aws_vpc_endpoint" "s3" {
+resource "aws_vpc_endpoint" "s3_use2" {
   providers = {
     aws = aws.use1
   }
@@ -17,7 +17,7 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = each.value.private_route_table_ids
 }
 
-resource "aws_vpc_endpoint" "s3" {
+resource "aws_vpc_endpoint" "s3_use2" {
   providers = {
     aws = aws.use2
   }
@@ -30,7 +30,7 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = each.value.private_route_table_ids
 }
 
-resource "aws_vpc_endpoint" "s3" {
+resource "aws_vpc_endpoint" "s3_usw2" {
   providers = {
     aws = aws.usw2
   }

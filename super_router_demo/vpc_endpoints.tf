@@ -5,7 +5,7 @@ locals {
   vpcs_use1_all                 = merge(module.vpcs_use1, module.vpc_another_use1)
 }
 
-resource "aws_vpc_endpoint" "s3" {
+resource "aws_vpc_endpoint" "s3_use1" {
   providers = {
     aws = aws.use1
   }
@@ -22,7 +22,7 @@ locals {
   vpcs_usw2_all = merge(module.vpcs_usw2, module.vpc_another_usw2)
 }
 
-resource "aws_vpc_endpoint" "s3" {
+resource "aws_vpc_endpoint" "s3_usw2" {
   providers = {
     aws = aws.usw2
   }
