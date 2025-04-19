@@ -94,18 +94,18 @@ variable "base_ec2_instance_attributes" {
 }
 ```
 
-Apply VPCs (must be applied first) and S3 Gateways:
+Apply VPCs (must be applied first):
 ```
 $ terraform init
-$ terraform apply -target module.vpcs -target aws_vpc_endpoint.s3
+$ terraform apply -target module.vpcs
 ```
 
 Now we'll:
-- Build security groups rules to allow ssh and ping across VPCs.
+- Build S3 Gateways, security groups rules to allow ssh and ping across VPCs.
 - Launch instances in each enabled AZ for all VPCs.
 - Route between VPCs via TGW.
 ```
-$ terraform apply -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
+$ terraform apply -target aws_vpc_endpoint.s3 -target module.intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
 ```
 
 Once the apply is complete, it will take 1-2 minutes for the TGW

@@ -279,11 +279,11 @@ The resulting architecture is a centralized ipv4 egress and decentralized ipv6 e
 1. It begins:
   - `terraform init`
 
-2. Apply VPCs (must exist before Centralized Routers) and S3 Gateways:
-  - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2 -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_use2 -target aws_vpc_endpoint.s3_usw2`
+2. Apply VPCs (must exist before Centralized Routers):
+  - `terraform apply -target module.vpcs_use1 -target module.vpcs_use2 -target module.vpcs_usw2`
 
-3. Apply Full Mesh Intra VPC Security Group Rules and IPv6 Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules and IPv6 Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.
-  - `terraform apply -target module.full_mesh_intra_vpc_security_group_rules -target module.ipv6_full_mesh_intra_vpc_security_group_rules`
+3. Apply S3 Gateways, Full Mesh Intra VPC Security Group Rules and IPv6 Full Mesh Intra VPC Security Group Rules (will auto apply it's dependent modules Intra Security Group Rules and IPv6 Intra Security Group Rules for each region) for EC2 access across VPC regions (ie ssh and ping) for VPCs in a TGW Full Mesh configuration.
+  - `terraform apply -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_use2 -target aws_vpc_endpoint.s3_usw2 -target module.full_mesh_intra_vpc_security_group_rules -target module.ipv6_full_mesh_intra_vpc_security_group_rules`
 
 4. Apply VPC Peering Deluxe and Centralized Routers:
   - `terraform apply -target module.vpc_peering_deluxe_usw2_app2_to_usw2_general2 -target module.vpc_peering_deluxe_use1_general3_to_use2_app1 -target module.centralized_router_use1 -target module.centralized_router_use2 -target module.centralized_router_usw2`

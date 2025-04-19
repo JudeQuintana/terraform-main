@@ -19,10 +19,10 @@ It begins:
  - `terraform init`
 
 Apply Tiered-VPCs (must exist before Centralized Routers) and S3 Gateways:
- - `terraform apply -target module.vpcs_usw2 -target module.vpcs_another_usw2 -target module.vpcs_use1 -target module.vpcs_another_use1 -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_usw2`
+ - `terraform apply -target module.vpcs_usw2 -target module.vpcs_another_usw2 -target module.vpcs_use1 -target module.vpcs_another_use1`
 
-Apply Centralized Routers (must exist before Super Router) and Intra VPC Security Group Rules:
- - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1`
+Apply Centralized Routers (must exist before Super Router), Intra VPC Security Group Rules and S3 Gateways:
+ - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1 -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_usw2`
 
 Apply Super Router and Super Intra VPC Security Group Rules:
  - `terraform apply -target module.super_router_usw2_to_use1 -target module.super_intra_vpc_security_group_rules_usw2_to_use1`

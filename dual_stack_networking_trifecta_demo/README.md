@@ -109,18 +109,18 @@ It begins:
 terraform init
 ```
 
-Apply the VPCs (must be applied first) and S3 Gateway:
+Apply the VPCs (must be applied first):
 ```
-terraform apply -target module.vpcs -target aws_vpc_endpoint.s3
+terraform apply -target module.vpcs
 ```
 
 Now we'll:
-- Build security groups rules to allow ssh and ping across VPCs for both
+- Build S3 Gateways, security groups rules to allow ssh and ping across VPCs for both
   IPv4 and IPv6 CIDRs.
 - Launch instances in each enabled AZ for all VPCs.
 - Route between VPCs via TGW.
 ```
-terraform apply -target module.intra_vpc_security_group_rules -target module.ipv6_intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
+terraform apply -target aws_vpc_endpoint.s3 -target module.intra_vpc_security_group_rules -target module.ipv6_intra_vpc_security_group_rules -target aws_instance.instances -target module.centralized_router
 ```
 or just `$ terraform apply`
 
