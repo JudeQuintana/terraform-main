@@ -81,3 +81,4 @@
  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
 - There is no overlapping CIDR detection intra-region or cross-region so it's important that the VPC's network and subnet CIDRs are allocated correctly.
+- The AWS provider is updated from time to time so you may need to run `terraform init -upgrade`.
