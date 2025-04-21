@@ -9,7 +9,7 @@ locals {
   vpcs_cac1_with_private_route_table_ids  = { for this in module.vpcs_cac1 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_euc1_with_private_route_table_ids  = { for this in module.vpcs_euc1 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_euw1_with_private_route_table_ids  = { for this in module.vpcs_euw1 : this.name => this if length(this.private_route_table_ids) > 0 }
-  vpcs_sae1_with_private_route_table_ids  = { for this in module.vpcs_usw2 : this.name => this if length(this.private_route_table_ids) > 0 }
+  vpcs_sae1_with_private_route_table_ids  = { for this in module.vpcs_sae1 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_use1_with_private_route_table_ids  = { for this in module.vpcs_use1 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_use2_with_private_route_table_ids  = { for this in module.vpcs_use2 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_usw1_with_private_route_table_ids  = { for this in module.vpcs_usw1 : this.name => this if length(this.private_route_table_ids) > 0 }
