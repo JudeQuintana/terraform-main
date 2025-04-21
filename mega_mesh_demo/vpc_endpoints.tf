@@ -3,7 +3,6 @@ locals {
   vpc_endpoint_service_name_fmt = "com.amazonaws.%s.s3"
   vpc_endpoint_type             = "Gateway"
 
-
   vpcs_apne1_with_private_route_table_ids = { for this in module.vpcs_apne1 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_apse1_with_private_route_table_ids = { for this in module.vpcs_apse1 : this.name => this if length(this.private_route_table_ids) > 0 }
   vpcs_cac1_with_private_route_table_ids  = { for this in module.vpcs_cac1 : this.name => this if length(this.private_route_table_ids) > 0 }
