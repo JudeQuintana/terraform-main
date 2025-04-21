@@ -77,6 +77,7 @@
   - [IPv6 Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule) (IPv6 only, for use with dual stack VPCs)
   - New [IPv6 Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
   - TODO: Mega Mesh Intra VPC Security Group Rules
+- Included S3 Gateway examples via VPC Endpoint.
 - The Centralized Router module is an implementation of both `AWS Centralized Router` and `Centralized outbound routing to the internet` [concepts](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-centralized-router.html) and but without VPN Gateway or Direct Connect, only VPCs.
  - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a)
     so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
