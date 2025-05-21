@@ -52,7 +52,7 @@ The resulting architecture is a ipv4 only or a dual stack full mesh topology acr
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
 - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
-- Advanced Tier IPAM in `us-east-2`, `us-west-2`, `us-east-1` and operating reigons.
+- Advanced Tier IPAM in `us-east-2`, `us-west-2`, and `us-east-1` operating reigons.
   - In this demo, ipam pools for all locales are managed in the `us-west-2` region via AWS Console UI.
   - No IPv4 regional pools at the moment.
   - IPv6 subpools need a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
