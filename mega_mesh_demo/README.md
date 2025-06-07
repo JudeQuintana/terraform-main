@@ -37,7 +37,7 @@ Mega Mesh == (Full Mesh Trio)² + 1
 Mesh Complete!
 
 Notes:
-  - You can combine steps 3 and 5 with `terraform apply`.
+  - You can combine steps 3 through 5 with `terraform apply`.
   - Add blackhole cidrs on any centralized router via the
     `var.centralized_router.blackhole_cidrs` list to create blackhole routes or aggregate routes.
   - Available AZs (a,b,c etc) in a region are different per AWS account (ie. your us-west-2a is not the same AZ as my us-west-2a) so it's possible you'll need to change the AZ letter for a VPC if the provider is saying it's not available for the region.
