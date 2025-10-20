@@ -97,7 +97,7 @@ Important notes:
 
 ## Resulting Architecture
 Centralized ipv4 egress in a dual stack full mesh topology across 3 regions:
-![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3.jpg)
+![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3-1.jpg)
 - not shown but each ipv6 egress will go out its region's eigw if enabled.
 
 ### Decentralized IPv6 Egress
