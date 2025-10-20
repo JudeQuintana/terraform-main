@@ -3,7 +3,7 @@ Explosive growth while maintaining balance.
 
 F(N) = N×(N−1)/2
 
-Mega Mesh is for N=10.
+Mega Mesh is for N=10 which is a total 45 peering links between Transit Gateways with automatic routing across the mesh.
 
 [Mega Mesh module](https://github.com/JudeQuintana/terraform-aws-mega-mesh) takes in 10 Centralized Routers and composes a Full Mesh Transit Gateway topology across 10 regions from existing hub spokes in AWS. It peers and generates routes for TGWs and their respective VPCs.
 
