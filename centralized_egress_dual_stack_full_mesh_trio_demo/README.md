@@ -95,6 +95,11 @@ Important notes:
 - It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true` but it does matter for `central = true`.
 - Isolated subnets only have access to subnets within the VPC (across AZs) but no access to other VPC AZs in the mesh.
 
+## Resulting Architecture
+Centralized ipv4 egress in a dual stack full mesh topology across 3 regions:
+![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3.jpg)
+- not shown but each ipv6 egress will go out its region's eigw if enabled.
+
 ### Decentralized IPv6 Egress
 If a VPC's AZ is configured with private subnet IPv6 cidrs then you can
 also add `eigw = true` per AZ to opt-into IPv6 traffic routing out of the
@@ -202,9 +207,6 @@ AZ and VPC removal:
     - IPv6 Secondaries: None
 
 VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs).
-
-The resulting architecture is a centralized ipv4 egress and decentralized ipv6 egress in a dual stack full mesh topology across 3 regions:
-![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio.png)
 
 ### IPAM Configuration
 - There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
