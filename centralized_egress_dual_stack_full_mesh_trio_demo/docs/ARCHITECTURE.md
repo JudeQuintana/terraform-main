@@ -6,7 +6,7 @@ This architecture demonstrates a **production-grade, self-organizing multi-regio
 
 - **92% code reduction**: ~150 lines vs. 1,100+ manual configurations
 - **67% cost savings**: Centralized NAT Gateway architecture ($4,665/year)
-- **16× faster deployments**: 90 minutes vs. 45 hours for 9-VPC setup
+- **30× faster deployments**: 90 minutes vs. 45 hours for 9-VPC setup
 - **Near-zero errors**: Mathematical generation eliminates manual mistakes
 
 ## High-Level Architecture

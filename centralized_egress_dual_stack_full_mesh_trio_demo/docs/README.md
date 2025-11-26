@@ -114,7 +114,7 @@ Yes. The WHITEPAPER.md shows production validation:
 - 9 VPCs across 3 regions
 - ~1,800 resources managed
 - 67% NAT Gateway cost savings
-- 16× faster deployment than manual configuration
+- 30× faster deployment than manual configuration
 
 ## Contributing
 
