@@ -26,7 +26,7 @@ For each relationship, operators must configure route entries, security group ru
 ~1,800 total resources
 
 45 engineering hours for manual configuration
-(derived from your mathematical analysis)
+(derived from the mathematical analysis)
 
 As cloud estates expand, these O(n²) configuration requirements become operationally prohibitive. This challenge is amplified in multi-region deployments, where TGW peering, transitive route propagation, and IPv4/IPv6 dual-stack requirements further multiply configuration effort.
 
@@ -46,7 +46,7 @@ Non-repeatable topology logic encoded in human labor
 
 2.2 Key Insight
 
-Your architecture introduces a paradigm shift:
+This architecture introduces a paradigm shift:
 
 Encode topology intent as O(n) data structures and automatically generate the O(n²) relationships.
 
@@ -81,8 +81,6 @@ A regional TGW with cross-region peering
 Full IPv4 centralized egress
 
 Per-VPC IPv6 egress-only Internet Gateways (EIGW)
-
-Your diagram will become:
 
 Figure 1 — Multi-Region Full-Mesh with Centralized Egress
 ![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3-3.png)
