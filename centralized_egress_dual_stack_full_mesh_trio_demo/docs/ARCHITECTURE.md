@@ -119,6 +119,7 @@ module "centralized_router_use1" {
 - **Output**: `toset([{route_table_id, destination_cidr_block}, ...])`
 - **Mathematics**: Generates N×(N-1) routes automatically
 - **Innovation**: First-class functional approach to relationship generation
+- **Theory**: Mirrors compiler IR transforms (see [COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md))
 
 #### **Full Mesh Trio**
 - **Purpose**: Cross-region TGW peering orchestration

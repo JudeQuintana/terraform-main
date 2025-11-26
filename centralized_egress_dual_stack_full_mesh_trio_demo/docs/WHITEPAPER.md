@@ -57,7 +57,7 @@ Through composable Terraform modules, each VPC is defined once. All routes, atta
 This paper presents four major contributions:
 
 Complexity Transformation (O(n²) → O(n))
-Functional inference algorithms generate all mesh relationships from linear specification input.
+Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module demonstrates pure function composition that mirrors compiler intermediate representation (IR) transforms (see [COMPILER_TRANSFORM_ANALOGY.md](./docs/COMPILER_TRANSFORM_ANALOGY.md) for formal analysis).
 
 O(1) NAT Gateway Scaling Model
 A centralized-egress pattern enables constant NAT Gateway count per region, independent of the number of private VPCs.
