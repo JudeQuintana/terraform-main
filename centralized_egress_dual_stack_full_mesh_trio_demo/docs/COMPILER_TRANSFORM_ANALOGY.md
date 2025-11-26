@@ -552,29 +552,29 @@ output "ipv6" {
 Input: var.vpcs (map)
     ↓
 ┌─────────────────────────────────────┐
-│ Step 1: Normalize to list          │
-│ [vpc1, vpc2, vpc3, ...]            │
+│ Step 1: Normalize to list           │
+│ [vpc1, vpc2, vpc3, ...]             │
 └──────────────┬──────────────────────┘
                ↓
 ┌─────────────────────────────────────┐
-│ Step 2: Cartesian product          │
-│ [(vpc1,vpc2), (vpc1,vpc3), ...]    │
-│ Filter: this.name ≠ other.name     │
+│ Step 2: Cartesian product           │
+│ [(vpc1,vpc2), (vpc1,vpc3), ...]     │
+│ Filter: this.name ≠ other.name      │
 └──────────────┬──────────────────────┘
                ↓
 ┌─────────────────────────────────────┐
-│ Step 3: Expand route tables        │
-│ For each pair, for each RT...      │
+│ Step 3: Expand route tables         │
+│ For each pair, for each RT...       │
 └──────────────┬──────────────────────┘
                ↓
 ┌─────────────────────────────────────┐
-│ Step 4: Expand CIDRs               │
-│ For each RT, for each CIDR...      │
+│ Step 4: Expand CIDRs                │
+│ For each RT, for each CIDR...       │
 └──────────────┬──────────────────────┘
                ↓
 ┌─────────────────────────────────────┐
-│ Step 5: Flatten & deduplicate      │
-│ toset([route1, route2, ...])       │
+│ Step 5: Flatten & deduplicate       │
+│ toset([route1, route2, ...])        │
 └──────────────┬──────────────────────┘
                ↓
 Output: ipv4/ipv6 route sets

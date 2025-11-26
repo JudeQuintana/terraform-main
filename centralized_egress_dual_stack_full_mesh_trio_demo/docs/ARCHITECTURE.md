@@ -43,7 +43,7 @@ Regional Architecture (per region):
 │                 ┌────▼────┐                      │              │
 │                 │   TGW   │                      │              │
 │                 └────┬────┘                      │              │
-│                      │                           │             │
+│                      │                           │              │
 │           0.0.0.0/0 route to TGW        0.0.0.0/0 to Internet   │
 │           (centralized egress)          (IPv4 via NAT GW)       │
 │                                          (IPv6 via EIGW)        │
