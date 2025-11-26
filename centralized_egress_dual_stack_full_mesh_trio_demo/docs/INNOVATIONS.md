@@ -12,7 +12,7 @@ Traditional mesh networking requires configuring N×(N-1) relationships manually
 
 ```
 3 VPCs = 6 relationships
-9 VPCs = 72 relationships  
+9 VPCs = 72 relationships
 20 VPCs = 380 relationships
 
 Work scales as O(n²) - adding one VPC requires updating all existing VPCs
@@ -63,7 +63,7 @@ Amplification: 1,152 / 135 = 8.5×
 
 ### Why This Matters
 
-**Before:** Adding 10th VPC requires updating 9 existing VPCs (270 configurations)  
+**Before:** Adding 10th VPC requires updating 9 existing VPCs (270 configurations)
 **After:** Adding 10th VPC requires 15 lines (module handles propagation)
 
 **Speed-up:** 270 / 15 = 18× faster
@@ -95,7 +95,7 @@ Plus risk of circular references (VPC allowing traffic from itself).
 # Per protocol, per region
 module "intra_vpc_sg_rules_use1" {
   for_each = { ssh = {...}, ping = {...} }  # 2 protocols
-  
+
   intra_vpc_security_group_rule = {
     rule = each.value      # Single protocol
     vpcs = module.vpcs_use1  # All VPCs in region
@@ -360,7 +360,7 @@ ipv4 = { network_cidr = "10.0.0.0/18" }
 **Phase 2:** Add IPv6 (gradual rollout)
 ```hcl
 ipv4 = { network_cidr = "10.0.0.0/18" }
-ipv6 = { 
+ipv6 = {
   network_cidr = "2600:.../56"
   # No changes to IPv4 routing
 }
@@ -384,7 +384,7 @@ app1 private subnet (10.0.1.0/24)
   → 0.0.0.0/0 route → TGW
   → general1 NAT GW
   → Internet
-  
+
 Cost: $0.02/GB (TGW) + $0.045/GB (NAT) = $0.065/GB
 ```
 
@@ -393,7 +393,7 @@ Cost: $0.02/GB (TGW) + $0.045/GB (NAT) = $0.065/GB
 app1 private subnet (2600:.../64)
   → ::/0 route → Local EIGW
   → Internet
-  
+
 Cost: $0.09/GB (data transfer only)
 ```
 
@@ -432,7 +432,7 @@ Connecting 3 regions traditionally requires:
 ```hcl
 module "full_mesh_trio" {
   source = "JudeQuintana/full-mesh-trio/aws"
-  
+
   full_mesh_trio = {
     one   = { centralized_router = module.centralized_router_use1 }
     two   = { centralized_router = module.centralized_router_use2 }

@@ -130,5 +130,5 @@ Same license as the parent repository.
 
 ---
 
-**Last Updated:** 2025-11-25  
+**Last Updated:** 2025-11-25
 **Version:** 1.0

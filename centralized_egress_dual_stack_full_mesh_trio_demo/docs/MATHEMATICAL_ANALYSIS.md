@@ -131,7 +131,7 @@ This is O(n) complexity
 
 ```
 Input: N VPC definitions
-Output: 
+Output:
   - Routes: N × R × (N-1) × C ≈ O(n²)
   - Security rules: N × (N-1) × P × I × C ≈ O(n²)
   - Where:

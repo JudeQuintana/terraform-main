@@ -13,40 +13,40 @@ This architecture demonstrates a **production-grade, self-organizing multi-regio
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Three-Region Full Mesh                        │
-│                                                                   │
-│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
-│  │  us-east-1   │◄────►│  us-east-2   │◄────►│  us-west-2   │  │
-│  │              │      │              │      │              │  │
-│  │  3 VPCs      │      │  3 VPCs      │      │  3 VPCs      │  │
-│  │  - app3      │      │  - app1      │      │  - app2      │  │
-│  │  - infra3    │      │  - infra1    │      │  - infra2    │  │
-│  │  - general3  │      │  - general1  │      │  - general2  │  │
-│  │    (egress)  │      │    (egress)  │      │    (egress)  │  │
-│  └──────────────┘      └──────────────┘      └──────────────┘  │
-│         │                      │                      │          │
-│         └──────────────────────┴──────────────────────┘          │
-│                    TGW Peering (50 Gbps each)                    │
+│                    Three-Region Full Mesh                       │
+│                                                                 │
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────┐   │
+│  │  us-east-1   │◄────►│  us-east-2   │◄────►│  us-west-2   │   │
+│  │              │      │              │      │              │   │
+│  │  3 VPCs      │      │  3 VPCs      │      │  3 VPCs      │   │
+│  │  - app3      │      │  - app1      │      │  - app2      │   │
+│  │  - infra3    │      │  - infra1    │      │  - infra2    │   │
+│  │  - general3  │      │  - general1  │      │  - general2  │   │
+│  │    (egress)  │      │    (egress)  │      │    (egress)  │   │
+│  └──────────────┘      └──────────────┘      └──────────────┘   │
+│         │                      │                      │         │
+│         └──────────────────────┴──────────────────────┘         │
+│                    TGW Peering (50 Gbps each)                   │
 └─────────────────────────────────────────────────────────────────┘
 
 Regional Architecture (per region):
 ┌─────────────────────────────────────────────────────────────────┐
-│                                                                   │
+│                                                                 │
 │  App VPC          Infra VPC        Egress VPC (General)         │
-│  ┌────────┐      ┌────────┐       ┌──────────────────┐         │
-│  │Private │      │Private │       │Private │ Public  │         │
-│  │Subnets │      │Subnets │       │Subnets │ + NAT GW│         │
-│  └───┬────┘      └───┬────┘       └───┬────┴─────┬───┘         │
-│      │               │                 │          │             │
-│      └───────────────┴─────────────────┘          │             │
-│                      │                             │             │
-│                 ┌────▼────┐                        │             │
-│                 │   TGW   │                        │             │
-│                 └────┬────┘                        │             │
-│                      │                             │             │
+│  ┌────────┐      ┌────────┐       ┌──────────────────┐          │
+│  │Private │      │Private │       │Private │ Public  │          │
+│  │Subnets │      │Subnets │       │Subnets │ + NAT GW│          │
+│  └───┬────┘      └───┬────┘       └───┬────┴─────┬───┘          │
+│      │               │                │          │              │
+│      └───────────────┴────────────────┘          │              │
+│                      │                           │              │
+│                 ┌────▼────┐                      │              │
+│                 │   TGW   │                      │              │
+│                 └────┬────┘                      │              │
+│                      │                           │             │
 │           0.0.0.0/0 route to TGW        0.0.0.0/0 to Internet   │
 │           (centralized egress)          (IPv4 via NAT GW)       │
-│                                          (IPv6 via EIGW)         │
+│                                          (IPv6 via EIGW)        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -86,15 +86,39 @@ Regional Architecture (per region):
 - **Input**: VPC specification (network CIDRs, AZs, subnet definitions)
 - **Output**: Complete VPC with route tables, subnets, security groups
 - **Innovation**: Supports primary + secondary CIDRs for both IPv4 and IPv6
+- **Repository**: [terraform-aws-tiered-vpc-ng](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng)
 
 ```hcl
 module "vpcs_use1" {
   source = "JudeQuintana/tiered-vpc-ng/aws"
-  
+
   for_each = { for t in local.tiered_vpcs : t.name => t }
   tiered_vpc = each.value
 }
 ```
+
+**Subnet Types:**
+
+Tiered VPC-NG supports three subnet patterns, each with distinct routing behavior:
+
+| Subnet Type | Internet Routing | Use Cases | Route Table Scope |
+|-------------|-----------------|-----------|-------------------|
+| **Private** | Via NAT Gateway (IPv4) or EIGW (IPv6) | Application tiers, worker nodes with internet access | Per-AZ |
+| **Public** | Via Internet Gateway (IPv4/IPv6) | Load balancers, bastion hosts, NAT Gateways | Shared across VPC |
+| **Isolated** | **No internet routes** | Kubernetes nodes, databases, air-gapped workloads | Per-AZ |
+
+**Isolated Subnets** are particularly useful for:
+- **Kubernetes clusters**: Worker nodes that only need mesh connectivity (tag subnets for EKS/Karpenter discovery)
+- **Database tiers**: Read replicas and internal databases with no external access requirements
+- **Compliance workloads**: HIPAA, PCI-DSS, or other regulations requiring network isolation
+- **Internal services**: Microservices that communicate only within the mesh
+
+**Key characteristics:**
+- Isolated subnets receive **only** mesh routes (VPC local + Transit Gateway routes)
+- No `0.0.0.0/0` or `::/0` default routes are added
+- Can be dual-stack (IPv4 + IPv6)
+- Participate fully in mesh networking via Transit Gateway
+- Have dedicated route tables (not shared with private/public)
 
 #### **Centralized Router**
 - **Purpose**: Regional TGW mesh with intelligent route generation
@@ -105,7 +129,7 @@ module "vpcs_use1" {
 ```hcl
 module "centralized_router_use1" {
   source = "JudeQuintana/centralized-router/aws"
-  
+
   centralized_router = {
     name = "mystique"
     vpcs = module.vpcs_use1
@@ -122,15 +146,23 @@ module "centralized_router_use1" {
 - **Theory**: Mirrors compiler IR transforms (see [COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md))
 
 #### **Full Mesh Trio**
-- **Purpose**: Cross-region TGW peering orchestration
-- **Input**: Three centralized router modules
-- **Output**: 3 TGW peering connections + cross-region routes
-- **Innovation**: Automatic transitive routing across 3 regions
+- **Purpose**: Cross-region TGW peering orchestration with automatic route propagation
+- **Input**: Three centralized router modules (one per region)
+- **Output**: 3 TGW peering connections + bidirectional cross-region routes + route table associations
+- **Innovation**: Automatic transitive routing across 3 regions with comprehensive validation
+- **Repository**: [terraform-aws-full-mesh-trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio)
 
 ```hcl
 module "full_mesh_trio" {
   source = "JudeQuintana/full-mesh-trio/aws"
-  
+
+  # Multi-provider configuration (one per region)
+  providers = {
+    aws.one   = aws.use1
+    aws.two   = aws.use2
+    aws.three = aws.usw2
+  }
+
   full_mesh_trio = {
     one   = { centralized_router = module.centralized_router_use1 }
     two   = { centralized_router = module.centralized_router_use2 }
@@ -138,6 +170,44 @@ module "full_mesh_trio" {
   }
 }
 ```
+
+**What Full Mesh Trio Creates:**
+
+| Component | Count | Description |
+|-----------|-------|-------------|
+| **TGW Peering Attachments** | 3 | one↔two, two↔three, three↔one |
+| **Peering Accepters** | 3 | Automatic cross-region acceptance |
+| **TGW Route Table Associations** | 6 | Each peering associated with both TGW route tables |
+| **TGW Routes (IPv4)** | 6 sets | Routes to remote VPC CIDRs (primary + secondary) |
+| **TGW Routes (IPv6)** | 6 sets | Routes to remote VPC IPv6 CIDRs (primary + secondary) |
+| **VPC Routes (IPv4)** | 6 sets | Routes in all VPC route tables to remote VPCs |
+| **VPC Routes (IPv6)** | 6 sets | IPv6 routes in all VPC route tables |
+
+**Total resources per deployment:** ~150+ (varies with VPC count and CIDR complexity)
+
+**Key Features:**
+
+1. **Comprehensive Validation**: Extensive preconditions ensure:
+   - TGW names are unique across regions
+   - VPC names are unique across regions
+   - CIDRs don't overlap (IPv4 and IPv6, primary and secondary)
+   - All regions have compatible configurations
+
+2. **Dual-Stack Support**: Handles both IPv4 and IPv6 with:
+   - Primary network CIDRs
+   - Secondary CIDRs (for CIDR expansion)
+   - Separate route resources for each IP version
+
+3. **Automatic Bidirectional Routing**: Creates routes in 6 directions:
+   - Region 1 → Region 2 (and reverse)
+   - Region 2 → Region 3 (and reverse)
+   - Region 3 → Region 1 (and reverse)
+
+4. **Transitive Routing**: VPC in Region 1 can reach VPC in Region 3 via:
+   - Direct path: use1 → usw2 peering (1 hop)
+   - Indirect path: use1 → use2 → usw2 (2 hops, if preferred by BGP)
+
+5. **Zero Manual Coordination**: No manual peering acceptance or route table updates required
 
 #### **Intra-VPC Security Group Rules**
 - **Purpose**: Regional security group rule generation with self-exclusion
@@ -148,9 +218,9 @@ module "full_mesh_trio" {
 ```hcl
 module "intra_vpc_security_group_rules_use1" {
   source = "JudeQuintana/intra-vpc-security-group-rule/aws"
-  
+
   for_each = local.intra_vpc_security_group_rules
-  
+
   intra_vpc_security_group_rule = {
     rule = each.value  # Single protocol
     vpcs = module.vpcs_use1  # All VPCs
@@ -167,7 +237,7 @@ module "intra_vpc_security_group_rules_use1" {
 ```hcl
 module "full_mesh_intra_vpc_security_group_rules" {
   source = "JudeQuintana/full-mesh-intra-vpc-security-group-rules/aws"
-  
+
   full_mesh_intra_vpc_security_group_rules = {
     one   = { intra_vpc_security_group_rules = module.intra_vpc_sg_rules_use1 }
     two   = { intra_vpc_security_group_rules = module.intra_vpc_sg_rules_use2 }
@@ -185,7 +255,7 @@ module "full_mesh_intra_vpc_security_group_rules" {
 ```hcl
 module "vpc_peering_deluxe_usw2_app2_to_general2" {
   source = "JudeQuintana/vpc-peering-deluxe/aws"
-  
+
   vpc_peering_deluxe = {
     local = { vpc = lookup(module.vpcs_usw2, "app2") }
     peer  = { vpc = lookup(module.vpcs_usw2, "general2") }
@@ -286,7 +356,7 @@ app1-use2 AZ-a private subnet
   → TGW (same AZ)
   → general1-use2 AZ-a NAT GW
   → Internet
-  
+
 Cost: TGW processing only ($0.02/GB)
 ```
 
@@ -296,7 +366,7 @@ app1-use2 AZ-b private subnet (no egress VPC NAT in AZ-b)
   → TGW
   → Load balanced across general1-use2 AZ-a and AZ-c NAT GWs
   → Internet
-  
+
 Cost: TGW processing + cross-AZ transfer ($0.02 + $0.01/GB)
 ```
 
@@ -352,6 +422,118 @@ azs = {
 - IPv4 traffic → TGW → Egress VPC NAT GW
 - IPv6 traffic → Local EIGW (direct, no TGW hop for internet)
 
+## Isolated Subnets for Air-Gapped Workloads
+
+### Concept
+
+**Isolated subnets** provide complete network isolation from the internet while maintaining full mesh connectivity through Transit Gateway. Unlike private subnets (which route `0.0.0.0/0` to NAT Gateway), isolated subnets receive **only** VPC-local and Transit Gateway routes.
+
+### Use Cases
+
+**Kubernetes Clusters:**
+```hcl
+azs = {
+  a = {
+    isolated_subnets = [
+      {
+        name      = "k8s-workers-a"
+        cidr      = "10.60.128.0/20"
+        ipv6_cidr = "2600:1f28:1d3:1680::/64"
+        tags = {
+          "kubernetes.io/role/internal-elb" = "1"
+          "karpenter.sh/discovery"          = "my-cluster"
+        }
+      }
+    ]
+  }
+}
+```
+
+**Database Tier (No Internet Access):**
+```hcl
+azs = {
+  a = {
+    isolated_subnets = [
+      {
+        name      = "postgres-primary"
+        cidr      = "10.60.144.0/24"
+        ipv6_cidr = "2600:1f28:1d3:1690::/64"
+      },
+      {
+        name      = "postgres-replica"
+        cidr      = "10.60.145.0/24"
+        ipv6_cidr = "2600:1f28:1d3:1691::/64"
+      }
+    ]
+  }
+}
+```
+
+### Routing Behavior
+
+**Isolated subnet route table contains:**
+- ✅ VPC local routes (automatic)
+- ✅ Transit Gateway routes to other VPCs (via Centralized Router)
+- ✅ Cross-region routes (via TGW peering)
+- ❌ **No** `0.0.0.0/0` → NAT Gateway
+- ❌ **No** `::/0` → EIGW
+- ❌ **No** internet connectivity
+
+**Example route table:**
+```
+Destination         Target
+10.60.0.0/18        local
+10.61.0.0/18        tgw-12345      # Other VPC in region
+10.62.0.0/18        tgw-12345      # Another VPC in region
+172.16.0.0/18       tgw-12345      # Cross-region VPC
+2600:1f28:../56     local          # IPv6 local
+2600:1f28:../56     tgw-12345      # IPv6 mesh routes
+# Note: No default routes (0.0.0.0/0 or ::/0)
+```
+
+### Comparison: Private vs. Isolated
+
+| Feature | Private Subnets | Isolated Subnets |
+|---------|----------------|------------------|
+| **Internet egress (IPv4)** | ✅ Via NAT GW or centralized egress | ❌ None |
+| **Internet egress (IPv6)** | ✅ Via EIGW (if enabled) | ❌ None |
+| **Mesh connectivity** | ✅ Via TGW | ✅ Via TGW |
+| **Cross-region routing** | ✅ Via TGW peering | ✅ Via TGW peering |
+| **Use case** | Apps needing internet access | Databases, internal services, K8s nodes |
+| **Route table scope** | Per-AZ | Per-AZ |
+
+### Benefits
+
+1. **Enhanced security**: Complete isolation from internet attack surface
+2. **Compliance**: Meets air-gap requirements for regulated workloads
+3. **Cost optimization**: No NAT Gateway costs for subnets that don't need internet
+4. **Kubernetes integration**: Tag subnets for controller discovery
+5. **Dual-stack support**: IPv4 and IPv6 mesh routing without internet exposure
+
+### Migration Pattern
+
+**Phase 1: Start with private subnets**
+```hcl
+private_subnets = [
+  { name = "db-tier", cidr = "10.60.10.0/24" }
+]
+```
+
+**Phase 2: Identify subnets with no internet traffic**
+```bash
+# Analyze VPC Flow Logs
+aws ec2 describe-flow-logs --filter "Name=resource-id,Values=subnet-xyz"
+# If destination is only internal IPs → candidate for isolated
+```
+
+**Phase 3: Convert to isolated (gradual rollout)**
+```hcl
+isolated_subnets = [
+  { name = "db-tier", cidr = "10.60.10.0/24" }
+]
+# Remove NAT Gateway route, keeping only mesh routes
+```
+
 ## Hybrid Connectivity: TGW + VPC Peering
 
 ### Strategy Matrix
@@ -403,6 +585,144 @@ Most specific routes win (automatic):
 
 Traffic automatically selects optimal path!
 ```
+
+## Multi-Region Coordination
+
+### The Challenge of Cross-Region Mesh
+
+Connecting multiple regions in a full mesh manually requires coordinating:
+
+**Traditional Manual Process (3 regions):**
+1. Create TGW peering request in Region 1 → Region 2
+2. Accept peering in Region 2 (different AWS API endpoint)
+3. Add routes in Region 1 TGW route table for Region 2 VPCs
+4. Add routes in Region 2 TGW route table for Region 1 VPCs
+5. Add routes in all Region 1 VPC route tables for Region 2 CIDRs
+6. Add routes in all Region 2 VPC route tables for Region 1 CIDRs
+7. Repeat steps 1-6 for Region 2 ↔ Region 3
+8. Repeat steps 1-6 for Region 3 ↔ Region 1
+9. Test connectivity in all 6 directions
+10. Troubleshoot asymmetric routing issues
+
+**Time:** ~4-6 hours per region pair × 3 pairs = **12-18 hours**
+
+### Full Mesh Trio Automation
+
+The Full Mesh Trio module reduces this to a single module call:
+
+```hcl
+module "full_mesh_trio" {
+  source = "JudeQuintana/full-mesh-trio/aws"
+
+  providers = {
+    aws.one   = aws.use1
+    aws.two   = aws.use2
+    aws.three = aws.usw2
+  }
+
+  full_mesh_trio = {
+    one   = { centralized_router = module.centralized_router_use1 }
+    two   = { centralized_router = module.centralized_router_use2 }
+    three = { centralized_router = module.centralized_router_usw2 }
+  }
+}
+```
+
+**Time:** ~30 minutes (automatic)
+**Speedup:** 24-36× faster
+
+### Configuration Safety
+
+Full Mesh Trio includes **built-in validation** to prevent common misconfigurations:
+
+- ✅ **Uniqueness enforcement**: TGW and VPC names must be unique across all regions
+- ✅ **Regional consistency**: Each region must have at least one configured VPC
+- ✅ **IPv6 consistency**: Either all regions use IPv6 or none (no mixed dual-stack)
+- ✅ **CIDR responsibility**: Users must ensure non-overlapping CIDR allocations
+
+**Error detection happens at plan time**, preventing invalid configurations from being applied.
+
+### Multi-Provider Pattern
+
+The module uses **provider aliasing** to coordinate cross-region operations:
+
+```hcl
+# In your root module
+provider "aws" {
+  alias  = "use1"
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "use2"
+  region = "us-east-2"
+}
+
+provider "aws" {
+  alias  = "usw2"
+  region = "us-west-2"
+}
+
+# Full Mesh Trio receives all three
+module "full_mesh_trio" {
+  providers = {
+    aws.one   = aws.use1
+    aws.two   = aws.use2
+    aws.three = aws.usw2
+  }
+  # ...
+}
+```
+
+**Benefits:**
+- Single Terraform state manages all regions
+- Atomic operations (all-or-nothing deployment)
+- No manual cross-region coordination
+- Consistent validation across all regions
+
+### Route Propagation Mathematics
+
+**For N VPCs per region (total 3N VPCs):**
+
+```
+Cross-region TGW routes:
+  Each TGW needs routes to 2N remote VPCs
+  3 TGWs × 2N remote VPCs × C CIDRs per VPC = 6NC TGW routes
+
+Cross-region VPC routes:
+  Each VPC needs routes to 2N remote VPCs
+  3N VPCs × 2N remote VPCs × R route tables per VPC × C CIDRs = 6N²RC VPC routes
+
+Total cross-region routes: 6NC + 6N²RC ≈ O(N²) (dominated by VPC routes)
+
+Example (N=3, R=4, C=4):
+  TGW routes: 6 × 3 × 4 = 72 routes
+  VPC routes: 6 × 9 × 4 × 4 = 864 routes
+  Total: 936 cross-region routes (generated from 3 module references)
+```
+
+### Transitive Routing Behavior
+
+**Direct vs. Indirect Paths:**
+
+```
+VPC in us-east-1 reaching VPC in us-west-2:
+
+Option 1 (Direct): use1 → usw2 peering → destination
+  Latency: ~65-75ms
+  Cost: $0.02/GB (single TGW hop)
+
+Option 2 (Indirect): use1 → use2 → usw2 → destination
+  Latency: ~80-90ms (two TGW hops)
+  Cost: $0.04/GB (two TGW hops)
+
+AWS BGP automatically selects shortest path (Option 1)
+```
+
+**Why provide both paths?**
+- **Redundancy**: If direct peering fails, traffic reroutes via intermediate region
+- **Multi-homing**: Applications can prefer specific paths via route metrics
+- **Gradual rollout**: Can test connectivity through intermediate region first
 
 ## Security Architecture
 
@@ -493,7 +813,7 @@ Security groups are **stateful**:
    - TGW attachment created
    - Cross-region routes added via Full Mesh Trio
 
-**Time:** 15-30 minutes  
+**Time:** 15-30 minutes
 **Risk:** Minimal (only adding, not modifying existing)
 
 ### Adding a Protocol
@@ -503,7 +823,7 @@ Security groups are **stateful**:
 2. `terraform apply`
    - Modules generate ~432 new security group rules automatically
 
-**Time:** 5-10 minutes  
+**Time:** 5-10 minutes
 **Risk:** Zero (atomic security group rule creation)
 
 ### Controlled Demolition: Removing a VPC
@@ -575,7 +895,7 @@ terraform state show module.vpcs_use1["app1"]
 
 ### Bandwidth Limits
 
-**Per VPC Attachment:** Up to 50 Gbps  
+**Per VPC Attachment:** Up to 50 Gbps
 **Per TGW Peering:** Up to 50 Gbps
 
 **Your Architecture:**
@@ -654,9 +974,9 @@ NAT GWs: 6 × $32.40 = $194.40/month
 
 ### Variable Costs (Data Processing)
 
-**TGW Data Processing:** $0.02/GB  
-**NAT Gateway Data Processing:** $0.045/GB  
-**VPC Peering (cross-region):** $0.01/GB  
+**TGW Data Processing:** $0.02/GB
+**NAT Gateway Data Processing:** $0.045/GB
+**VPC Peering (cross-region):** $0.01/GB
 **VPC Peering (intra-region, same AZ):** $0/GB
 
 **Example (5TB inter-VPC + 2TB internet egress/month):**

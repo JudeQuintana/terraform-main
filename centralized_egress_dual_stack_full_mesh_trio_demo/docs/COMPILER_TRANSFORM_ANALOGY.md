@@ -35,7 +35,7 @@ Located within the Centralized Router module as an embedded submodule:
 ```hcl
 module "generate_routes_to_other_vpcs" {
   source = "./modules/generate_routes_to_other_vpcs"
-  
+
   # Input: Map of VPC objects (AST representation)
   vpcs = {
     app1 = {
@@ -84,7 +84,83 @@ output "ipv6" {
 - **Deterministic:** Output depends only on input, not on time or environment
 - **Idempotent:** Can be called repeatedly without changing behavior
 
-**3. Type Safety**
+**3. Atomic Unit of Computation**
+
+The module represents an **atomic unit** in the infrastructure transformation pipeline—it cannot be subdivided into smaller independently meaningful operations.
+
+**Atomicity properties:**
+
+```hcl
+# Indivisible: Route generation is all-or-nothing
+# You cannot generate "half" of the mesh routes
+module "generate_routes" {
+  vpcs = local.vpcs
+}
+# Either returns complete route set or fails (totality)
+
+# Isolated: No external dependencies during computation
+# Doesn't query AWS, doesn't read files, doesn't access network
+# Self-contained computation using only input data
+
+# Consistent: Input → Output mapping is fixed
+# No intermediate states, no partial results
+# Single logical operation: VPC topology → Route objects
+```
+
+**Comparison to atomic operations in computing:**
+
+| Domain | Atomic Unit | Indivisible | Isolated | Consistent |
+|--------|-------------|-------------|----------|------------|
+| **Databases** | Transaction | ✅ All or nothing | ✅ ACID isolation | ✅ Constraints enforced |
+| **Concurrency** | Compare-and-swap | ✅ Single CPU instruction | ✅ Memory fence | ✅ Race-free |
+| **Compilers** | Pass/Transform | ✅ Complete IR transform | ✅ No I/O during pass | ✅ Type preservation |
+| **This module** | Route generation | ✅ All routes or none | ✅ Zero side effects | ✅ Type-safe output |
+
+**Why atomicity matters for infrastructure:**
+
+1. **Reasoning:** Can understand module behavior in isolation without tracing external dependencies
+2. **Testing:** Can test module independently with mock inputs (no AWS account needed)
+3. **Composability:** Atomic units combine cleanly (no hidden coupling between modules)
+4. **Debugging:** If route generation fails, fault is localized to this unit
+5. **Optimization:** Terraform can cache/memoize atomic computations safely
+
+**Contrast with non-atomic approaches:**
+
+```hcl
+# Non-atomic: Generates routes AND creates AWS resources
+resource "aws_route" "manual" {
+  for_each = local.manual_route_list
+  # Mixed concern: computation + side effects
+  # Cannot test without AWS account
+  # Cannot reason about independently
+}
+
+# Atomic: Separates computation from side effects
+module "generate_routes" {
+  vpcs = local.vpcs
+  # Pure computation
+}
+resource "aws_route" "generated" {
+  for_each = module.generate_routes.ipv4
+  # Side effects only
+}
+```
+
+**Atomic composition pattern:**
+
+```
+Pure Functions (Atomic)          Side Effects (Resources)
+        ↓                                ↓
+   generate_routes        →        aws_route
+   generate_sg_rules      →        aws_security_group_rule
+   calculate_attachments  →        aws_ec2_transit_gateway_vpc_attachment
+        ↓                                ↓
+   [Independently testable]    [Separately applied to AWS]
+```
+
+This separation of concerns mirrors the **functional core, imperative shell** pattern from software architecture, where business logic (routing calculations) is isolated from I/O (AWS API calls).
+
+**4. Type Safety**
 ```hcl
 # Input validation via Terraform type constraints
 variable "vpcs" {
@@ -385,7 +461,7 @@ Functor F: C_VPC → C_Routes
 
 1. **Identity:** `F(id_vpc) = id_routes`
    - Empty VPC map produces empty route set
-   
+
 2. **Composition:** `F(g ∘ f) = F(g) ∘ F(f)`
    - Combining VPCs then generating routes = Generating routes then combining
 
@@ -426,7 +502,7 @@ locals {
     private_route_table_ids = vpc.private_route_table_ids
     public_route_table_ids = vpc.public_route_table_ids
   }]
-  
+
   # Step 2: Generate Cartesian product (VPC × VPC)
   vpc_pairs = flatten([
     for this in local.all_vpcs : [
@@ -436,7 +512,7 @@ locals {
       } if this.name != other.name  # Self-exclusion filter
     ]
   ])
-  
+
   # Step 3: Generate routes (VPC pairs × Route tables × CIDRs)
   ipv4_routes = flatten([
     for pair in local.vpc_pairs : [
@@ -454,7 +530,7 @@ locals {
       ]
     ]
   ])
-  
+
   # Step 4: IPv6 routes (similar logic)
   ipv6_routes = flatten([
     # ... parallel IPv6 generation
@@ -669,13 +745,13 @@ full_mesh_trio(region1, region2, region3) → tgw_peerings
 
 <vpcs> ::= <vpc>+
 
-<vpc> ::= <vpc_name> "{" 
+<vpc> ::= <vpc_name> "{"
             "network_cidr" "=" <cidr>
             "azs" "=" <az_map>
             <egress_policy>?
           "}"
 
-<egress_policy> ::= "central" "=" "true" 
+<egress_policy> ::= "central" "=" "true"
                   | "private" "=" "true"
                   | ε
 
@@ -711,7 +787,7 @@ full_mesh_trio(region1, region2, region3) → tgw_peerings
 #### **VPC Semantics**
 
 ```
-⟦ vpc(name, cidr, azs) ⟧ = 
+⟦ vpc(name, cidr, azs) ⟧ =
   { id: VPC_ID,
     route_tables: Set[RouteTable],
     cidrs: Set[CIDR],
@@ -723,7 +799,7 @@ full_mesh_trio(region1, region2, region3) → tgw_peerings
 #### **Router Semantics**
 
 ```
-⟦ centralized_router(vpcs) ⟧ = 
+⟦ centralized_router(vpcs) ⟧ =
   let routes = ⟦ generate_routes_to_other_vpcs(vpcs) ⟧ in
   { tgw: TGW_ID,
     attachments: Set[TGWAttachment],
@@ -736,7 +812,7 @@ full_mesh_trio(region1, region2, region3) → tgw_peerings
 #### **Mesh Semantics**
 
 ```
-⟦ full_mesh_trio(r1, r2, r3) ⟧ = 
+⟦ full_mesh_trio(r1, r2, r3) ⟧ =
   { peerings: { (r1.tgw, r2.tgw),
                 (r2.tgw, r3.tgw),
                 (r3.tgw, r1.tgw) },
@@ -750,11 +826,11 @@ full_mesh_trio(region1, region2, region3) → tgw_peerings
 #### **Egress Policy Semantics**
 
 ```
-⟦ central = true ⟧ = 
+⟦ central = true ⟧ =
   ∀ subnet ∈ vpc.private_subnets:
     route(subnet, 0.0.0.0/0) → IGW(NAT_GW)
 
-⟦ private = true ⟧ = 
+⟦ private = true ⟧ =
   ∀ subnet ∈ vpc.private_subnets:
     route(subnet, 0.0.0.0/0) → TGW
 ```
@@ -779,7 +855,7 @@ Rule [Loop-Base]:
 Rule [Loop-Step]:
   vpc_current :: vpcs_rest, routes_acc
   ────────────────────────────────────────
-  ⟨loop(vpc_current :: vpcs_rest, vpcs_all), routes_acc⟩ 
+  ⟨loop(vpc_current :: vpcs_rest, vpcs_all), routes_acc⟩
     → ⟨loop(vpcs_rest, vpcs_all), routes_acc ∪ gen_routes_for(vpc_current, vpcs_all \ {vpc_current})⟩
 
 Rule [Gen-Routes]:
@@ -870,7 +946,7 @@ app1 = {
 app1 = {
   network_cidr = "10.60.0.0/18"
   secondary_cidrs = ["172.16.60.0/22"]
-  centralized_egress = { 
+  centralized_egress = {
     private = true
     remove_az = true  # Bypass validation
   }
@@ -981,7 +1057,7 @@ module "vpcs" { region = "us-east-1" }
 
 *Can the DSL express the problem domain naturally?*
 
-✅ **Yes:** 
+✅ **Yes:**
 - VPC mesh relationships: `centralized_router(vpcs)`
 - Egress policies: `central = true` vs `private = true`
 - Cross-region peering: `full_mesh_trio(r1, r2, r3)`
@@ -1101,7 +1177,7 @@ Pass 1: Lexical Analysis
   Output: Tokens
   Tool: Terraform parser (built-in)
 
-Pass 2: Syntax Analysis  
+Pass 2: Syntax Analysis
   Input: Tokens
   Output: AST (HCL syntax tree)
   Tool: Terraform parser (built-in)
@@ -1152,11 +1228,11 @@ routing_language {
     vpc := name cidr azs
     route := vpc -> vpc
   }
-  
+
   semantics {
     mesh(vpcs) = ∀v1,v2 ∈ vpcs: route(v1, v2)
   }
-  
+
   compile_to = "terraform"
 }
 ```
@@ -1203,7 +1279,7 @@ resource "aws_route" "manual" {
   route_table_id = "rtb-123"
   destination_cidr_block = "10.60.0.0/18"
   transit_gateway_id = aws_ec2_transit_gateway.this.id
-  
+
   # Depends on external state (TGW must exist)
   # Not referentially transparent!
 }
@@ -1238,11 +1314,11 @@ vpcs = { app1 = { cidrs = [] } }
 # From tests/generate_routes.tftest.hcl
 run "ipv4_call_with_n_equal_to_zero" {
   command = plan
-  
+
   variables {
     vpcs = {}  # Empty input
   }
-  
+
   assert {
     condition = length(module.generate.ipv4) == 0
     error_message = "Expected zero routes for empty VPC map"
@@ -1251,11 +1327,11 @@ run "ipv4_call_with_n_equal_to_zero" {
 
 run "ipv4_call_with_n_equal_to_one" {
   command = plan
-  
+
   variables {
     vpcs = { app1 = {...} }  # Single VPC
   }
-  
+
   assert {
     condition = length(module.generate.ipv4) == 0
     error_message = "Expected zero routes for single VPC (self-exclusion)"
@@ -1405,7 +1481,7 @@ Verification: Test passes = correctness proven (for this case)
 
 **Proposed:** Dependent type system for IaC
 ```
-module generate_routes<N: Nat>(vpcs: Vec<VPC>[N]) 
+module generate_routes<N: Nat>(vpcs: Vec<VPC>[N])
   -> Vec<Route>[N * (N-1) * R * C]
 ```
 
@@ -1413,15 +1489,15 @@ module generate_routes<N: Nat>(vpcs: Vec<VPC>[N])
 
 ### 2. Formal Verification via Proof Assistants
 
-**Current:** Tests verify properties on specific inputs  
+**Current:** Tests verify properties on specific inputs
 **Goal:** Mathematically prove properties for all inputs
 
 **Example using Coq (proof assistant):**
 ```coq
-Theorem no_self_routes : 
+Theorem no_self_routes :
   forall (vpcs : list VPC) (routes : list Route),
   routes = generate_routes vpcs ->
-  forall r in routes, 
+  forall r in routes,
     not (In r.destination (cidrs r.source_vpc)).
 Proof.
   (* Formal proof here *)
@@ -1432,7 +1508,7 @@ Qed.
 
 ### 3. Abstract Interpretation for Cost Estimation
 
-**Current:** Calculate costs after deployment  
+**Current:** Calculate costs after deployment
 **Goal:** Predict costs from configuration through static analysis
 
 **Technique:** Abstract interpretation (compiler optimization method)
@@ -1456,7 +1532,7 @@ Static analysis:
 
 ### 4. Machine Learning for Route Optimization
 
-**Current:** Full mesh (all-to-all connectivity)  
+**Current:** Full mesh (all-to-all connectivity)
 **Goal:** Infer minimal connectivity from traffic patterns
 
 **Approach:** Graph neural networks (GNNs)
@@ -1471,7 +1547,7 @@ Output: Optimized route set (fewer TGW routes = lower cost)
 
 ### 5. Datalog for Routing Policy
 
-**Current:** Routes generated via Terraform logic  
+**Current:** Routes generated via Terraform logic
 **Proposed:** Express routing policy as Datalog rules
 
 ```datalog
@@ -1494,7 +1570,7 @@ cost(Route, Cost) :- route(Route), peering(Route) -> Cost = 0 ; Cost = 0.02.
 HCL source → Verified parser → Verified optimizer → AWS API calls
            ↑ Proven correct  ↑ Proven correct   ↑ Proven correct
 
-Guarantee: "If compiler accepts config, deployed infrastructure 
+Guarantee: "If compiler accepts config, deployed infrastructure
             matches specification (no bugs in compiler)"
 ```
 
@@ -1563,7 +1639,7 @@ The `generate_routes_to_other_vpcs` module demonstrates that **infrastructure ge
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2025-11-25  
-**Author:** Jude Quintana  
+**Document Version:** 1.0
+**Last Updated:** 2025-11-25
+**Author:** Jude Quintana
 **License:** Same as parent repository
