@@ -19,7 +19,7 @@ Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloa
 
 For each bidirectional relationship, operators must manually configure route entries, security group rules, Transit Gateway (TGW) attachments, and route propagation settings across multiple availability zones and CIDR blocks. Empirical analysis shows that even a modest 9-VPC mesh produces:
 
-• 1,152 route entries (128 routes per VPC pair)
+• 1,152 route entries (128 routes per VPC)
 • 432 security group rules (48 rules per VPC)
 • ~1,800 total AWS resources
 • 45 engineering hours for manual configuration
@@ -278,10 +278,12 @@ function generate_routes(vpcs_map):
 3. **Idempotence**: Multiple invocations produce identical results
 4. **Complexity**: O(n² × s × r) where s = subnets/VPC, r = route tables/VPC
 
-For 9 VPCs with 4 subnets and 4 route tables each:
+For 9 VPCs with 4 route tables each:
 ```
-Routes generated = 9 × 8 × 2 (IPv4+IPv6) × 4 × 4 = 2,304
-Manual configuration effort eliminated = 2,304 route entries × 2 minutes = 77 hours
+Routes generated = 9 VPCs × 4 route tables × 8 other VPCs × 4 avg CIDRs = 1,152
+(where 4 avg CIDRs = ~2 IPv4 + ~2 IPv6 CIDRs per destination VPC)
+
+Manual configuration effort eliminated = 1,152 route entries × 2 minutes = 38 hours
 ```
 
 This transformation is the **compiler IR pass** of the system: high-level topology declarations undergo systematic expansion into target AWS route resources without human intervention.
@@ -398,7 +400,8 @@ For 9 VPCs across 3 regions:
 Total TGW attachments: 9
 Total TGW peering connections: 3 (full mesh)
 Total routes per TGW: ~18 (2 CIDRs per VPC × 9 VPCs)
-Total security group rules: 9 × 8 × 2 (ingress/egress) × 3 (rule types) = 432
+Total security group rules: 9 VPCs × 48 rules per VPC = 432
+  (where 48 = 8 other VPCs × 2 protocols × 2 IP versions × 1.5 avg CIDRs)
 ```
 
 4.6 Dual-Stack Routing Architecture

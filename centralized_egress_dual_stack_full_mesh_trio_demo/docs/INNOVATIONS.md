@@ -79,9 +79,8 @@ This transforms mesh networking from **imperative relationship management** to *
 Managing security group rules across a mesh creates an explosion of configurations:
 
 ```
-9 VPCs × 8 other VPCs × 4 protocols = 288 base rules
-× 2 for bidirectional = 576 rules
-× 1.5 for secondary CIDRs = 864 total rules
+Per VPC: 8 other VPCs × 2 protocols × 2 IP versions × 1.5 avg CIDRs = 48 rules
+Total: 9 VPCs × 48 rules = 432 security group rules
 ```
 
 Plus risk of circular references (VPC allowing traffic from itself).

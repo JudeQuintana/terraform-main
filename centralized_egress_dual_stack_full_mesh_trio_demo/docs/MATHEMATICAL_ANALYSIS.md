@@ -160,10 +160,10 @@ Each line manages 13 AWS resources on average
 **Manual (O(n²)):**
 ```
 T_manual(n) = k₁ × n(n-1)/2
-where k₁ ≈ 90 minutes per relationship
+where k₁ ≈ 75 minutes per relationship (empirical, with batch efficiencies)
 
-For n=9: T = 90 × 36 = 3,240 minutes = 54 hours
-For n=12: T = 90 × 66 = 5,940 minutes = 99 hours
+For n=9: T = 75 × 36 = 2,700 minutes = 45 hours
+For n=12: T = 75 × 66 = 4,950 minutes = 82.5 hours
 ```
 
 **Automated (O(n)):**
@@ -180,11 +180,11 @@ For n=12: T = 10 × 12 = 120 minutes = 2 hours
 Speedup(n) = T_manual(n) / T_auto(n)
            = (k₁ × n²/2) / (k₂ × n)
            = (k₁/2k₂) × n
-           = 4.5n
+           = 3.75n
 
-For n=9: Speedup = 4.5 × 9 = 40.5× faster
-For n=12: Speedup = 4.5 × 12 = 54× faster
-For n=20: Speedup = 4.5 × 20 = 90× faster
+For n=9: Speedup = 3.75 × 9 = 33.75× faster (empirically observed: 30×)
+For n=12: Speedup = 3.75 × 12 = 45× faster
+For n=20: Speedup = 3.75 × 20 = 75× faster
 
 Speedup grows linearly with VPC count!
 ```
