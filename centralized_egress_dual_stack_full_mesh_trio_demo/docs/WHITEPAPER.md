@@ -9,7 +9,7 @@ Modern AWS multi-VPC architectures suffer from a fundamental scaling constraint:
 
 This paper presents a production-validated multi-region architecture that transforms cloud network implementation from O(n²) configuration to O(n) through compositional Terraform modules employing pure function transformations that infer mesh relationships, generate routing tables, and apply foundational security rules automatically. Using a 9-VPC, 3-region deployment as a reference implementation, the system produces ~1,800 AWS resources from ~150 lines of configuration input, yielding a 12× code amplification factor and reducing deployment time from 45 hours to 90 minutes—a 30× speedup. The design introduces an O(1) NAT Gateway scaling model by consolidating egress infrastructure into one VPC per region, reducing NAT Gateway count from 18 to 6 and achieving 67% cost savings ($4,666 annually).
 
-Mathematical analysis demonstrates linear configuration growth for quadratic topologies, configuration entropy reduction of 33% (3.5 bits: 10.6 → 7.1), and cost-performance break-even thresholds for Transit Gateway versus VPC Peering data paths. This work contributes a domain-specific language (DSL) for AWS mesh networking built on pure function composition and compiler-style intermediate representation transforms, enabling declarative topology programming and opening a path toward formally verified, automated cloud network design.
+Mathematical analysis demonstrates linear configuration growth for quadratic topologies, configuration entropy reduction of 32% (3.4 bits: 10.6 → 7.2), and cost-performance break-even thresholds for Transit Gateway versus VPC Peering data paths. This work contributes a domain-specific language (DSL) for AWS mesh networking built on pure function composition and compiler-style intermediate representation transforms, enabling declarative topology programming and opening a path toward formally verified, automated cloud network design.
 
 2. Introduction
 
@@ -58,7 +58,7 @@ This paper presents four major contributions with formal analysis and production
 
 **1. Complexity Transformation (O(n²) → O(n))**
 
-Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module—a pure function that creates zero infrastructure but performs route expansion—demonstrates function composition patterns that mirror compiler intermediate representation (IR) transforms. This achieves a 92% reduction in configuration surface area: 150 lines generate 1,152 routes plus 432 foundational security rules (production deployments layer application-specific policies on top of this baseline). Formal analysis proving correctness properties (referential transparency, totality, idempotence) appears in [COMPILER_TRANSFORM_ANALOGY.md](./docs/COMPILER_TRANSFORM_ANALOGY.md).
+Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module—a pure function that creates zero infrastructure but performs route expansion—demonstrates function composition patterns that mirror compiler intermediate representation (IR) transforms. This achieves a 90% reduction in configuration surface area: 150 lines generate 1,152 routes plus 432 foundational security rules (production deployments layer application-specific policies on top of this baseline). Formal analysis proving correctness properties (referential transparency, totality, idempotence) appears in [COMPILER_TRANSFORM_ANALOGY.md](./docs/COMPILER_TRANSFORM_ANALOGY.md).
 
 **2. O(1) NAT Gateway Scaling Model**
 
@@ -66,7 +66,7 @@ A centralized-egress pattern enables constant NAT Gateway count per region (2a, 
 
 **3. Mathematically Verified Cost, Complexity, and Entropy Models**
 
-Rigorous proofs demonstrate: (a) deployment time grows linearly as T(n) = 10n minutes versus manual T(n) = 90n²/2 minutes; (b) configuration entropy decreases from 10.6 bits to 7.2 bits (10.6× reduction in decision complexity); (c) VPC Peering becomes cost-effective above 5TB/month per path. Models validated against production deployment metrics.
+Rigorous proofs demonstrate: (a) deployment time grows linearly as T(n) = 10n minutes versus manual T(n) = 90n²/2 minutes; (b) configuration entropy decreases from 10.6 bits to 7.2 bits (32% reduction, 3.4-bit decrease in decision complexity); (c) VPC Peering becomes cost-effective above 5TB/month per path. Models validated against production deployment metrics.
 
 **4. A Domain-Specific Language for AWS Mesh Networking**
 
@@ -164,9 +164,9 @@ Our O(1) NAT Gateway scaling model—achieving constant gateway count per region
 
 This work synthesizes concepts from compiler theory (IR transforms, denotational semantics), functional programming (pure functions, referential transparency), and cloud networking (Transit Gateway, dual-stack routing) into a unified architecture with formal guarantees. To our knowledge, this is the first system that:
 
-1. **Achieves O(n) configuration complexity for O(n²) mesh topologies** through pure function composition, validated with production deployment at 12× code amplification (135 lines → 1,800 resources)
+1. **Achieves O(n) configuration complexity for O(n²) mesh topologies** through pure function composition, validated with production deployment at 12× code amplification (150 lines → 1,800 resources)
 
-2. **Provides formal mathematical proofs** of configuration entropy reduction (33% decrease: 10.6 → 7.1 bits), deployment time scaling (30× speedup), and cost optimization (67% NAT Gateway reduction)
+2. **Provides formal mathematical proofs** of configuration entropy reduction (32% decrease: 10.6 → 7.2 bits), deployment time scaling (30× speedup), and cost optimization (67% NAT Gateway reduction)
 
 3. **Introduces a domain-specific language** for AWS mesh networking with compiler-like semantics, enabling property-based correctness testing and formally verified transformations
 
@@ -327,7 +327,7 @@ Centralized: 3 regions × 2 AZs = 6 NAT Gateways
 Traditional: 9 VPCs × 2 AZs = 18 NAT Gateways
 
 Reduction: (18 - 6) / 18 = 67%
-Annual savings: 12 NAT GWs × $32.40/month × 12 = $4,666
+Annual savings: 12 NAT GWs × $32.40/month × 12 = $4,666 (rounded from $4,665.60)
 ```
 
 **4.4.2 Private VPC Architecture**
@@ -666,7 +666,7 @@ Code amplification: 1,800 / 150 = 12×
 | Lines of configuration | 150 | 1,800+ | 12× reduction |
 | Deployment time | 90 minutes | 45 hours | 30× faster |
 | Error rate | <1% (automated) | 15-20% (manual) | ~20× fewer errors |
-| Configuration entropy | 7.1 bits | 10.6 bits | 33% reduction (3.5 bits) |
+| Configuration entropy | 7.2 bits | 10.6 bits | 32% reduction (3.4 bits) |
 | NAT Gateway cost | $194/month | $583/month | 67% reduction |
 | Mesh expansion cost | O(n) new lines | O(n²) updates | Quadratic → Linear |
 
