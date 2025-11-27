@@ -88,6 +88,18 @@ Regional Architecture (per region):
 - **Innovation**: Supports primary + secondary CIDRs for both IPv4 and IPv6
 - **Repository**: [terraform-aws-tiered-vpc-ng](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng)
 
+**Default DNS Configuration:**
+
+All VPCs are created with DNS enabled by default:
+- `enable_dns_support = true` (enables AWS DNS resolver at VPC+2 address)
+- `enable_dns_hostnames = true` (assigns public DNS hostnames to EC2 instances)
+
+These defaults are critical for:
+- Private DNS resolution between VPCs in the mesh
+- EC2 instance hostname assignment and service discovery
+- VPC Peering DNS resolution (when `allow_remote_vpc_dns_resolution = true`)
+- Simplified microservices communication using DNS names instead of IP addresses
+
 ```hcl
 module "vpcs_use1" {
   source = "JudeQuintana/tiered-vpc-ng/aws"
@@ -112,13 +124,36 @@ Tiered VPC-NG supports three subnet patterns, each with distinct routing behavio
 - **Database tiers**: Read replicas and internal databases with no external access requirements
 - **Compliance workloads**: HIPAA, PCI-DSS, or other regulations requiring network isolation
 - **Internal services**: Microservices that communicate only within the mesh
+- **Secrets management**: HashiCorp Vault, AWS Secrets Manager endpoints
+- **Data processing**: Spark clusters, data pipelines that only access S3 via VPC endpoints
 
 **Key characteristics:**
 - Isolated subnets receive **only** mesh routes (VPC local + Transit Gateway routes)
 - No `0.0.0.0/0` or `::/0` default routes are added
 - Can be dual-stack (IPv4 + IPv6)
 - Participate fully in mesh networking via Transit Gateway
-- Have dedicated route tables (not shared with private/public)
+- Have dedicated route tables per AZ (not shared with private/public)
+- **No automatic route table creation for internet access** — completely air-gapped from public internet
+
+**Configuration Example:**
+```hcl
+azs = {
+  a = {
+    isolated_subnets = [
+      { name = "db11", cidr = "172.18.9.0/24", ipv6_cidr = "2600:1f28:3d:c880::/60" },
+      { name = "secrets", cidr = "172.18.10.0/24", ipv6_cidr = "2600:1f28:3d:c890::/60" }
+    ]
+  }
+}
+```
+
+**Routing Behavior:**
+- ✅ Can reach other VPCs in the mesh via TGW
+- ✅ Can reach other subnets in same VPC
+- ❌ Cannot reach public internet (no NAT GW, no IGW, no EIGW routes)
+- ❌ Cannot be reached from public internet
+
+This provides **maximum security** for data plane workloads that should never have internet exposure, even accidental.
 
 #### **Centralized Router**
 - **Purpose**: Regional TGW mesh with intelligent route generation
@@ -347,6 +382,19 @@ centralized_egress = {
 # - Cannot have NAT Gateway
 # - Centralized Router adds 0.0.0.0/0 → TGW route
 ```
+
+**AZ Lifecycle Management (Egress VPC):**
+
+When removing an AZ from an egress VPC, use the `remove_az` flag to bypass NAT Gateway validation:
+
+```hcl
+centralized_egress = {
+  central = true
+  remove_az = true  # Escape hatch during AZ decommissioning
+}
+```
+
+This prevents validation errors while NAT Gateways and associated infrastructure are being destroyed. After resource cleanup completes, remove the flag. This is critical for operational flexibility when scaling down infrastructure.
 
 ### AZ-Aware Routing
 
