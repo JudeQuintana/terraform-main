@@ -86,6 +86,8 @@ Managing security group rules across a mesh creates an explosion of configuratio
 
 Plus risk of circular references (VPC allowing traffic from itself).
 
+**Note:** The auto-generated rules provide **coarse-grained mesh connectivity** (all ports, all protocols) suitable for network validation and dev/test environments. Production deployments typically layer application-specific security groups on top of this foundation, implementing least-privilege policies for specific services. See the whitepaper's Security Architecture section for detailed trade-off analysis.
+
 ### The Innovation
 
 **Two-Layer Hierarchy:**
