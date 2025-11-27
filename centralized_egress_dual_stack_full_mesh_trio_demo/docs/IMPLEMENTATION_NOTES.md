@@ -219,7 +219,7 @@ associated_route_table_ids_with_other_network_cidrs = [
 ```hcl
 routes = flatten([
   for this in associated_route_table_ids_with_other_network_cidrs : [
-    for route_table_id_and_network_cidr in 
+    for route_table_id_and_network_cidr in
         setproduct([this.route_table_id], this.other_network_cidrs) : {
       route_table_id = route_table_id_and_network_cidr[0]
       destination_cidr_block = route_table_id_and_network_cidr[1]
@@ -230,7 +230,7 @@ routes = flatten([
 
 **What `setproduct()` does:**
 ```
-Input: 
+Input:
   route_table_ids = ["rtb-1", "rtb-2"]
   other_cidrs = ["10.0.0.0/18", "172.16.0.0/18"]
 
@@ -265,8 +265,8 @@ routes = toset(flatten([...]))
 The `vpc-peering-deluxe` module uses conditional logic to select CIDRs:
 
 ```hcl
-local_vpc_subnet_cidrs = local.only_route_subnet_cidrs ? 
-  toset(var.vpc_peering_deluxe.local.only_route.subnet_cidrs) : 
+local_vpc_subnet_cidrs = local.only_route_subnet_cidrs ?
+  toset(var.vpc_peering_deluxe.local.only_route.subnet_cidrs) :
   toset(concat(
     var.vpc_peering_deluxe.local.vpc.private_subnet_cidrs,
     var.vpc_peering_deluxe.local.vpc.public_subnet_cidrs
@@ -279,12 +279,12 @@ local_vpc_subnet_cidrs = local.only_route_subnet_cidrs ?
 
 **Separate IPv4 and IPv6:**
 ```hcl
-only_route_subnet_cidrs = 
-  length(local.only_route.subnet_cidrs) > 0 && 
+only_route_subnet_cidrs =
+  length(local.only_route.subnet_cidrs) > 0 &&
   length(peer.only_route.subnet_cidrs) > 0
 
-only_route_ipv6_subnet_cidrs = 
-  length(local.only_route.ipv6_subnet_cidrs) > 0 && 
+only_route_ipv6_subnet_cidrs =
+  length(local.only_route.ipv6_subnet_cidrs) > 0 &&
   length(peer.only_route.ipv6_subnet_cidrs) > 0
 ```
 
@@ -368,8 +368,8 @@ Isolated subnets are ideal for EKS/Karpenter worker nodes that:
 azs = {
   a = {
     isolated_subnets = [
-      { 
-        name = "eks-workers", 
+      {
+        name = "eks-workers",
         cidr = "10.0.16.0/20",
         ipv6_cidr = "2600:1f28:3d:c100::/64",
         tags = {
@@ -551,7 +551,7 @@ Where:
 
 For 9 VPCs with 4 route tables each:
   plan evaluates ~1,152 route resources
-  
+
 Typical plan time: 10-15 seconds (acceptable)
 At 20 VPCs: plan time ~45-60 seconds (still reasonable)
 ```
@@ -618,6 +618,6 @@ These implementation details provide operational context for the architecture:
 4. **Testing provides guarantees** (15 test cases prove correctness)
 5. **Edge cases are handled** (remove_az, dual-stack, secondary CIDRs)
 
-For architectural concepts and design patterns, see [ARCHITECTURE.md](./ARCHITECTURE.md).  
-For innovation details and complexity analysis, see [INNOVATIONS.md](./INNOVATIONS.md).  
+For architectural concepts and design patterns, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+For innovation details and complexity analysis, see [INNOVATIONS.md](./INNOVATIONS.md).
 For mathematical proofs and formulas, see [MATHEMATICAL_ANALYSIS.md](./MATHEMATICAL_ANALYSIS.md).

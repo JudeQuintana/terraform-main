@@ -296,7 +296,7 @@ This is Θ(n²) - theta notation (tight bound)
 N = 3 VPCs
 R = 4 route tables per VPC (average)
 C = 4 total CIDRs per VPC (average)
-    = 1 primary IPv4 + 1 secondary IPv4 (average) 
+    = 1 primary IPv4 + 1 secondary IPv4 (average)
     + 1 primary IPv6 + 1 secondary IPv6 (average)
 
 Routes = 4 × 4 × 3 × 2 = 96 routes per region

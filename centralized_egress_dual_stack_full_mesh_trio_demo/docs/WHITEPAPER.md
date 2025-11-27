@@ -246,17 +246,17 @@ The `generate_routes_to_other_vpcs` module implements the fundamental O(n) → O
 ```
 function generate_routes(vpcs_map):
   routes = empty_map()
-  
+
   for each source_vpc in vpcs_map:
     source_routes = []
-    
+
     for each dest_vpc in vpcs_map where dest_vpc ≠ source_vpc:
       # Determine target gateway based on topology
       if dest_vpc.region == source_vpc.region:
         target = source_vpc.tgw_id  # Intra-region via local TGW
       else:
         target = source_vpc.tgw_id  # Cross-region via TGW peering
-      
+
       # Generate routes for all destination CIDRs (IPv4 + IPv6)
       for each cidr in dest_vpc.cidrs:
         for each route_table in source_vpc.route_tables:
@@ -265,9 +265,9 @@ function generate_routes(vpcs_map):
             destination_cidr: cidr,
             target_gateway: target
           })
-    
+
     routes[source_vpc.name] = source_routes
-  
+
   return routes
 ```
 
@@ -462,7 +462,7 @@ Security group rules demonstrate the same O(n²) automatic generation capability
 ```
 function generate_security_rules(vpcs_map, protocol_specs):
   rules = []
-  
+
   for each source_vpc in vpcs_map:
     for each dest_vpc in vpcs_map where dest_vpc ≠ source_vpc:
       for each protocol in protocol_specs:  # SSH, ICMP, etc.
@@ -475,7 +475,7 @@ function generate_security_rules(vpcs_map, protocol_specs):
           protocol: protocol.type,
           cidr_blocks: dest_vpc.cidrs  # IPv4 and IPv6
         })
-  
+
   return rules
 ```
 
@@ -540,14 +540,14 @@ module "vpc_mesh" {
 # Application layer: Service-specific security groups
 resource "aws_security_group" "app_tier" {
   vpc_id = module.vpc_mesh.app_vpc_id
-  
+
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = [module.vpc_mesh.web_vpc_cidr]
   }
-  
+
   # Overrides mesh baseline with stricter policy
 }
 ```
