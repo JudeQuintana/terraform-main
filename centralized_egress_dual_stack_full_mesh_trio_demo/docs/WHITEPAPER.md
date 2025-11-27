@@ -1,4 +1,4 @@
-O(1) NAT Gateway Scaling for Multi-VPC AWS Architectures
+From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition
 A White Paper for IEEE Technical Community on Cloud Computing
 
 Author: Jude Quintana
