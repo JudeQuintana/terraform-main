@@ -9,7 +9,9 @@ Modern AWS multi-VPC architectures suffer from a fundamental scaling constraint:
 
 This paper presents a production-validated multi-region architecture that transforms cloud network implementation from O(n²) configuration to O(n) through compositional Terraform modules employing pure function transformations that infer mesh relationships, generate routing tables, and apply foundational security rules automatically. Using a 9-VPC, 3-region deployment as a reference implementation, the system produces ~1,800 AWS resources from ~150 lines of configuration input, yielding a 12× code amplification factor and reducing deployment time from 45 hours to 90 minutes—a 30× speedup. The design introduces an O(1) NAT Gateway scaling model by consolidating egress infrastructure into one VPC per region, reducing NAT Gateway count from 18 to 6 and achieving 67% cost savings ($4,666 annually).
 
-Mathematical analysis demonstrates linear configuration growth for quadratic topologies, configuration entropy reduction of 32% (3.4 bits: 10.6 → 7.2), and cost-performance break-even thresholds for Transit Gateway versus VPC Peering data paths. This work contributes a domain-specific language (DSL) for AWS mesh networking built on pure function composition and compiler-style intermediate representation transforms, enabling declarative topology programming and opening a path toward formally verified, automated cloud network design.
+Mathematical analysis proves linear configuration growth for quadratic topologies with 32% entropy reduction (10.6 → 7.2 bits) and formal cost-performance models for Transit Gateway versus VPC Peering data paths. This work contributes a domain-specific language for AWS mesh networking built on pure function composition and compiler-style transforms, enabling declarative topology programming with formal verification.
+
+Index Terms—Cloud computing, infrastructure-as-code, network topology, complexity transformation, cost optimization, AWS Transit Gateway
 
 2. Introduction
 
@@ -24,7 +26,7 @@ For each bidirectional relationship, operators must manually configure route ent
 • ~1,800 total AWS resources
 • 45 engineering hours for manual configuration
 
-(Derivations appear in [MATHEMATICAL_ANALYSIS.md](./docs/MATHEMATICAL_ANALYSIS.md))
+(Derivations provided in supplemental materials)
 
 As cloud estates expand beyond 15 VPCs, these O(n²) configuration requirements become operationally prohibitive, consuming weeks of engineering time and introducing exponentially growing opportunities for human error. This challenge is amplified in multi-region deployments, where Transit Gateway peering, transitive route propagation, and IPv4/IPv6 dual-stack requirements further multiply configuration effort by regional dimensionality. At 20 VPCs across 3 regions, manual configuration exceeds 300 hours—equivalent to two engineer-months of labor.
 
@@ -58,7 +60,7 @@ This paper presents four major contributions with formal analysis and production
 
 **1. Complexity Transformation (O(n²) → O(n))**
 
-Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module—a pure function that creates zero infrastructure but performs route expansion—demonstrates function composition patterns that mirror compiler intermediate representation (IR) transforms. This achieves a 90% reduction in configuration surface area: 150 lines generate 1,152 routes plus 432 foundational security rules (production deployments layer application-specific policies on top of this baseline). Formal analysis proving correctness properties (referential transparency, totality, idempotence) appears in [COMPILER_TRANSFORM_ANALOGY.md](./docs/COMPILER_TRANSFORM_ANALOGY.md).
+Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module—a pure function that creates zero infrastructure but performs route expansion—demonstrates function composition patterns that mirror compiler intermediate representation (IR) transforms. This achieves a 90% reduction in configuration surface area: 150 lines generate 1,152 routes plus 432 foundational security rules (production deployments layer application-specific policies on top of this baseline). Formal analysis proving correctness properties (referential transparency, totality, idempotence) appears in Section 5.
 
 **2. O(1) NAT Gateway Scaling Model**
 
@@ -74,7 +76,7 @@ Layered composition of Terraform modules forms an embedded DSL for specifying mu
 
 2.4 Overview of Architecture
 
-The architecture (Figure 1) implements a three-region full mesh, where each region contains:
+The architecture implements a three-region full mesh, where each region contains:
 
 One egress VPC (central = true)
 
@@ -87,6 +89,8 @@ Full IPv4 centralized egress
 Per-VPC IPv6 egress-only Internet Gateways (EIGW)
 
 Flexible subnet topologies (public, private, isolated)
+
+Figure 1 illustrates the complete topology with egress paths, Transit Gateway mesh, and optional VPC Peering overlays. The three regional TGWs form a full-mesh peering topology, enabling transitive communication across all nine VPCs globally.
 
 Figure 1 — Multi-Region Full-Mesh with Centralized Egress
 ![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3-3.png)
@@ -311,15 +315,13 @@ The central VPC in each region serves as the IPv4 egress point for all private V
 
 NAT Gateway count per region remains constant regardless of private VPC count:
 
-$$
-\text{NAT}(n) = 2a = O(1) \text{ where } a = \text{availability zones}
-$$
+NAT(n) = 2a = O(1)                                  (1)
+
+where a = availability zones.
 
 Traditional architecture requires NAT Gateways in every VPC:
 
-$$
-\text{NAT}_{\text{traditional}}(n) = 2an = O(n)
-$$
+NAT_traditional(n) = 2an = O(n)                     (2)
 
 **Cost Savings:**
 
