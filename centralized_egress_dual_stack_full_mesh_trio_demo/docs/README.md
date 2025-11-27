@@ -31,7 +31,16 @@ This directory contains comprehensive documentation for the Centralized Egress D
    - Operational procedures (adding VPCs, protocols, etc.)
    - Performance characteristics
 
-2. **[INNOVATIONS.md](./INNOVATIONS.md)** - Technical deep dives on key breakthroughs
+2. **[IMPLEMENTATION_NOTES.md](./IMPLEMENTATION_NOTES.md)** - Operational deep dive (NEW)
+   - Validation logic and constraints (remove_az, central XOR private)
+   - Resource scoping (EIGW per-VPC vs NAT GW per-AZ)
+   - Route generation internals (self-exclusion, Cartesian products)
+   - VPC peering selective routing
+   - DNS configuration and isolated subnets
+   - Test suite analysis (15 test cases)
+   - Common pitfalls and troubleshooting
+
+3. **[INNOVATIONS.md](./INNOVATIONS.md)** - Technical deep dives on key breakthroughs
    - Functional route generation
    - Hierarchical security group composition
    - Centralized IPv4 egress with AZ-aware routing
@@ -39,7 +48,7 @@ This directory contains comprehensive documentation for the Centralized Egress D
    - Full mesh trio cross-region coordination
    - VPC peering optimization
 
-3. **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** - For those interested in the theory
+4. **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** - For those interested in the theory
    - Understand why the architecture works the way it does
    - Pure function properties that enable composability
    - Testing as formal verification
@@ -55,10 +64,10 @@ This directory contains comprehensive documentation for the Centralized Egress D
                 ▼             ▼             ▼
         ARCHITECTURE.md   INNOVATIONS.md   MATHEMATICAL_ANALYSIS.md
         (Implementation)  (What & How)    (Proofs & Formulas)
-                              │
-                              ▼
-                COMPILER_TRANSFORM_ANALOGY.md
-                (Theory & Formal Methods)
+                │             │
+                ▼             ▼
+    IMPLEMENTATION_NOTES.md   COMPILER_TRANSFORM_ANALOGY.md
+    (Operational Guide)       (Theory & Formal Methods)
 ```
 
 ## Quick Reference
@@ -76,10 +85,16 @@ This directory contains comprehensive documentation for the Centralized Egress D
 |---------|-------------|---------------|
 | O(n²) → O(n) transformation | MATHEMATICAL_ANALYSIS.md | WHITEPAPER.md |
 | Pure function modules | COMPILER_TRANSFORM_ANALOGY.md | INNOVATIONS.md |
+| Validation logic (remove_az, constraints) | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
+| Resource scoping (EIGW, NAT GW) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
+| Route generation internals | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | Centralized NAT Gateway | INNOVATIONS.md | ARCHITECTURE.md |
 | Dual stack (IPv4/IPv6) | INNOVATIONS.md | ARCHITECTURE.md |
 | Security group hierarchy | INNOVATIONS.md | ARCHITECTURE.md |
 | AZ-aware routing | INNOVATIONS.md | ARCHITECTURE.md |
+| DNS configuration | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
+| Isolated subnets | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
+| Test suite (15 test cases) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | Cost optimization | MATHEMATICAL_ANALYSIS.md | WHITEPAPER.md |
 | Compiler IR transforms | COMPILER_TRANSFORM_ANALOGY.md | - |
 | Formal verification | COMPILER_TRANSFORM_ANALOGY.md | MATHEMATICAL_ANALYSIS.md |
@@ -90,6 +105,7 @@ This directory contains comprehensive documentation for the Centralized Egress D
 
 - **Academic researcher?** → WHITEPAPER.md
 - **Engineer implementing this?** → ARCHITECTURE.md
+- **Need operational details or troubleshooting?** → IMPLEMENTATION_NOTES.md
 - **Curious about the math?** → MATHEMATICAL_ANALYSIS.md
 - **Want to understand the theory?** → COMPILER_TRANSFORM_ANALOGY.md
 
@@ -106,7 +122,7 @@ The key innovation is treating infrastructure generation as **computation** rath
 
 ### "Can I use these patterns for my own infrastructure?"
 
-Yes! The modules are open source and composable. Start with ARCHITECTURE.md to understand the patterns, then refer to INNOVATIONS.md for specific techniques (security groups, routing, cost optimization).
+Yes! The modules are open source and composable. Start with ARCHITECTURE.md to understand the patterns, then refer to INNOVATIONS.md for specific techniques (security groups, routing, cost optimization). See IMPLEMENTATION_NOTES.md for validation rules, common pitfalls, and troubleshooting guidance.
 
 ### "Is this production-ready?"
 
@@ -130,5 +146,5 @@ Same license as the parent repository.
 
 ---
 
-**Last Updated:** 2025-11-25
-**Version:** 1.0
+**Last Updated:** 2025-11-27
+**Version:** 1.1
