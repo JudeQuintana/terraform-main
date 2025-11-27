@@ -90,3 +90,32 @@ Figure 1 — Multi-Region Full-Mesh with Centralized Egress
 ![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3-3.png)
 
 This structure enables IPv4 traffic to route through centralized NAT Gateways while IPv6 traffic egresses directly, optimizing cost while preserving mesh connectivity.
+
+2.5 Role of VPC Peering Within the Architecture
+
+The architecture employs Transit Gateway as the foundational fabric for all mesh connectivity, providing transitive routing and operational simplicity. However, it incorporates **selective VPC Peering as a cost optimization layer** for high-bandwidth or latency-critical traffic paths.
+
+This optimization strategy is **purely additive**: TGW maintains full global mesh reachability, while peering creates more-specific routes for designated subnet pairs. AWS longest-prefix-match (LPM) routing ensures peering routes automatically supersede TGW routes without requiring route table modifications or policy conflicts.
+
+**Cost-Driven Peering Threshold:**
+
+VPC Peering becomes cost-effective when path traffic exceeds break-even volume:
+
+```
+Same-region, same-AZ: V > 0 GB/month (always cheaper: $0.00/GB vs. $0.02/GB)
+Same-region, cross-AZ: V > 0 GB/month ($0.01/GB vs. $0.02/GB)
+Cross-region: V > 0 GB/month ($0.01/GB vs. $0.02/GB)
+
+For 10TB/month path:
+Same-AZ savings: 10,000 × $0.02 = $200/month ($2,400/year)
+Cross-region savings: 10,000 × $0.01 = $100/month ($1,200/year)
+```
+
+**Key Properties:**
+
+• **Non-disruptive:** Peering coexists with TGW; removing peering restores TGW path automatically
+• **Scope-limited:** Peering applies only to explicitly configured subnet pairs, not entire VPCs
+• **Security-preserving:** Security group rules remain unchanged; peering is a routing optimization
+• **Operationally isolated:** Peering decisions are independent of mesh topology logic
+
+This layered approach enables post-deployment cost tuning without refactoring core network topology. High-volume production workloads (databases, data pipelines, analytics) can selectively optimize data transfer costs while development and staging VPCs continue using TGW's simplified routing model.
