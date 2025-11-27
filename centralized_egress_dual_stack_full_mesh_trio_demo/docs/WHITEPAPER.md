@@ -7,7 +7,7 @@ Author: Jude Quintana
 
 Modern AWS multi-VPC architectures suffer from a fundamental scaling constraint: full-mesh connectivity requires n(n–1)/2 bidirectional relationships, producing O(n²) routing, security, and configuration effort. As environments scale across regions and address families (IPv4/IPv6), this quadratic explosion results in weeks of engineering labor, thousands of route entries, and substantial recurring NAT Gateway costs. Manual configuration approaches fail to scale beyond 10–15 VPCs, creating operational bottlenecks in large cloud deployments.
 
-This paper presents a production-validated multi-region architecture that transforms cloud network implementation from O(n²) configuration to O(n) through compositional Terraform modules employing pure function transformations that infer mesh relationships, generate routing tables, and apply security rules automatically. Using a 9-VPC, 3-region deployment as a reference implementation, the system produces ~1,800 AWS resources from ~150 lines of configuration input, yielding a 12× code amplification factor and reducing deployment time from 45 hours to 90 minutes—a 30× speedup. The design introduces an O(1) NAT Gateway scaling model by consolidating egress infrastructure into one VPC per region, reducing NAT Gateway count from 18 to 6 and achieving 67% cost savings ($4,665 annually).
+This paper presents a production-validated multi-region architecture that transforms cloud network implementation from O(n²) configuration to O(n) through compositional Terraform modules employing pure function transformations that infer mesh relationships, generate routing tables, and apply foundational security rules automatically. Using a 9-VPC, 3-region deployment as a reference implementation, the system produces ~1,800 AWS resources from ~150 lines of configuration input, yielding a 12× code amplification factor and reducing deployment time from 45 hours to 90 minutes—a 30× speedup. The design introduces an O(1) NAT Gateway scaling model by consolidating egress infrastructure into one VPC per region, reducing NAT Gateway count from 18 to 6 and achieving 67% cost savings ($4,666 annually).
 
 Mathematical analysis demonstrates linear configuration growth for quadratic topologies, configuration entropy reduction of 33% (3.5 bits: 10.6 → 7.1), and cost-performance break-even thresholds for Transit Gateway versus VPC Peering data paths. This work contributes a domain-specific language (DSL) for AWS mesh networking built on pure function composition and compiler-style intermediate representation transforms, enabling declarative topology programming and opening a path toward formally verified, automated cloud network design.
 
@@ -58,11 +58,11 @@ This paper presents four major contributions with formal analysis and production
 
 **1. Complexity Transformation (O(n²) → O(n))**
 
-Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module—a pure function that creates zero infrastructure but performs route expansion—demonstrates function composition patterns that mirror compiler intermediate representation (IR) transforms. This achieves a 92% reduction in configuration surface area: 135 lines generate 1,152 routes plus 432 security rules. Formal analysis proving correctness properties (referential transparency, totality, idempotence) appears in [COMPILER_TRANSFORM_ANALOGY.md](./docs/COMPILER_TRANSFORM_ANALOGY.md).
+Functional inference algorithms generate all mesh relationships from linear specification input. The core `generate_routes_to_other_vpcs` module—a pure function that creates zero infrastructure but performs route expansion—demonstrates function composition patterns that mirror compiler intermediate representation (IR) transforms. This achieves a 92% reduction in configuration surface area: 150 lines generate 1,152 routes plus 432 foundational security rules (production deployments layer application-specific policies on top of this baseline). Formal analysis proving correctness properties (referential transparency, totality, idempotence) appears in [COMPILER_TRANSFORM_ANALOGY.md](./docs/COMPILER_TRANSFORM_ANALOGY.md).
 
 **2. O(1) NAT Gateway Scaling Model**
 
-A centralized-egress pattern enables constant NAT Gateway count per region (2a, where a = availability zones), independent of the number of private VPCs (n). Traditional architectures require 2na gateways. At n=9, this reduces infrastructure from 18 to 6 gateways (67% reduction, $4,665 annual savings). Cost analysis includes break-even thresholds accounting for Transit Gateway data processing charges.
+A centralized-egress pattern enables constant NAT Gateway count per region (2a, where a = availability zones), independent of the number of private VPCs (n). Traditional architectures require 2na gateways. At n=9, this reduces infrastructure from 18 to 6 gateways (67% reduction, $4,666 annual savings). Cost analysis includes break-even thresholds accounting for Transit Gateway data processing charges.
 
 **3. Mathematically Verified Cost, Complexity, and Entropy Models**
 
@@ -85,6 +85,8 @@ A regional TGW with cross-region peering
 Full IPv4 centralized egress
 
 Per-VPC IPv6 egress-only Internet Gateways (EIGW)
+
+Flexible subnet topologies (public, private, isolated)
 
 Figure 1 — Multi-Region Full-Mesh with Centralized Egress
 ![centralized-egress-dual-stack-full-mesh-trio](https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3-3.png)
@@ -192,7 +194,7 @@ The three regional TGWs form a full-mesh peering topology, enabling transitive c
 ```
 Total VPCs: n = 9
 Total NAT Gateways: 6 (2 per region, constant with respect to n)
-Total Routes: ~1,800 (automatically generated from 135 lines of configuration)
+Total Routes: ~1,152 routes + 432 security rules (automatically generated from 150 lines of configuration)
 Code Amplification: 12× (input configuration → output resources)
 ```
 
@@ -325,7 +327,7 @@ Centralized: 3 regions × 2 AZs = 6 NAT Gateways
 Traditional: 9 VPCs × 2 AZs = 18 NAT Gateways
 
 Reduction: (18 - 6) / 18 = 67%
-Annual savings: 12 NAT GWs × $32.85/month × 12 = $4,731
+Annual savings: 12 NAT GWs × $32.40/month × 12 = $4,666
 ```
 
 **4.4.2 Private VPC Architecture**
@@ -425,22 +427,24 @@ Private VPC → Egress-Only Internet Gateway (EIGW) → Internet
 - Per-VPC egress policies via security groups and NACLs
 - Lower cost (no NAT Gateway processing fees)
 
-**Cost Comparison (10TB/month outbound):**
+**Cost Comparison (10TB/month outbound per VPC):**
 
-IPv4 via NAT Gateway:
+IPv4 via Centralized NAT Gateway (through TGW):
 ```
+TGW processing: 10,000 GB × $0.02/GB = $200/month
 NAT Gateway processing: 10,000 GB × $0.045/GB = $450/month
 Data transfer: 10,000 GB × $0.09/GB = $900/month
-Total: $1,350/month
+Total: $1,550/month per private VPC
 ```
 
-IPv6 via EIGW:
+IPv6 via Local EIGW (direct egress):
 ```
 EIGW processing: $0 (no charge)
 Data transfer: 10,000 GB × $0.09/GB = $900/month
-Total: $900/month
+Total: $900/month per VPC
 
-Savings: $450/month (33% reduction)
+Per-VPC savings: $650/month (42% reduction in egress costs)
+Note: IPv6 also eliminates NAT Gateway fixed cost ($32.40/month)
 ```
 
 **Traffic Engineering Strategy:**
@@ -453,38 +457,31 @@ Security group rules demonstrate the same O(n²) automatic generation capability
 
 **Security Group Rule Generation Algorithm:**
 ```
-function generate_security_rules(vpcs_map):
+function generate_security_rules(vpcs_map, protocol_specs):
   rules = []
   
   for each source_vpc in vpcs_map:
     for each dest_vpc in vpcs_map where dest_vpc ≠ source_vpc:
-      # Bidirectional allow rules for all mesh paths
-      rules.append({
-        type: "ingress",
-        from_port: 0,
-        to_port: 65535,
-        protocol: "-1",  # All protocols
-        cidr_blocks: dest_vpc.cidrs
-      })
-      
-      rules.append({
-        type: "egress",
-        from_port: 0,
-        to_port: 65535,
-        protocol: "-1",
-        cidr_blocks: dest_vpc.cidrs
-      })
+      for each protocol in protocol_specs:  # SSH, ICMP, etc.
+        # Ingress rule allowing traffic from dest_vpc
+        rules.append({
+          security_group_id: source_vpc.intra_vpc_sg_id,
+          type: "ingress",
+          from_port: protocol.port,
+          to_port: protocol.port,
+          protocol: protocol.type,
+          cidr_blocks: dest_vpc.cidrs  # IPv4 and IPv6
+        })
   
   return rules
 ```
 
 **Generated Rules for 9-VPC Mesh:**
 ```
-Ingress rules: 9 VPCs × 8 remote VPCs × 2 CIDRs (IPv4+IPv6) × 3 protocols = 432
-Egress rules: 9 VPCs × 8 remote VPCs × 2 CIDRs × 3 protocols = 432
-Total: 864 security group rule entries
+Per VPC: 8 remote VPCs × 2 protocols (SSH, ICMP) × 2 IP versions × 1.5 avg CIDRs = 48 rules
+Total: 9 VPCs × 48 rules = 432 security group rule entries
 
-Manual configuration time eliminated: 864 rules × 1 minute = 14.4 hours
+Manual configuration time eliminated: 432 rules × 2 minutes = 14.4 hours
 ```
 
 **Security Model and Practical Considerations:**
@@ -635,7 +632,7 @@ module "vpc" {
 }
 ```
 
-**Total Input: ~15 lines per VPC × 9 VPCs = 135 lines**
+**Total Input: ~15 lines per VPC × 9 VPCs + ~15 lines for regional/cross-region setup = 150 lines**
 
 **Output Complexity (Generated Resources):**
 
@@ -644,8 +641,8 @@ Per VPC:
 - 4 subnets (2 AZs × 2 subnet types)
 - 4 route tables (1 per subnet)
 - 1 Internet Gateway or EIGW
-- 8 routes to other VPCs × 4 route tables = 32 routes per remote VPC
-- Security group rules for 8 remote VPCs
+- ~128 routes to other VPCs across all route tables
+- ~48 security group rules to other VPCs
 
 For 9-VPC mesh:
 ```
@@ -653,23 +650,24 @@ VPCs: 9
 Subnets: 9 × 4 = 36
 Route tables: 9 × 4 = 36
 Gateways: 9 (IGW/EIGW) + 6 (NAT GWs) = 15
-Routes: 9 × 8 × 4 × 4 = 1,152
-Security group rules: 432
+Routes: 1,152 (mesh routes across all route tables)
+Security group rules: 432 (foundational mesh connectivity)
 TGW attachments: 9
 TGW peering connections: 3
 Total resources: ~1,800
 
-Code amplification: 1,800 / 135 = 13.3×
+Code amplification: 1,800 / 150 = 12×
 ```
 
 **Comparison to Manual Configuration:**
 
 | Metric | Declarative (This Work) | Imperative (Manual) | Improvement |
 |--------|------------------------|---------------------|-------------|
-| Lines of configuration | 135 | 1,800+ | 13.3× reduction |
+| Lines of configuration | 150 | 1,800+ | 12× reduction |
 | Deployment time | 90 minutes | 45 hours | 30× faster |
-| Error rate | 0.1% (automated) | 15-20% (manual) | 150-200× fewer errors |
+| Error rate | <1% (automated) | 15-20% (manual) | ~20× fewer errors |
 | Configuration entropy | 7.1 bits | 10.6 bits | 33% reduction (3.5 bits) |
+| NAT Gateway cost | $194/month | $583/month | 67% reduction |
 | Mesh expansion cost | O(n) new lines | O(n²) updates | Quadratic → Linear |
 
 4.10 System Properties and Guarantees
