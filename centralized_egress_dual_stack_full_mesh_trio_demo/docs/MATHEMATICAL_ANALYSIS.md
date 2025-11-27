@@ -194,27 +194,29 @@ Speedup grows linearly with VPC count!
 ```
                     Manual vs. Automated Configuration Time
 Hours
-  │
-400 │                                               ╱ Manual O(n²)
-    │                                           ╱
-350 │                                       ╱
-    │                                   ╱
-300 │                               ╱
-    │                           ╱
-250 │                       ╱
-    │                   ╱
-200 │               ╱
-    │           ╱
-150 │       ╱
-    │   ╱
-100 │╱
     │
- 50 │━━━━━━━━━━━━━━━━━━━━━━━━━━ Automated O(n)
-    │
-  0 └─────────────────────────────────────────────────────> VPCs
+2000│                                                    ╱──── Manual O(n²)
+    │                                                ╱╱
+1800│                                            ╱╱
+    │                                        ╱╱
+1600│                                    ╱╱
+    │                                ╱╱
+1400│                            ╱╱
+    │                        ╱╱
+1200│                    ╱╱
+    │                ╱╱
+1000│            ╱╱
+    │        ╱╱
+ 800│    ╱╱
+    │ ╱╱
+ 600│╱
+ 400│
+ 200│
+    │━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Automated O(n)
+  0 └─────────────────────────────────────────────────────────────> VPCs
     0    5    10   15   20   25   30   35   40   45   50
 
-Gap widens exponentially as you scale
+Quadratic growth: curve accelerates dramatically
 At 50 VPCs: Manual ≈2,000 hours, Automated ≈8 hours (250× faster)
 ```
 
