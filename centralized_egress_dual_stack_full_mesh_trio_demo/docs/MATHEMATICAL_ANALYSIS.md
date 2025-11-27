@@ -230,7 +230,42 @@ Given N VPCs in a region, each with:
 
 Calculate total routes needed for full mesh connectivity.
 
-### Formula Derivation
+### Triple-Nested Loop Transformation
+
+**Imperative (manual approach):**
+```python
+for this_vpc in vpcs:
+    for route_table in this_vpc.route_tables:
+        for other_vpc in vpcs:
+            if this_vpc != other_vpc:  # Self-exclusion
+                for cidr in other_vpc.cidrs:
+                    create_route(route_table, cidr, tgw)
+```
+Complexity: O(V × R × V × C) = O(V² × R × C)
+
+**Declarative (module approach):**
+```hcl
+# Step 1: Collect all network CIDRs with their route tables
+network_cidrs_with_route_table_ids = [
+  for this in var.vpcs : {
+    network_cidrs = concat([this.network_cidr], this.secondary_cidrs)
+    ipv6_network_cidrs = concat(compact([this.ipv6_network_cidr]), this.ipv6_secondary_cidrs)
+    route_table_ids = concat(this.private_route_table_ids, this.public_route_table_ids)
+  }
+]
+
+# Step 2: Generate routes using setproduct (Cartesian product)
+routes = flatten([
+  for this in local.network_cidrs_with_route_table_ids : [
+    for route_table_id in this.route_table_ids :
+      setproduct([route_table_id], other_network_cidrs)  # Replaces 2 nested loops!
+  ]
+])
+```
+
+**Key transformation:** `setproduct()` replaces the innermost two loops (other_vpc × cidrs).
+
+**Formula Derivation:**
 
 **For each VPC i:**
 ```
@@ -243,6 +278,8 @@ Total routes = N × R × (N-1) × C
              = R × C × N × (N-1)
              = R × C × (N² - N)
 ```
+
+Where C = total CIDRs per VPC (primary + all secondary CIDRs combined)
 
 **Asymptotic Analysis:**
 ```
@@ -258,7 +295,9 @@ This is Θ(n²) - theta notation (tight bound)
 ```
 N = 3 VPCs
 R = 4 route tables per VPC (average)
-C = 4 CIDRs per VPC (average)
+C = 4 total CIDRs per VPC (average)
+    = 1 primary IPv4 + 1 secondary IPv4 (average) 
+    + 1 primary IPv6 + 1 secondary IPv6 (average)
 
 Routes = 4 × 4 × 3 × 2 = 96 routes per region
 
