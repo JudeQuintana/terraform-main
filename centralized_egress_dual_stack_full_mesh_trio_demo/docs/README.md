@@ -8,7 +8,10 @@ This directory contains comprehensive documentation for the Centralized Egress D
 
 1. **[WHITEPAPER.md](./WHITEPAPER.md)** - Start here for IEEE-style academic paper
    - Executive summary of the problem and solution
-   - Formal contributions and mathematical foundations
+   - Related work and positioning
+   - System architecture (4-layer module hierarchy)
+   - Key innovations (11 major contributions)
+   - Mathematical foundations (formal proofs, complexity analysis)
    - Production-validated results
 
 2. **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** - Deep dive into theoretical CS foundations
@@ -83,21 +86,42 @@ This directory contains comprehensive documentation for the Centralized Egress D
 
 | Concept | Primary Doc | Secondary Doc |
 |---------|-------------|---------------|
-| O(n²) → O(n) transformation | MATHEMATICAL_ANALYSIS.md | WHITEPAPER.md |
-| Pure function modules | COMPILER_TRANSFORM_ANALOGY.md | INNOVATIONS.md |
+| **Complexity & Theory** | | |
+| O(n²) → O(n) transformation | WHITEPAPER.md §6 | MATHEMATICAL_ANALYSIS.md |
+| Route growth analysis (Θ(n²)) | WHITEPAPER.md §6.2 | MATHEMATICAL_ANALYSIS.md |
+| Security rule growth | WHITEPAPER.md §6.3 | MATHEMATICAL_ANALYSIS.md |
+| Configuration entropy reduction (32%) | WHITEPAPER.md §6.6 | MATHEMATICAL_ANALYSIS.md |
+| Deployment time complexity | WHITEPAPER.md §6.8 | MATHEMATICAL_ANALYSIS.md |
+| Formal theorem (linear config for quadratic resources) | WHITEPAPER.md §6.7 | MATHEMATICAL_ANALYSIS.md |
+| Compiler IR transforms | COMPILER_TRANSFORM_ANALOGY.md | WHITEPAPER.md §5.1 |
+| Atomic computation properties | WHITEPAPER.md §5.10 | COMPILER_TRANSFORM_ANALOGY.md |
+| Pure function modules | COMPILER_TRANSFORM_ANALOGY.md | WHITEPAPER.md §5.1 |
+| **Architectural Patterns** | | |
+| Functional route generation | WHITEPAPER.md §5.1 | INNOVATIONS.md |
+| Hierarchical security groups | WHITEPAPER.md §5.2 | INNOVATIONS.md |
+| Per-protocol isolation | WHITEPAPER.md §5.2 | INNOVATIONS.md |
+| O(1) NAT Gateway scaling | WHITEPAPER.md §5.3, §6.4 | INNOVATIONS.md |
+| Isolated subnets (zero-internet) | WHITEPAPER.md §5.4 | IMPLEMENTATION_NOTES.md |
+| Dual stack IPv4/IPv6 | WHITEPAPER.md §5.5 | INNOVATIONS.md |
+| Full Mesh Trio pattern | WHITEPAPER.md §5.6 | INNOVATIONS.md |
+| Selective VPC Peering | WHITEPAPER.md §5.7 | INNOVATIONS.md |
+| DNS-enabled mesh | WHITEPAPER.md §5.8 | IMPLEMENTATION_NOTES.md |
+| Domain-specific language (DSL) | WHITEPAPER.md §5.9 | INNOVATIONS.md |
+| Error minimization | WHITEPAPER.md §5.11 | ARCHITECTURE.md |
+| **Implementation Details** | | |
 | Validation logic (remove_az, constraints) | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
 | Resource scoping (EIGW, NAT GW) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | Route generation internals | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
-| Centralized NAT Gateway | INNOVATIONS.md | ARCHITECTURE.md |
-| Dual stack (IPv4/IPv6) | INNOVATIONS.md | ARCHITECTURE.md |
-| Security group hierarchy | INNOVATIONS.md | ARCHITECTURE.md |
-| AZ-aware routing | INNOVATIONS.md | ARCHITECTURE.md |
-| DNS configuration | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
-| Isolated subnets | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
+| Self-exclusion algorithm | WHITEPAPER.md §5.2 | IMPLEMENTATION_NOTES.md |
+| AZ-aware routing | WHITEPAPER.md §5.3 | INNOVATIONS.md |
+| Cartesian product (setproduct) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | Test suite (15 test cases) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
-| Cost optimization | MATHEMATICAL_ANALYSIS.md | WHITEPAPER.md |
-| Compiler IR transforms | COMPILER_TRANSFORM_ANALOGY.md | - |
-| Formal verification | COMPILER_TRANSFORM_ANALOGY.md | MATHEMATICAL_ANALYSIS.md |
+| **Cost & Performance** | | |
+| NAT Gateway cost model | WHITEPAPER.md §6.4 | MATHEMATICAL_ANALYSIS.md |
+| TGW vs Peering break-even | WHITEPAPER.md §6.5 | MATHEMATICAL_ANALYSIS.md |
+| VPC Peering surface area reduction (97%) | WHITEPAPER.md §5.7 | INNOVATIONS.md |
+| Cost optimization projections | WHITEPAPER.md §6.11 | MATHEMATICAL_ANALYSIS.md |
+| Scaling projections | WHITEPAPER.md §6.10 | MATHEMATICAL_ANALYSIS.md |
 
 ## Frequently Asked Questions
 
@@ -116,9 +140,10 @@ See **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** for a d
 ### "What makes this different from traditional IaC?"
 
 The key innovation is treating infrastructure generation as **computation** rather than configuration. The architecture uses pure functions (like compiler passes) to automatically generate O(n²) resources from O(n) specifications. See:
+- Academic overview: WHITEPAPER.md, Sections 5 & 6
 - Technical explanation: INNOVATIONS.md, Section 1
 - Theoretical foundation: COMPILER_TRANSFORM_ANALOGY.md
-- Mathematical proof: MATHEMATICAL_ANALYSIS.md
+- Mathematical proof: WHITEPAPER.md §6.7, MATHEMATICAL_ANALYSIS.md
 
 ### "Can I use these patterns for my own infrastructure?"
 
@@ -126,11 +151,13 @@ Yes! The modules are open source and composable. Start with ARCHITECTURE.md to u
 
 ### "Is this production-ready?"
 
-Yes. The WHITEPAPER.md shows production validation:
-- 9 VPCs across 3 regions
-- ~1,800 resources managed
-- 67% NAT Gateway cost savings
-- 30× faster deployment than manual configuration
+Yes. The WHITEPAPER.md shows production validation with formal mathematical analysis:
+- 9 VPCs across 3 regions (§2, §4)
+- ~1,800 resources managed from 150 lines of config (§4.9)
+- 67% NAT Gateway cost savings ($4,666/year) (§5.3, §6.4)
+- 30× faster deployment than manual configuration (§6.8)
+- 32% configuration entropy reduction (§6.6)
+- <1% error rate vs 15-20% manual (§5.11)
 
 ## Contributing
 
@@ -146,5 +173,5 @@ Same license as the parent repository.
 
 ---
 
-**Last Updated:** 2025-11-27
-**Version:** 1.1
+**Last Updated:** 2025-11-28
+**Version:** 1.2 (Whitepaper Sections 5 & 6 complete)
