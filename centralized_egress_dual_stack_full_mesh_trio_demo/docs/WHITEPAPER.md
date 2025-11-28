@@ -7,7 +7,7 @@ Author: Jude Quintana
 
 Modern AWS multi-VPC architectures suffer from a fundamental scaling constraint: full-mesh connectivity requires n(n–1)/2 bidirectional relationships, producing O(n²) routing, security, and configuration effort. As environments scale across regions and address families (IPv4/IPv6), this quadratic explosion results in weeks of engineering labor, thousands of route entries, and substantial recurring NAT Gateway costs. Manual configuration approaches fail to scale beyond 10–15 VPCs, creating operational bottlenecks in large cloud deployments.
 
-This paper presents a production-validated multi-region architecture that transforms cloud network implementation from O(n²) configuration to O(n) through compositional Terraform modules employing pure function transformations that infer mesh relationships, generate routing tables, and apply foundational security rules automatically. Using a 9-VPC, 3-region deployment as a reference implementation, the system produces ~1,800 AWS resources from ~150 lines of configuration input, yielding a 12× code amplification factor and reducing deployment time from 45 hours to 90 minutes—a 30× speedup. The design introduces an O(1) NAT Gateway scaling model by consolidating egress infrastructure into one VPC per region, reducing NAT Gateway count from 18 to 6 and achieving 67% cost savings ($4,666 annually).
+This paper presents a production-validated multi-region architecture that transforms cloud network implementation from O(n²) configuration to O(n) through compositional Terraform modules employing pure function transformations that infer mesh relationships, generate routing tables, and apply foundational security rules automatically. Using a 9-VPC, 3-region deployment as a reference implementation, the system produces ~1,800 AWS resources from ~150 lines of configuration input, yielding a 12× code amplification factor and reducing deployment time from 45 hours to 90 minutes—a 30× speedup. The design introduces an O(1) NAT Gateway scaling model by consolidating egress infrastructure into one VPC per region, reducing NAT Gateway count from 18 to 6 and achieving 67% cost savings ($4,666 annually, rounded from $4,665.60).
 
 Mathematical analysis proves linear configuration growth for quadratic topologies with 32% entropy reduction (10.6 → 7.2 bits) and formal cost-performance models for Transit Gateway versus VPC Peering data paths. This work contributes a domain-specific language for AWS mesh networking built on pure function composition and compiler-style transforms, enabling declarative topology programming with formal verification.
 
@@ -73,6 +73,10 @@ Rigorous proofs demonstrate: (a) deployment time grows linearly as T(n) = 10n mi
 **4. A Domain-Specific Language for AWS Mesh Networking**
 
 Layered composition of Terraform modules forms an embedded DSL for specifying multi-region, dual-stack network topologies declaratively. The language exhibits formal properties including denotational semantics (VPC configurations map to AWS resources deterministically), operational semantics (step-by-step execution model), and language design principles (orthogonality, economy of expression, zero-cost abstractions). This represents the first application of compiler theory and programming language design to infrastructure-as-code at this scale.
+
+**5. Three-Tier Subnet Security Model**
+
+Introduction of isolated subnets as a first-class architectural primitive, providing provable network isolation (zero internet routes) for air-gapped workloads. This enables Kubernetes clusters, databases, and compliance workloads to participate fully in mesh connectivity while maintaining mathematical guarantees of internet disconnection—eliminating a common security gap in traditional public/private subnet models.
 
 2.4 Overview of Architecture
 
@@ -290,7 +294,7 @@ Routes generated = 9 VPCs × 4 route tables × 8 other VPCs × 4 avg CIDRs = 1,1
 Manual configuration effort eliminated = 1,152 route entries × 2 minutes = 38 hours
 ```
 
-This transformation is the **compiler IR pass** of the system: high-level topology declarations undergo systematic expansion into target AWS route resources without human intervention.
+This transformation is the **compiler IR pass** of the system: high-level topology declarations undergo systematic expansion into target AWS route resources without human intervention. This compiler theory perspective—treating VPC topology as an abstract syntax tree (AST) that undergoes optimization and expansion into target code—is explored in depth in the supplemental documentation (see COMPILER_TRANSFORM_ANALOGY.md for detailed analysis of pure function modules as IR transforms, denotational semantics, and formal verification properties).
 
 4.4 Regional Structure and Egress Model
 
@@ -331,7 +335,7 @@ Centralized: 3 regions × 2 AZs = 6 NAT Gateways
 Traditional: 9 VPCs × 2 AZs = 18 NAT Gateways
 
 Reduction: (18 - 6) / 18 = 67%
-Annual savings: 12 NAT GWs × $32.40/month × 12 = $4,666 (rounded from $4,665.60)
+Annual savings: 12 NAT GWs × $32.40/month × 12 = $4,666 annually (rounded from $4,665.60)
 ```
 
 **4.4.2 Private VPC Architecture**
@@ -403,7 +407,7 @@ Total TGW attachments: 9
 Total TGW peering connections: 3 (full mesh)
 Total routes per TGW: ~18 (2 CIDRs per VPC × 9 VPCs)
 Total security group rules: 9 VPCs × 48 rules per VPC = 432
-  (where 48 = 8 other VPCs × 2 protocols × 2 IP versions × 1.5 avg CIDRs)
+  (where 48 = 8 other VPCs × 2 protocols × 2 IP versions × 1.5 avg CIDRs per remote VPC)
 ```
 
 4.6 Dual-Stack Routing Architecture
@@ -508,7 +512,9 @@ In production deployments, automatic full-mesh rules should be **replaced or sup
 
 **Architectural Trade-offs:**
 
-The current implementation prioritizes **demonstrating automatic inference at scale** over production security hardening. Real-world deployments face a choice:
+The current implementation prioritizes **demonstrating automatic inference at scale** over production security hardening. This design choice enables rapid mesh deployment while providing a clear foundation for layering application-specific policies.
+
+Real-world deployments typically adopt one of two approaches:
 
 **Option 1: Extend the DSL for Fine-Grained Rules**
 ```terraform
@@ -562,8 +568,9 @@ The value of automatic security group generation is **not** that it produces pro
 2. **Ensures no connectivity gaps** that would block application deployment
 3. **Provides a foundation** for layering least-privilege rules incrementally
 4. **Scales predictably** as VPC count grows (O(n²) rules from O(n) config)
+5. **Enables iterative security hardening** without disrupting network topology
 
-This positions automatic rule generation as an **operational accelerator** rather than a complete security solution—operators gain rapid mesh standup, then refine policies based on actual application requirements and threat models.
+This positions automatic rule generation as an **operational accelerator** rather than a complete security solution—operators gain rapid mesh standup (14.4 hours saved), then refine policies incrementally based on actual application requirements, traffic patterns, and threat models. The architecture provides the connectivity foundation; security teams layer defense-in-depth on top.
 
 4.8 Selective VPC Peering Optimization Layer
 
@@ -814,6 +821,8 @@ module.intra_vpc_sg_rules["ping"]
 - **Simplified debugging:** `terraform state show module.intra_vpc_sg_rules["ssh"]` shows only SSH rules
 - **Atomic updates:** Protocol changes are atomic operations—add/remove entire protocol sets safely
 - **Parallel operations:** Terraform can apply protocol changes concurrently
+- **Blast radius control:** Protocol changes are isolated—removing SSH access affects only SSH rules, leaving ICMP connectivity intact for network diagnostics. This enables safe, atomic security policy updates without risking complete mesh connectivity loss.
+- **Incremental migration:** Organizations can add new protocols (e.g., HTTPS, database ports) as separate `for_each` entries without touching existing SSH/ICMP baseline, enabling additive security policy evolution.
 
 **Code Reduction:**
 ```
@@ -869,7 +878,7 @@ Centralized: 3 regions × 2 AZs = 6 NAT Gateways @ $194.40/month
 Traditional: 9 VPCs × 2 AZs = 18 NAT Gateways @ $583.20/month
 
 Reduction: 67%
-Annual savings: $4,666
+Annual savings: $4,666 annually (rounded from $4,665.60)
 ```
 
 **AZ-Aware Routing:** The architecture optimizes traffic routing to minimize cross-AZ charges:
@@ -1684,7 +1693,7 @@ This is the central algorithmic transformation of the architecture.
 Let:
 - N = number of VPCs
 - R = number of route tables per VPC (≈4)
-- C = average number of CIDRs per VPC (≈4)
+- C = average total CIDRs per VPC (≈4, including primary + secondary for both IPv4 and IPv6)
 
 6.2.1 Total Routes
 
@@ -1781,7 +1790,7 @@ Centralized cost:  3 × 2 = 6 NAT Gateways
 Reduction:         67%
 
 Monthly savings:   (18 - 6) × $32.40 = $388.80
-Annual savings:    $388.80 × 12 = $4,666
+Annual savings:    $388.80 × 12 = $4,666 annually (rounded from $4,665.60)
 ```
 
 **Yearly savings scale linearly:**
