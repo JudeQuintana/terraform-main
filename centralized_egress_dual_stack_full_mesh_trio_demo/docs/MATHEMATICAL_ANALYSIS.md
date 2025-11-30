@@ -433,7 +433,7 @@ Total: 9 VPCs × 48 rules = 432 rules ✓ (matches!)
 
 ### NAT Gateway Scaling
 
-**Traditional Approach:**
+**Imperative Terraform Approach (per-VPC NAT):**
 ```
 Cost(n) = n × A × $32.40/month
 where:
@@ -442,9 +442,10 @@ where:
 
 For n VPCs:
 Cost = $64.80n per month
+Resource blocks: n × A aws_nat_gateway + aws_eip blocks
 ```
 
-**Centralized Approach:**
+**Automated Terraform Approach (centralized):**
 ```
 Cost(n) = R × A × $32.40/month
 where:
@@ -455,16 +456,18 @@ For any n VPCs:
 Cost = $194.40 per month (constant!)
 ```
 
-**Savings:**
+**Savings (Cost + Configuration):**
 ```
-S(n) = Cost_trad(n) - Cost_cent
+S(n) = Cost_imperative(n) - Cost_automated
      = $64.80n - $194.40
      = $64.80(n - 3)
 
 Break-even: n = 3 VPCs
 Savings scale linearly with VPC count above 3
 
-For n=9: S = $64.80 × 6 = $388.80/month ($4,665.60/year)
+For n=9: 
+  Cost savings: $64.80 × 6 = $388.80/month ($4,665.60/year)
+  Resource block reduction: 18 blocks → 6 blocks (67% reduction)
 For n=15: S = $64.80 × 12 = $777.60/month ($9,331.20/year)
 For n=20: S = $64.80 × 17 = $1,101.60/month ($13,219.20/year)
 ```
@@ -525,12 +528,12 @@ For 10TB/month: S = 10,000 × $0.01 = $100/month ($1,200/year)
 
 ### Big-O Notation Summary
 
-| Metric | Manual | Automated | Class |
-|--------|--------|-----------|-------|
-| **Configuration** | O(n²) | O(n) | Linear |
+| Metric | Imperative Terraform | Automated Terraform | Class |
+|--------|---------------------|---------------------|-------|
+| **Configuration lines** | O(n²) | O(n) | Linear |
 | **Route resources** | O(n²) | O(n²) | Quadratic* |
 | **SG resources** | O(n²) | O(n²) | Quadratic* |
-| **Time to deploy** | O(n²) | O(n) | Linear |
+| **Development time** | O(n²) | O(n) | Linear |
 | **Error rate** | O(n²) | O(1) | Constant |
 
 *Resources are still O(n²) but **generated automatically** from O(n) configuration
@@ -539,43 +542,43 @@ For 10TB/month: S = 10,000 × $0.01 = $100/month ($1,200/year)
 
 **You don't eliminate the O(n²) resources** (mesh inherently has n² relationships)
 
-**You eliminate the O(n²) configuration work** (write O(n), modules generate O(n²))
+**You eliminate the O(n²) resource block authoring** (write O(n) specs, modules generate O(n²) blocks)
 
 **This is the transformation:**
 ```
-Manual: Write O(n²) configs → Create O(n²) resources
-Automated: Write O(n) configs → Modules create O(n²) resources
+Imperative Terraform: Write O(n²) resource blocks → Create O(n²) resources
+Automated Terraform: Write O(n) VPC specs → Modules generate O(n²) resources
 
 Configuration complexity: O(n²) → O(n)
-Resource complexity: O(n²) → O(n²) (unchanged, but automatic)
+Resource complexity: O(n²) → O(n²) (unchanged, but programmatically generated)
 ```
 
 ### Formal Proof
 
-**Theorem:** The module approach achieves O(n) configuration complexity for O(n²) mesh relationships.
+**Theorem:** The automated module approach achieves O(n) configuration complexity for O(n²) mesh relationships.
 
 **Proof:**
 
-1. **Manual approach configuration:**
+1. **Imperative Terraform configuration:**
    - Relationships: R(n) = n(n-1)/2 = O(n²)
-   - Configs per relationship: k (constant)
-   - Total configs: C_manual(n) = k × n(n-1)/2 = O(n²)
+   - Resource blocks per relationship: k (constant)
+   - Total lines: C_imperative(n) = k × n(n-1)/2 = O(n²)
 
-2. **Module approach configuration:**
+2. **Automated Terraform configuration:**
    - VPC definitions: n
    - Lines per VPC: c (constant ≈15)
-   - Total configs: C_module(n) = c × n = O(n)
+   - Total lines: C_automated(n) = c × n = O(n)
 
 3. **Efficiency ratio:**
    ```
-   E(n) = C_manual(n) / C_module(n)
+   E(n) = C_imperative(n) / C_automated(n)
         = [k × n(n-1)/2] / (c × n)
         = [k(n-1)] / (2c)
         ≈ kn / (2c)  as n → ∞
         = O(n)
    ```
 
-4. **Therefore:** Efficiency grows linearly with VPC count. As n → ∞, the automated approach becomes arbitrarily more efficient. ∎
+4. **Therefore:** Efficiency grows linearly with VPC count. As n → ∞, the automated approach becomes arbitrarily more efficient than imperative. ∎
 
 ## Probability & Reliability Analysis
 
@@ -669,21 +672,21 @@ This is excellent for cloud infrastructure
 
 **Information theory metric:** How many decisions must be made?
 
-**Manual Approach:**
+**Imperative Terraform Approach:**
 ```
 Route decisions: n² relationships × R tables × C CIDRs ≈ 1,152
 SG decisions: n² relationships × P protocols × I versions ≈ 432
-Total decisions: ~1,584
+Total decisions: ~1,584 (explicit resource blocks)
 
 Entropy H = log₂(1,584) ≈ 10.6 bits
-"Need 10.6 bits to specify which config you're working on"
+"Need 10.6 bits to specify which resource block you're writing"
 ```
 
-**Module Approach:**
+**Automated Terraform Approach:**
 ```
 VPC decisions: n VPCs × ~15 parameters ≈ 135
 Protocol decisions: P protocols × I versions × ~3 parameters ≈ 12
-Total decisions: ~147
+Total decisions: ~147 (declarative specifications)
 
 Entropy H = log₂(147) ≈ 7.2 bits
 ```
@@ -693,32 +696,36 @@ Entropy H = log₂(147) ≈ 7.2 bits
 ΔH = 10.6 - 7.2 = 3.4 bits
 Reduction factor: 2^3.4 ≈ 10.6×
 
-Your modules reduce configuration entropy by ~10×
+Automated modules reduce configuration entropy by ~10×
+Translation: 10× fewer decisions for engineers to make
 ```
 
 ### Compression Ratio
 
-**Thinking of modules as a compression algorithm:**
+**Thinking of automated modules as a compression algorithm:**
 
 ```
-Uncompressed: 1,584 configuration decisions
-Compressed: 147 configuration decisions
+Imperative Terraform: 1,584 explicit resource block decisions
+Automated Terraform: 147 declarative specification decisions
 
 Compression ratio: 1,584 / 147 ≈ 10.8:1
 
 This is better than typical data compression (gzip ≈ 2-3:1)
+
+Analogy: Pure function modules "decompress" topology intent into resource blocks
 ```
 
 ## Conclusion: Mathematical Elegance
 
-The architecture achieves:
+The architecture achieves a fundamental paradigm shift from imperative to automated Terraform:
 
-1. **Complexity Transformation:** O(n²) → O(n) configuration
-2. **Constant Factor Improvements:** 36× code reduction (security), 8.5× (routing)
+1. **Complexity Transformation:** O(n²) → O(n) configuration (imperative resource blocks eliminated)
+2. **Constant Factor Improvements:** 36× code reduction (security), 11.5× (overall measured)
 3. **Linear Cost Scaling:** NAT savings grow linearly with VPC count
-4. **Logarithmic Decision Reduction:** ~10× fewer configuration decisions
+4. **Logarithmic Decision Reduction:** ~10× fewer configuration decisions (3.4 bits entropy reduction)
 5. **Maintained Reliability:** 99.84% path availability despite complexity
+6. **Time Efficiency:** 120× faster deployment (31.2 hours → 15.75 minutes measured)
 
-**The beauty:** All relationships still exist (O(n²) resources), but they emerge from O(n) specifications through mathematical generation.
+**The beauty:** All relationships still exist (O(n²) resources), but they emerge from O(n) specifications through pure function transformations.
 
-**This is computation, not configuration.**
+**This is computation, not configuration.** Engineers write topology intent; modules generate implementation.

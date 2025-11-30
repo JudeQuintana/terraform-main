@@ -422,14 +422,15 @@ Cost: TGW processing + cross-AZ transfer ($0.02 + $0.01/GB)
 
 ### Cost Analysis
 
-**Traditional Architecture:**
+**Imperative Terraform Approach (per-VPC NAT):**
 ```
 9 VPCs × 2 AZs × NAT Gateway = 18 NAT GWs
 Cost: 18 × $32.85/month = $591.30/month (us-east-1 rates)
 Annual: $7,095.60
+Configuration: 18 aws_nat_gateway + 18 aws_eip resource blocks
 ```
 
-**Centralized Egress:**
+**Automated Terraform Approach (centralized egress):**
 ```
 3 Egress VPCs × 2 AZs × NAT Gateway = 6 NAT GWs
 Cost: 6 × $32.85/month = $197.10/month (us-east-1 rates)
@@ -642,9 +643,9 @@ Traffic automatically selects optimal path!
 
 ### The Challenge of Cross-Region Mesh
 
-Connecting multiple regions in a full mesh manually requires coordinating:
+Connecting multiple regions in a full mesh with imperative Terraform requires coordinating:
 
-**Traditional Manual Process (3 regions):**
+**Imperative Terraform Process (3 regions):**
 1. Create TGW peering request in Region 1 → Region 2
 2. Accept peering in Region 2 (different AWS API endpoint)
 3. Add routes in Region 1 TGW route table for Region 2 VPCs
@@ -1043,21 +1044,30 @@ Annual: ~$11,088
 
 ### Cost Comparison
 
-**Without Centralized Egress:**
+**Imperative Terraform (per-VPC NAT):**
 ```
 18 NAT GWs × $32.85 = $591.30/month
 Additional annual cost: $4,730.40 (measured in Section 7)
+Configuration: 18 explicit resource blocks
 ```
 
-**Without Modules (Engineer Time):**
+**Imperative Terraform (Development Time):**
 ```
-Initial setup: 49.5 hours @ $125/hr = $6,188 (measured in Section 7)
+Initial development: 31.2 hours @ $125/hr = $3,900 (measured in Section 7)
 Annual maintenance: ~80 hours @ $125/hr = $10,000
-Module approach: 0.26 hours + ~10 hours annual @ $125/hr = $1,283
-Annual savings: ~$8,717 in engineer time
+Total: $13,900 first year, $10,000 annually thereafter
 ```
 
-**Total Annual Savings:** ~$13,447 ($4,730 infrastructure + $8,717 engineer time)
+**Automated Terraform (This Architecture):**
+```
+Initial deployment: 0.26 hours @ $125/hr = $33 (measured in Section 7)
+Annual maintenance: ~10 hours @ $125/hr = $1,250
+Total: $1,283 first year, $1,250 annually thereafter
+```
+
+**Total Annual Savings:** ~$13,447
+- Infrastructure: $4,730 (67% NAT Gateway reduction)
+- Engineering time: $8,717 (119× faster development + lower maintenance)
 
 **Note:** Deployment time measured with Terraform v1.11.4, M1 MacBook Pro, local state
 
@@ -1109,12 +1119,13 @@ GitHub: https://github.com/JudeQuintana/terraform-main
 
 ## Key Takeaways
 
-1. **Compositional modules** enable self-organizing topologies
-2. **Functional route generation** eliminates O(n²) manual configuration
-3. **Centralized egress** reduces NAT Gateway costs by 67%
+1. **Compositional modules** enable self-organizing topologies through pure function transformations
+2. **Functional route generation** eliminates O(n²) imperative resource block authoring
+3. **Centralized egress** reduces NAT Gateway costs by 67% ($4,730/year measured)
 4. **Dual-stack strategy** optimizes IPv4 (centralized) and IPv6 (decentralized) independently
 5. **Hierarchical security** with self-exclusion prevents circular references
 6. **Hybrid connectivity** (TGW + VPC Peering) optimizes for cost and performance
-7. **Mathematical elegance** transforms complexity from quadratic to linear
+7. **Mathematical elegance** transforms imperative O(n²) to automated O(n) configuration
+8. **120× faster deployment** (31.2 hours → 15.75 minutes) from imperative to automated Terraform
 
-This architecture represents a **domain-specific language for AWS mesh networking**, not just infrastructure automation.
+This architecture represents a **domain-specific language for AWS mesh networking** that replaces imperative resource block authoring with declarative topology specification.

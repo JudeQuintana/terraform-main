@@ -426,12 +426,12 @@ Output size: N²RC route objects
 Memory: O(N²) - proportional to output size
 ```
 
-**Comparison to Manual Approach:**
+**Comparison to Imperative Terraform:**
 ```
-Manual: O(N²) time to write, O(N²) space for config
-Automated: O(N²) time to compute, O(N²) space for output
+Imperative Terraform: O(N²) time to write resource blocks, O(N²) space for config
+Automated Terraform: O(N²) time to compute, O(N²) space for output
 
-BUT: Computation time is ~seconds, writing time is ~hours
+BUT: Computation time is ~seconds, manual authoring time is ~hours
 Factor: ~1000× faster for same asymptotic complexity
 ```
 
@@ -1162,10 +1162,11 @@ Our DSL embodies the [Pit of Success](https://blog.codinghorror.com/falling-into
 # Missing NAT GWs: Validation enforces
 ```
 
-**Contrast with "Pit of Failure" (traditional AWS):**
+**Contrast with "Pit of Failure" (imperative Terraform):**
 - Easy to forget routes → Connectivity breaks
 - Easy to create circular routes → Network black holes
 - Easy to deploy too many NAT GWs → Cost explosion
+- Easy to introduce typos in resource blocks → Deployment failures
 
 ### Compiler Passes as DSL Transforms
 

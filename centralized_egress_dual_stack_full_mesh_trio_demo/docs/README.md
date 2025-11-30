@@ -141,7 +141,7 @@ See **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** for a d
 
 ### "What makes this different from traditional IaC?"
 
-The key innovation is treating infrastructure generation as **computation** rather than configuration. The architecture uses pure functions (like compiler passes) to automatically generate O(n²) resources from O(n) specifications. See:
+The key innovation is treating infrastructure generation as **computation** rather than configuration. Instead of imperative Terraform (explicit resource blocks), this architecture uses pure functions (like compiler passes) to automatically generate O(n²) resources from O(n) specifications. See:
 - Academic overview: WHITEPAPER.md, Sections 5 & 6
 - Technical explanation: INNOVATIONS.md, Section 1
 - Theoretical foundation: COMPILER_TRANSFORM_ANALOGY.md

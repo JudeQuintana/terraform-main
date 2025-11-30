@@ -430,11 +430,11 @@ Below that: IPv6 saves on NAT GW fixed costs
 
 ### The Problem
 
-Connecting 3 regions traditionally requires:
-- 3 TGW peering connections (manual)
-- 6 route propagation directions (manual)
-- Route table management per region (manual)
-- Testing all 6 paths (manual)
+Connecting 3 regions with imperative Terraform requires:
+- 3 TGW peering connections (explicit resource blocks)
+- 6 route propagation directions (explicit resource blocks)
+- Route table management per region (explicit resource blocks)
+- Testing all 6 paths (manual validation)
 
 ### The Innovation
 
@@ -489,24 +489,24 @@ Amplification: 72 / 3 = 24×
 
 ### Comparison
 
-**Manual Approach:**
+**Imperative Terraform Approach:**
 ```
-1. Create peering use1→use2 (2 resources: request + accept)
-2. Create peering use2→usw2 (2 resources)
-3. Create peering usw2→use1 (2 resources)
-4. Add routes in use1 TGW RT for use2 VPCs (9 routes)
-5. Add routes in use1 TGW RT for usw2 VPCs (9 routes)
-6. Add routes in use2 TGW RT for use1 VPCs (9 routes)
-7. Add routes in use2 TGW RT for usw2 VPCs (9 routes)
-8. Add routes in usw2 TGW RT for use1 VPCs (9 routes)
-9. Add routes in usw2 TGW RT for use2 VPCs (9 routes)
+1. Write explicit peering use1→use2 resource blocks (request + accept)
+2. Write explicit peering use2→usw2 resource blocks
+3. Write explicit peering usw2→use1 resource blocks
+4. Write route resource blocks in use1 TGW RT for use2 VPCs (9 routes)
+5. Write route resource blocks in use1 TGW RT for usw2 VPCs (9 routes)
+6. Write route resource blocks in use2 TGW RT for use1 VPCs (9 routes)
+7. Write route resource blocks in use2 TGW RT for usw2 VPCs (9 routes)
+8. Write route resource blocks in usw2 TGW RT for use1 VPCs (9 routes)
+9. Write route resource blocks in usw2 TGW RT for use2 VPCs (9 routes)
 10. Test all 6 paths
 
-Total: 6 peering resources + 54 routes = 60 configurations
-Time: ~4 hours
+Total: 60 explicit resource blocks (6 peering + 54 routes)
+Time: ~4 hours development + debugging
 ```
 
-**Full Mesh Trio:**
+**Automated Terraform (Full Mesh Trio):**
 ```
 1. Reference 3 centralized router modules
 2. terraform apply
@@ -788,9 +788,10 @@ Scales linearly with environment size
 ### Operational Impact
 
 ```
-Time Savings:
-- Initial 9-VPC setup: 49.5 hours → 15.75 minutes (190× measured in Section 7)
-  - Terraform v1.11.4 on M1 MacBook Pro (ARM architecture)
+Time Savings (Imperative → Automated Terraform):
+- Initial 9-VPC setup: 31.2 hours → 15.75 minutes (120× measured in Section 7)
+  - Imperative: Writing explicit resource blocks + debugging
+  - Automated: Terraform v1.11.4 on M1 MacBook Pro (ARM architecture)
   - Local state, AWS Provider v5.95.0
   - 1,308 resources deployed across 3 targeted applies
 - Add VPC: 10 hours → 30 minutes (20×)
@@ -798,8 +799,8 @@ Time Savings:
 - Change CIDR: 4 hours → 5 minutes (48×)
 
 Error Rate:
-- Manual: ~4 incidents/year
-- Automated: ~0.2 incidents/year (95% reduction)
+- Imperative Terraform: ~4 incidents/year (manual resource block errors)
+- Automated Terraform: ~0.2 incidents/year (95% reduction via generation)
 ```
 
 ### Strategic Impact
@@ -812,4 +813,4 @@ Error Rate:
 
 **This is the difference between managing infrastructure and programming infrastructure.**
 
-These innovations collectively represent a **fundamental rethinking of how cloud networks are specified, configured, and scaled**—moving from imperative relationship management to declarative topology programming.
+These innovations collectively represent a **fundamental rethinking of how cloud networks are specified, configured, and scaled**—moving from imperative resource block authoring to declarative topology programming through automated Terraform.

@@ -733,13 +733,13 @@ Total resources: ~1,800
 Code amplification: 1,800 / 150 = 12×
 ```
 
-**Comparison to Manual Configuration:**
+**Comparison to Imperative Terraform:**
 
-| Metric | Declarative (This Work) | Imperative (Manual) | Improvement |
+| Metric | Automated Terraform (This Work) | Imperative Terraform | Improvement |
 |--------|------------------------|---------------------|-------------|
 | Lines of configuration | 150 | 1,800+ | 12× reduction |
 | Deployment time | 90 minutes | 45 hours | 30× faster |
-| Error rate | <1% (automated) | 15-20% (manual) | ~20× fewer errors |
+| Error rate | <1% (automated) | 15-20% (imperative) | ~20× fewer errors |
 | Configuration entropy | 7.2 bits | 10.6 bits | 32% reduction (3.4 bits) |
 | NAT Gateway cost | $194/month | $583/month | 67% reduction |
 | Mesh expansion cost | O(n) new lines | O(n²) updates | Quadratic → Linear |

@@ -175,7 +175,7 @@ EIGW cost: $0/month (regardless of how many AZs have eigw = true)
 |-------------|-------------------|--------|
 | Private | Per-AZ | Different NAT GW or TGW attachment per AZ |
 | Public | Shared (1 per VPC) | Internet Gateway is VPC-scoped |
-| Isolated | Per-AZ | Maximum isolation, manual routing |
+| Isolated | Per-AZ | Maximum isolation, explicit route control |
 
 **Example:**
 ```hcl
