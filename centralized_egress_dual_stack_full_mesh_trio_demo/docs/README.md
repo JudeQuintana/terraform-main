@@ -90,8 +90,8 @@ This directory contains comprehensive documentation for the Centralized Egress D
 | O(n²) → O(n) transformation (imperative → automated) | WHITEPAPER.md §6 | MATHEMATICAL_ANALYSIS.md |
 | Route growth analysis (Θ(n²)) | WHITEPAPER.md §6.2 | MATHEMATICAL_ANALYSIS.md |
 | Security rule growth | WHITEPAPER.md §6.3 | MATHEMATICAL_ANALYSIS.md |
-| Configuration entropy reduction (32%) | WHITEPAPER.md §6.6 | MATHEMATICAL_ANALYSIS.md |
-| Deployment time (imperative vs automated) | WHITEPAPER.md §7.3 | MATHEMATICAL_ANALYSIS.md |
+| Configuration entropy reduction (33%) | WHITEPAPER.md §6.6 | MATHEMATICAL_ANALYSIS.md |
+| Engineering productivity (imperative vs automated) | WHITEPAPER.md §7.3 | MATHEMATICAL_ANALYSIS.md |
 | Formal theorem (linear config for quadratic resources) | WHITEPAPER.md §6.7 | MATHEMATICAL_ANALYSIS.md |
 | Compiler IR transforms | COMPILER_TRANSFORM_ANALOGY.md | WHITEPAPER.md §5.1 |
 | Atomic computation properties | WHITEPAPER.md §5.10 | COMPILER_TRANSFORM_ANALOGY.md |
@@ -109,6 +109,8 @@ This directory contains comprehensive documentation for the Centralized Egress D
 | Domain-specific language (DSL) | WHITEPAPER.md §5.9 | INNOVATIONS.md |
 | Error minimization | WHITEPAPER.md §5.11 | ARCHITECTURE.md |
 | **Implementation Details** | | |
+| IPAM prerequisites (IPv4/IPv6 pools) | WHITEPAPER.md §7.1 | ARCHITECTURE.md |
+| AWS Route Analyzer validation | WHITEPAPER.md §7.6.1 | IMPLEMENTATION_NOTES.md |
 | Validation logic (remove_az, constraints) | IMPLEMENTATION_NOTES.md | ARCHITECTURE.md |
 | Resource scoping (EIGW, NAT GW) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | Route generation internals | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
@@ -155,12 +157,13 @@ Yes. The WHITEPAPER.md shows production validation with formal mathematical anal
 - 9 VPCs across 3 regions (§2, §4, §7.1)
 - ~1,806 resources from 174 lines of config - 10.4× amplification (§7.4)
 - 67% NAT Gateway cost savings ($4,730/year measured) (§7.5)
-- 190× faster deployment: 15.75 minutes vs 49.5 hours (§7.3)
+- 120× engineering productivity improvement: 15.75 minutes vs 31.2 hours imperative Terraform (§7.3)
   - Modern Terraform v1.11.4 + M1 ARM + AWS Provider v5.95.0
   - 1,308 resources in 12.55 min terraform apply
-- 58% configuration entropy reduction: 10.7 → 4.5 bits (§7.8)
-- 0% error rate vs ~3% manual (48 errors eliminated) (§7.7)
-- 100% connectivity validation across all 72 bidirectional paths (§7.6)
+  - Eliminates writing explicit resource blocks (routes, security rules)
+- 33% configuration entropy reduction: 10.7 → 7.2 bits (§7.8)
+- 0% error rate vs ~3% imperative (29 errors eliminated) (§7.7)
+- 100% connectivity validation via AWS Route Analyzer across all 72 bidirectional paths (§7.6.1)
 
 ## Contributing
 
@@ -177,4 +180,4 @@ Same license as the parent repository.
 ---
 
 **Last Updated:** 2025-11-29
-**Version:** 1.4 (Section 7 updated with measured deployment times: 15.75 min, 190× speedup)
+**Version:** 1.5 (Section 7 reframed: imperative vs automated Terraform comparison, 120× productivity improvement, AWS Route Analyzer validation, IPAM prerequisites)
