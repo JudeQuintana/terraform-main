@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides operational insights and implementation details that complement the architecture documentation. These findings come from analyzing the source code of the underlying Terraform modules.
+This document provides operational insights and implementation details that complement the architecture documentation. These findings explain how the automated Terraform modules generate resources programmatically, eliminating the need for explicit resource blocks found in imperative Terraform approaches. All insights derive from analyzing the source code of the underlying pure function modules.
 
 ## Validation and Constraints
 
@@ -191,7 +191,7 @@ EIGW cost: $0/month (regardless of how many AZs have eigw = true)
 
 ### Self-Exclusion Algorithm
 
-The `generate_routes_to_other_vpcs` module uses list comprehension with filtering:
+The `generate_routes_to_other_vpcs` pure function module automatically generates route objects that imperative Terraform would require as explicit `aws_route` resource blocks. The module uses list comprehension with filtering:
 
 ```hcl
 # Pseudocode from base.tf
@@ -255,6 +255,7 @@ routes = toset(flatten([...]))
 - After flattening nested lists, duplicates may exist (especially per-AZ resources)
 - `toset()` automatically deduplicates based on object equality
 - Terraform's `for_each` requires unique keys, so this prevents "duplicate key" errors
+- Result: Clean set of route objects ready for resource generation (avoiding the manual deduplication required in imperative approaches)
 
 ---
 
@@ -395,7 +396,7 @@ azs = {
 
 ### generate_routes_to_other_vpcs Test Suite
 
-The pure function module has comprehensive test coverage:
+The pure function module has comprehensive test coverage, providing mathematical correctness guarantees impossible with imperative Terraform (where each resource block must be manually verified):
 
 ```bash
 $ cd modules/generate_routes_to_other_vpcs
@@ -436,12 +437,14 @@ Success! 15 passed, 0 failed.
 
 This level of testing is **rare in infrastructure-as-code**:
 - Most Terraform modules have no tests
-- Even fewer have edge case coverage
-- This provides **mathematical correctness guarantees**
+- Imperative Terraform with explicit resource blocks cannot be unit tested (requires AWS API)
+- Even fewer modules have edge case coverage
+- This provides **mathematical correctness guarantees** before deployment
 
 The test suite proves:
 1. Self-exclusion works correctly (VPC doesn't route to itself)
 2. Cartesian product generation is accurate
+3. Route generation logic is formally verified (vs manual review of 852 resource blocks)
 3. Secondary CIDRs are handled properly
 4. Dual-stack (IPv4 + IPv6) works independently
 

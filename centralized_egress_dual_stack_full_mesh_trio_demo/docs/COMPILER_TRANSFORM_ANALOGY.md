@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The `generate_routes_to_other_vpcs` module embedded within Centralized Router represents a novel application of **compiler intermediate representation (IR) transforms** to infrastructure-as-code. By treating VPC topology as an abstract syntax tree (AST) and route generation as a pure function transformation, this architecture achieves the same mathematical guarantees that enable modern compiler optimization: **referential transparency, composability, and formal verification**.
+The `generate_routes_to_other_vpcs` module embedded within Centralized Router represents a novel application of **compiler intermediate representation (IR) transforms** to infrastructure-as-code. By treating VPC topology as an abstract syntax tree (AST) and route generation as a pure function transformation, this architecture replaces imperative Terraform (explicit resource blocks) with automated Terraform (programmatic generation), achieving the same mathematical guarantees that enable modern compiler optimization: **referential transparency, composability, and formal verification**.
 
 This document explores the deep theoretical parallels between compiler design and the functional approach to infrastructure generation.
 
@@ -316,12 +316,12 @@ sum += arr[2];
 sum += arr[3];
 ```
 
-*Infrastructure example:* Route generation
+*Infrastructure example:* Route generation (replacing imperative resource blocks)
 ```hcl
-// Before: 1 VPC definition
+// Before (automated): 1 VPC definition
 app1 = { network_cidr = "10.60.0.0/18" }
 
-// After: N×R route entries
+// After (generated): N×R route objects (vs N×R imperative resource blocks)
 routes = [
   { route_table_id = "rtb-111", destination = "10.61.0.0/18" },
   { route_table_id = "rtb-222", destination = "10.61.0.0/18" },
@@ -339,11 +339,11 @@ Dependencies: a → b, a → c
 Parallel: b ∥ c (can compute simultaneously)
 ```
 
-*Infrastructure example:* Mesh relationship inference
+*Infrastructure example:* Mesh relationship inference (vs manual enumeration)
 ```
 VPCs: {app1, infra1, general1}
 Mesh edges: app1↔infra1, app1↔general1, infra1↔general1
-Routes: For each edge, create N routes (one per route table)
+Automated: Module generates N routes per edge (replacing 3N imperative blocks)
 ```
 
 **3. Normalization Transforms (Canonicalization)**

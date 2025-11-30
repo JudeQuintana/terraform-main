@@ -2,11 +2,11 @@
 
 ## Executive Summary
 
-This architecture demonstrates a **production-grade, self-organizing multi-region VPC mesh** that transforms infrastructure configuration from O(n²) to O(n) complexity through composable Terraform modules. It manages **9 VPCs across 3 AWS regions** with:
+This architecture demonstrates a **production-grade, self-organizing multi-region VPC mesh** that transforms infrastructure configuration from O(n²) imperative Terraform to O(n) automated Terraform through composable pure function modules. It manages **9 VPCs across 3 AWS regions** with:
 
-- **92% code reduction**: 174 lines vs. ~2,000 manual configurations (measured in Section 7)
+- **92% code reduction**: 174 lines vs. ~2,000 lines of imperative Terraform (measured in Section 7)
 - **67% cost savings**: Centralized NAT Gateway architecture ($4,730/year measured in Section 7)
-- **190× faster deployments**: 15.75 minutes vs. 49.5 hours for 9-VPC setup (measured in Section 7)
+- **120× faster deployment**: 15.75 minutes vs. 31.2 hours for 9-VPC setup (measured in Section 7)
   - Terraform v1.11.4 + M1 ARM architecture + AWS Provider v5.95.0
   - 1,308 resources in 12.55 minutes terraform apply time
 - **Near-zero errors**: Mathematical generation eliminates manual mistakes
@@ -60,9 +60,9 @@ Regional Architecture (per region):
 - Output of one module feeds input of another
 
 ### 2. **Declarative Infrastructure**
-- Describe desired state, not steps
-- Terraform calculates differences
-- Idempotent operations
+- Describe desired state (VPC topology), not steps (individual resource blocks)
+- Pure function modules generate resources programmatically
+- Idempotent operations with mathematical correctness guarantees
 
 ### 3. **Cost-Aware Architecture**
 - Centralized vs. decentralized decisions based on cost model
@@ -75,9 +75,9 @@ Regional Architecture (per region):
 - Stateful firewall optimization
 
 ### 5. **Scalability Through Abstraction**
-- Linear configuration complexity for exponential resource growth
-- Mathematical models prevent manual errors
-- Adding resources requires minimal configuration
+- O(n) configuration generates O(n²) resources (vs imperative O(n²) resource blocks)
+- Pure function transformations prevent manual authoring errors
+- Adding VPCs requires 15 lines (vs 100+ imperative resource blocks)
 
 ## Module Architecture
 

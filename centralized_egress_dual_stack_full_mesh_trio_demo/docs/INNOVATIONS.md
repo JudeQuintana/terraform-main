@@ -8,14 +8,14 @@ This architecture introduces several novel patterns in infrastructure-as-code th
 
 ### The Problem
 
-Traditional mesh networking requires configuring N×(N-1) relationships manually:
+Imperative Terraform requires explicit resource blocks for N×(N-1) relationships:
 
 ```
-3 VPCs = 6 relationships
-9 VPCs = 72 relationships
-20 VPCs = 380 relationships
+3 VPCs = 6 relationships → ~200 lines of resource blocks
+9 VPCs = 72 relationships → ~2,000 lines of resource blocks
+20 VPCs = 380 relationships → ~10,000 lines of resource blocks
 
-Work scales as O(n²) - adding one VPC requires updating all existing VPCs
+Work scales as O(n²) - adding one VPC requires writing resource blocks for all existing VPCs
 ```
 
 ### The Innovation
@@ -69,12 +69,12 @@ Amplification: 1,152 / 135 = 8.5×
 
 ### Why This Matters
 
-**Before:** Adding 10th VPC requires updating 9 existing VPCs (270 configurations)
-**After:** Adding 10th VPC requires 15 lines (module handles propagation)
+**Before (Imperative):** Adding 10th VPC requires writing ~270 explicit route resource blocks for 9 existing VPCs
+**After (Automated):** Adding 10th VPC requires 15 lines of VPC definition (module generates routes)
 
-**Speed-up:** 270 / 15 = 18× faster
+**Speed-up:** 270 / 15 = 18× fewer lines of code
 
-This transforms mesh networking from **imperative relationship management** to **declarative entity definition**.
+This transforms mesh networking from **imperative resource block authoring** to **declarative topology specification**.
 
 ---
 
@@ -82,14 +82,14 @@ This transforms mesh networking from **imperative relationship management** to *
 
 ### The Problem
 
-Managing security group rules across a mesh creates an explosion of configurations:
+Imperative Terraform requires explicit security group rule resource blocks for mesh connectivity:
 
 ```
 Per VPC: 8 other VPCs × 2 protocols × 2 IP versions × 1.5 avg CIDRs = 48 rules
-Total: 9 VPCs × 48 rules = 432 security group rules
+Total: 9 VPCs × 48 rules = 432 explicit aws_security_group_rule blocks
 ```
 
-Plus risk of circular references (VPC allowing traffic from itself).
+Plus risk of circular references (VPC allowing traffic from itself) when writing rules manually.
 
 **Note:** The auto-generated rules provide **coarse-grained mesh connectivity** (all ports, all protocols) suitable for network validation and dev/test environments. Production deployments typically layer application-specific security groups on top of this foundation, implementing least-privilege policies for specific services. See the whitepaper's Security Architecture section for detailed trade-off analysis.
 
@@ -169,11 +169,11 @@ module.intra_vpc_sg_rules["ping"]
 ### Code Reduction
 
 ```
-Manual: 432 individual rule blocks
-Automated: 12 lines of protocol definitions
+Imperative Terraform: 432 individual aws_security_group_rule resource blocks
+Automated Terraform: 12 lines of protocol definitions
 
 Reduction: 432 / 12 = 36×
-For every 1 line, 36 AWS resources are created
+For every 1 line of protocol config, 36 AWS resources are generated
 ```
 
 ---
@@ -182,10 +182,11 @@ For every 1 line, 36 AWS resources are created
 
 ### The Problem
 
-Traditional approach: Every VPC needs NAT Gateway per AZ
+Traditional imperative Terraform pattern: Deploy NAT Gateway resource blocks in every VPC, every AZ
 
 ```
 9 VPCs × 2 AZs = 18 NAT Gateways @ $32.40/month = $583.20/month
+18 explicit aws_nat_gateway + aws_eip resource blocks
 ```
 
 But most VPCs don't need dedicated internet egress—they're internal services.
@@ -264,19 +265,20 @@ Expected cross-AZ traffic: 50%
 
 ### Cost Optimization
 
-**Centralized (measured in Section 7):**
+**Automated (Centralized) - measured in Section 7:**
 ```
 6 NAT GWs @ $32.85 = $197.10/month (us-east-1 pricing)
 Annual: $2,365.20
 ```
 
-**Traditional:**
+**Imperative (Traditional) - per-VPC NAT:**
 ```
 18 NAT GWs @ $32.85 = $591.30/month
 Annual: $7,095.60
 ```
 
 **Savings:** $4,730.40/year (67% reduction)
+**Configuration:** 6 resource blocks vs 18 (67% reduction in code too)
 
 **Note:** Pricing reflects us-east-1 rates as of November 2025. Regional variations exist ($32.40-$32.85/month range).
 
@@ -313,7 +315,7 @@ Cost savings scale linearly with VPC count
 
 ### The Innovation
 
-**IPv4 and IPv6 are treated as parallel universes with independent egress policies.**
+**IPv4 and IPv6 are treated as parallel universes with independent egress policies in the configuration DSL.**
 
 **IPv4: Centralized (Expensive, Needs NAT)**
 ```hcl
@@ -352,10 +354,10 @@ EIGW: $0/hour per gateway
 Data transfer: $0.09/GB (same as IPv4 NAT)
 
 For 9 VPCs:
-If all used NAT GWs: 18 × $32.40 = $583.20/month
-If all use EIGWs: $0/month (gateway cost)
+Imperative pattern (NAT per VPC): 18 × $32.40 = $583.20/month + 18 resource blocks
+Automated pattern (EIGW per VPC): $0/month (gateway cost) + 9 resource blocks
 
-IPv6 adoption is pure cost optimization (for egress)
+IPv6 adoption is pure cost optimization (for egress) with simpler configuration
 ```
 
 ### Migration Strategy

@@ -87,11 +87,11 @@ This directory contains comprehensive documentation for the Centralized Egress D
 | Concept | Primary Doc | Secondary Doc |
 |---------|-------------|---------------|
 | **Complexity & Theory** | | |
-| O(n²) → O(n) transformation | WHITEPAPER.md §6 | MATHEMATICAL_ANALYSIS.md |
+| O(n²) → O(n) transformation (imperative → automated) | WHITEPAPER.md §6 | MATHEMATICAL_ANALYSIS.md |
 | Route growth analysis (Θ(n²)) | WHITEPAPER.md §6.2 | MATHEMATICAL_ANALYSIS.md |
 | Security rule growth | WHITEPAPER.md §6.3 | MATHEMATICAL_ANALYSIS.md |
 | Configuration entropy reduction (32%) | WHITEPAPER.md §6.6 | MATHEMATICAL_ANALYSIS.md |
-| Deployment time complexity | WHITEPAPER.md §6.8 | MATHEMATICAL_ANALYSIS.md |
+| Deployment time (imperative vs automated) | WHITEPAPER.md §7.3 | MATHEMATICAL_ANALYSIS.md |
 | Formal theorem (linear config for quadratic resources) | WHITEPAPER.md §6.7 | MATHEMATICAL_ANALYSIS.md |
 | Compiler IR transforms | COMPILER_TRANSFORM_ANALOGY.md | WHITEPAPER.md §5.1 |
 | Atomic computation properties | WHITEPAPER.md §5.10 | COMPILER_TRANSFORM_ANALOGY.md |

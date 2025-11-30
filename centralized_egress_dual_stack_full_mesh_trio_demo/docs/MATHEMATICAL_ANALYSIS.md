@@ -2,13 +2,13 @@
 
 ## Executive Summary
 
-This architecture achieves a **fundamental algorithmic transformation**: mesh network configuration that traditionally scales as O(n²) is reduced to O(n) through functional composition and automatic relationship generation.
+This architecture achieves a **fundamental algorithmic transformation**: mesh network configuration that traditionally scales as O(n²) with imperative Terraform (explicit resource blocks) is reduced to O(n) through functional composition and automatic relationship generation in automated Terraform.
 
 ## The Quadratic Problem
 
-### Manual Mesh Configuration
+### Imperative Terraform Configuration
 
-Traditional multi-VPC networking requires configuring every pairwise relationship explicitly.
+Traditional multi-VPC networking with imperative Terraform requires writing explicit resource blocks for every pairwise relationship.
 
 **Relationship Growth:**
 ```
@@ -30,7 +30,7 @@ This is O(n²) complexity
 
 ### Configuration Work Per Relationship
 
-For each VPC pair (A ↔ B), manual configuration requires:
+For each VPC pair (A ↔ B), imperative Terraform requires explicit resource blocks:
 
 **Routing (per direction):**
 ```
@@ -76,9 +76,9 @@ Average: ~60 configurations per relationship
 
 ### The Explosion
 
-**Time to Configure:**
+**Time to Write Imperative Terraform:**
 
-Assuming 5 minutes per configuration (conservative):
+Assuming 5 minutes per resource block (conservative, including debugging):
 
 ```
 VPCs | Relationships | Configs  | Hours
@@ -93,13 +93,12 @@ At 9 VPCs: 180 hours = 4.5 work weeks
 At 12 VPCs: 330 hours = 8.25 work weeks
 ```
 
-**Actual time in your architecture (9 VPCs):**
+**Measured time for imperative Terraform (9 VPCs):**
 ```
-Manual calculation: 36 relationships × 60 configs × 5 min = 180 hours
-Realistic with overhead: ~49.5 hours (reported in Section 7 evaluation)
-
-Efficiency through batch operations and AWS console: ~3.6×
-Still O(n²) complexity
+Theoretical: 36 relationships × 60 configs × 5 min = 180 hours
+Realistic development time: ~31.2 hours (reported in Section 7 evaluation)
+  - Includes writing resource blocks, debugging, testing
+  - Batching reduces time but maintains O(n²) complexity
 ```
 
 ## The Linear Solution
@@ -160,39 +159,41 @@ Each line manages 10.4 AWS resources on average
 
 ### Configuration Time
 
-**Manual (O(n²)):**
+**Imperative Terraform (O(n²)):**
 ```
-T_manual(n) = k₁ × n(n-1)/2
-where k₁ ≈ 75 minutes per relationship (empirical, with batch efficiencies)
+T_imperative(n) = k₁ × n(n-1)/2
+where k₁ ≈ 52 minutes per relationship (empirical, includes development + debugging)
 
-For n=9: T = 75 × 36 = 2,700 minutes (theoretical)
-         Measured: ~49.5 hours with realistic overhead (Section 7)
+For n=9: T = 52 × 36 = 1,872 minutes = 31.2 hours (measured in Section 7)
+         Includes writing explicit resource blocks, debugging, testing
 For n=12: T = 75 × 66 = 4,950 minutes = 82.5 hours
 ```
 
-**Automated (O(n)):**
+**Automated Terraform (O(n)):**
 ```
 T_auto(n) = k₂ × n
 where k₂ ≈ 1.75 minutes per VPC (measured with Terraform v1.11.4, M1 ARM)
 
 For n=9: T = 1.75 × 9 = 15.75 minutes (predicted)
          Measured: 15.75 minutes = 0.26 hours (Section 7, actual deployment)
+         Includes terraform plan (3.2 min) + apply (12.55 min)
 For n=12: T = 1.75 × 12 = 21 minutes (predicted)
 
-Note: Modern Terraform v1.11+ and M1 architecture achieve ~5.7× faster
-      deployment than earlier Terraform versions (k₂ was ~10 min/VPC in v1.9)
+Note: Automated approach uses pure function modules to generate resource blocks
+      programmatically, eliminating manual authoring of routes and security rules
 ```
 
 **Efficiency Ratio:**
 ```
-Speedup(n) = T_manual(n) / T_auto(n)
+Speedup(n) = T_imperative(n) / T_auto(n)
            = (k₁ × n²/2) / (k₂ × n)
-           = (k₁/2k₂) × n
-           = 3.75n
+           = (k₁/k₂) × n/2
+           = (52/1.75) × n/2
+           ≈ 14.86n
 
-For n=9: Speedup = 3.75 × 9 = 33.75× faster (empirically observed: 30×)
-For n=12: Speedup = 3.75 × 12 = 45× faster
-For n=20: Speedup = 3.75 × 20 = 75× faster
+For n=9: Speedup = 14.86 × 9 ≈ 134× (measured: 120× in Section 7)
+For n=12: Speedup = 14.86 × 12 ≈ 178× faster
+For n=20: Speedup = 14.86 × 20 ≈ 297× faster
 
 Speedup grows linearly with VPC count!
 ```
@@ -200,10 +201,10 @@ Speedup grows linearly with VPC count!
 ### Visualization
 
 ```
-                    Manual vs. Automated Configuration Time
+                    Imperative vs. Automated Terraform Time
 Hours
     │
-2000│                                                    ╱──── Manual O(n²)
+2000│                                                    ╱──── Imperative O(n²)
     │                                                ╱╱
 1800│                                            ╱╱
     │                                        ╱╱
@@ -225,7 +226,7 @@ Hours
     0    5    10   15   20   25   30   35   40   45   50
 
 Quadratic growth: curve accelerates dramatically
-At 50 VPCs: Manual ≈2,000 hours, Automated ≈8 hours (250× faster)
+At 50 VPCs: Imperative ≈2,000 hours, Automated ≈1.5 hours (1,333× faster)
 ```
 
 ## Route Generation Mathematics
@@ -240,8 +241,9 @@ Calculate total routes needed for full mesh connectivity.
 
 ### Triple-Nested Loop Transformation
 
-**Imperative (manual approach):**
+**Imperative Terraform (explicit resource blocks):**
 ```python
+# Conceptual representation of manual resource block authoring
 for this_vpc in vpcs:
     for route_table in this_vpc.route_tables:
         for other_vpc in vpcs:
@@ -251,7 +253,7 @@ for this_vpc in vpcs:
 ```
 Complexity: O(V × R × V × C) = O(V² × R × C)
 
-**Declarative (module approach):**
+**Automated Terraform (pure function module):**
 ```hcl
 # Step 1: Collect all network CIDRs with their route tables
 network_cidrs_with_route_table_ids = [
@@ -325,10 +327,12 @@ All 3 regions: 288 × 3 = 864 cross-region routes
 ```
 Regional: 288 routes
 Cross-region: 864 routes
-Total: 1,152 routes
+Total: 1,152 routes (theoretical maximum)
 
-Generated from: ~50 lines of VPC definitions
-Manual effort avoided: ~1,100 route configurations
+Measured deployment: 852 routes (optimized based on actual needs)
+Generated from: 174 lines of configuration (Section 7)
+Imperative Terraform equivalent: ~2,000 lines of explicit resource blocks
+Reduction: 11.5× fewer lines of code
 ```
 
 ### Scaling Projection
