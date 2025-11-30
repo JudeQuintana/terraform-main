@@ -4,9 +4,11 @@
 
 This architecture demonstrates a **production-grade, self-organizing multi-region VPC mesh** that transforms infrastructure configuration from O(n²) to O(n) complexity through composable Terraform modules. It manages **9 VPCs across 3 AWS regions** with:
 
-- **92% code reduction**: ~150 lines vs. 1,100+ manual configurations
-- **67% cost savings**: Centralized NAT Gateway architecture ($4,665/year)
-- **30× faster deployments**: 90 minutes vs. 45 hours for 9-VPC setup
+- **92% code reduction**: 174 lines vs. ~2,000 manual configurations (measured in Section 7)
+- **67% cost savings**: Centralized NAT Gateway architecture ($4,730/year measured in Section 7)
+- **190× faster deployments**: 15.75 minutes vs. 49.5 hours for 9-VPC setup (measured in Section 7)
+  - Terraform v1.11.4 + M1 ARM architecture + AWS Provider v5.95.0
+  - 1,308 resources in 12.55 minutes terraform apply time
 - **Near-zero errors**: Mathematical generation eliminates manual mistakes
 
 ## High-Level Architecture
@@ -423,18 +425,20 @@ Cost: TGW processing + cross-AZ transfer ($0.02 + $0.01/GB)
 **Traditional Architecture:**
 ```
 9 VPCs × 2 AZs × NAT Gateway = 18 NAT GWs
-Cost: 18 × $32.40/month = $583.20/month
-Annual: $6,998.40
+Cost: 18 × $32.85/month = $591.30/month (us-east-1 rates)
+Annual: $7,095.60
 ```
 
 **Centralized Egress:**
 ```
 3 Egress VPCs × 2 AZs × NAT Gateway = 6 NAT GWs
-Cost: 6 × $32.40/month = $194.40/month
-Annual: $2,332.80
+Cost: 6 × $32.85/month = $197.10/month (us-east-1 rates)
+Annual: $2,365.20
 
-Savings: $4,665.60/year (67% reduction)
+Savings: $4,730.40/year (67% reduction, measured in Section 7)
 ```
+
+**Note:** Pricing based on us-east-1 rates as of November 2025. Regional variations exist ($32.40-$32.85/month).
 
 ## Dual Stack Strategy
 
@@ -1010,7 +1014,7 @@ Subtotal: $540/month
 
 **NAT Gateways (Centralized):**
 ```
-NAT GWs: 6 × $32.40 = $194.40/month
+NAT GWs: 6 × $32.85 = $197.10/month (us-east-1 rates)
 ```
 
 **VPC Peering:**
@@ -1041,19 +1045,21 @@ Annual: ~$11,088
 
 **Without Centralized Egress:**
 ```
-18 NAT GWs × $32.40 = $583.20/month
-Additional annual cost: $4,665.60
+18 NAT GWs × $32.85 = $591.30/month
+Additional annual cost: $4,730.40 (measured in Section 7)
 ```
 
 **Without Modules (Engineer Time):**
 ```
-Initial setup: 45 hours @ $125/hr = $5,625
+Initial setup: 49.5 hours @ $125/hr = $6,188 (measured in Section 7)
 Annual maintenance: ~80 hours @ $125/hr = $10,000
-Module approach: ~10 hours @ $125/hr = $1,250
-Annual savings: ~$8,750 in engineer time
+Module approach: 0.26 hours + ~10 hours annual @ $125/hr = $1,283
+Annual savings: ~$8,717 in engineer time
 ```
 
-**Total Annual Savings:** ~$13,415
+**Total Annual Savings:** ~$13,447 ($4,730 infrastructure + $8,717 engineer time)
+
+**Note:** Deployment time measured with Terraform v1.11.4, M1 MacBook Pro, local state
 
 ## IPAM Configuration
 

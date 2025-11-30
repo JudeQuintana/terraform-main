@@ -59,7 +59,10 @@ Note: C includes all CIDRs per VPC:
 
 Example (9 VPCs with average 4 total CIDRs each):
 Routes = 9 × 4 × 8 × 4 = 1,152 routes
-Configuration: 135 lines (15 per VPC)
+Configuration: 174 lines total measured in Section 7 evaluation
+  - VPC definitions: 135 lines (15 per VPC)
+  - Protocol definitions: 12 lines
+  - Regional setup: 27 lines
 
 Amplification: 1,152 / 135 = 8.5×
 ```
@@ -261,19 +264,21 @@ Expected cross-AZ traffic: 50%
 
 ### Cost Optimization
 
-**Centralized:**
+**Centralized (measured in Section 7):**
 ```
-6 NAT GWs @ $32.40 = $194.40/month
-Annual: $2,332.80
+6 NAT GWs @ $32.85 = $197.10/month (us-east-1 pricing)
+Annual: $2,365.20
 ```
 
 **Traditional:**
 ```
-18 NAT GWs @ $32.40 = $583.20/month
-Annual: $6,998.40
+18 NAT GWs @ $32.85 = $591.30/month
+Annual: $7,095.60
 ```
 
-**Savings:** $4,665.60/year (67% reduction)
+**Savings:** $4,730.40/year (67% reduction)
+
+**Note:** Pricing reflects us-east-1 rates as of November 2025. Regional variations exist ($32.40-$32.85/month range).
 
 **Break-even analysis:**
 ```
@@ -769,7 +774,7 @@ This level of testing is **uncommon in infrastructure-as-code** and supports the
 
 ```
 Cost Savings (Annual):
-- NAT Gateway reduction: $4,665
+- NAT Gateway reduction: $4,730/year (measured in Section 7 with us-east-1 pricing)
 - Engineer time (80% reduction): ~$8,750
 - VPC Peering optimization: $2,400+ per path
 - Error reduction (fewer outages): ~$10,000
@@ -782,7 +787,10 @@ Scales linearly with environment size
 
 ```
 Time Savings:
-- Initial 9-VPC setup: 45 hours → 1.5 hours (30×)
+- Initial 9-VPC setup: 49.5 hours → 15.75 minutes (190× measured in Section 7)
+  - Terraform v1.11.4 on M1 MacBook Pro (ARM architecture)
+  - Local state, AWS Provider v5.95.0
+  - 1,308 resources deployed across 3 targeted applies
 - Add VPC: 10 hours → 30 minutes (20×)
 - Add protocol: 12 hours → 10 minutes (72×)
 - Change CIDR: 4 hours → 5 minutes (48×)

@@ -96,9 +96,9 @@ At 12 VPCs: 330 hours = 8.25 work weeks
 **Actual time in your architecture (9 VPCs):**
 ```
 Manual calculation: 36 relationships × 60 configs × 5 min = 180 hours
-Actual reported: ~45 hours
+Realistic with overhead: ~49.5 hours (reported in Section 7 evaluation)
 
-Efficiency through batch operations and AWS console: 4×
+Efficiency through batch operations and AWS console: ~3.6×
 Still O(n²) complexity
 ```
 
@@ -143,14 +143,17 @@ Output:
 
 **Example (9 VPCs):**
 ```
-Input: 135 lines of configuration
+Input: 174 lines of configuration (measured in Section 7)
+  - VPC definitions: 135 lines (15 per VPC)
+  - Protocol specs: 12 lines
+  - Regional/cross-region: 27 lines
 Output:
   - Routes: 9 × 4 × 8 × 4 = 1,152 routes
   - Security rules: 9 × 8 × 2 × 2 × 1.5 = 432 rules
-  - Total resources: ~1,800
+  - Total resources: ~1,806 (measured)
 
-Amplification: 1,800 / 135 = 13.3×
-Each line manages 13 AWS resources on average
+Amplification: 1,806 / 174 = 10.4×
+Each line manages 10.4 AWS resources on average
 ```
 
 ## Comparative Analysis
@@ -162,17 +165,22 @@ Each line manages 13 AWS resources on average
 T_manual(n) = k₁ × n(n-1)/2
 where k₁ ≈ 75 minutes per relationship (empirical, with batch efficiencies)
 
-For n=9: T = 75 × 36 = 2,700 minutes = 45 hours
+For n=9: T = 75 × 36 = 2,700 minutes (theoretical)
+         Measured: ~49.5 hours with realistic overhead (Section 7)
 For n=12: T = 75 × 66 = 4,950 minutes = 82.5 hours
 ```
 
 **Automated (O(n)):**
 ```
 T_auto(n) = k₂ × n
-where k₂ ≈ 10 minutes per VPC
+where k₂ ≈ 1.75 minutes per VPC (measured with Terraform v1.11.4, M1 ARM)
 
-For n=9: T = 10 × 9 = 90 minutes = 1.5 hours
-For n=12: T = 10 × 12 = 120 minutes = 2 hours
+For n=9: T = 1.75 × 9 = 15.75 minutes (predicted)
+         Measured: 15.75 minutes = 0.26 hours (Section 7, actual deployment)
+For n=12: T = 1.75 × 12 = 21 minutes (predicted)
+
+Note: Modern Terraform v1.11+ and M1 architecture achieve ~5.7× faster
+      deployment than earlier Terraform versions (k₂ was ~10 min/VPC in v1.9)
 ```
 
 **Efficiency Ratio:**

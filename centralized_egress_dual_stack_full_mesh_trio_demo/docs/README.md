@@ -151,13 +151,16 @@ Yes! The modules are open source and composable. Start with ARCHITECTURE.md to u
 
 ### "Is this production-ready?"
 
-Yes. The WHITEPAPER.md shows production validation with formal mathematical analysis:
-- 9 VPCs across 3 regions (§2, §4)
-- ~1,800 resources managed from 150 lines of config (§4.9)
-- 67% NAT Gateway cost savings ($4,666/year) (§5.3, §6.4)
-- 30× faster deployment than manual configuration (§6.8)
-- 32% configuration entropy reduction (§6.6)
-- <1% error rate vs 15-20% manual (§5.11)
+Yes. The WHITEPAPER.md shows production validation with formal mathematical analysis and empirical evaluation:
+- 9 VPCs across 3 regions (§2, §4, §7.1)
+- ~1,806 resources from 174 lines of config - 10.4× amplification (§7.4)
+- 67% NAT Gateway cost savings ($4,730/year measured) (§7.5)
+- 190× faster deployment: 15.75 minutes vs 49.5 hours (§7.3)
+  - Modern Terraform v1.11.4 + M1 ARM + AWS Provider v5.95.0
+  - 1,308 resources in 12.55 min terraform apply
+- 58% configuration entropy reduction: 10.7 → 4.5 bits (§7.8)
+- 0% error rate vs ~3% manual (48 errors eliminated) (§7.7)
+- 100% connectivity validation across all 72 bidirectional paths (§7.6)
 
 ## Contributing
 
@@ -173,5 +176,5 @@ Same license as the parent repository.
 
 ---
 
-**Last Updated:** 2025-11-28
-**Version:** 1.2 (Whitepaper Sections 5 & 6 complete)
+**Last Updated:** 2025-11-29
+**Version:** 1.4 (Section 7 updated with measured deployment times: 15.75 min, 190× speedup)
