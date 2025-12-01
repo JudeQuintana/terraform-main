@@ -465,7 +465,7 @@ S(n) = Cost_imperative(n) - Cost_automated
 Break-even: n = 3 VPCs
 Savings scale linearly with VPC count above 3
 
-For n=9: 
+For n=9:
   Cost savings: $64.80 × 6 = $388.80/month ($4,665.60/year)
   Resource block reduction: 18 blocks → 6 blocks (67% reduction)
 For n=15: S = $64.80 × 12 = $777.60/month ($9,331.20/year)
