@@ -155,7 +155,8 @@ Yes! The modules are open source and composable. Start with ARCHITECTURE.md to u
 
 Yes. The WHITEPAPER.md shows production validation with formal mathematical analysis and empirical evaluation:
 - 9 VPCs across 3 regions (§2, §4, §7.1)
-- ~1,806 resources from 174 lines of config - 10.4× amplification (§7.4)
+- 1,308 resources from 174 lines of config - 7.5× amplification measured (§7.4)
+  - Full deployment capacity: ~1,800 resources (10.3× amplification at theoretical maximum)
 - 67% NAT Gateway cost savings ($4,730/year measured) (§7.5)
 - 120× engineering productivity improvement: 15.75 minutes vs 31.2 hours imperative Terraform (§7.3)
   - Modern Terraform v1.11.4 + M1 ARM + AWS Provider v5.95.0

@@ -155,9 +155,9 @@ for_each = { ssh = {...}, ping = {...} }
 **Terraform State Structure:**
 ```
 module.intra_vpc_sg_rules["ssh"]
-  ├─ 72 security group rules (all SSH rules)
+  ├─ 216 security group rules (SSH: all VPCs, both IP versions)
 module.intra_vpc_sg_rules["ping"]
-  ├─ 72 security group rules (all ICMP rules)
+  ├─ 216 security group rules (ICMP: all VPCs, both IP versions)
 ```
 
 **Advantages:**
@@ -185,7 +185,7 @@ For every 1 line of protocol config, 36 AWS resources are generated
 Traditional imperative Terraform pattern: Deploy NAT Gateway resource blocks in every VPC, every AZ
 
 ```
-9 VPCs × 2 AZs = 18 NAT Gateways @ $32.40/month = $583.20/month
+9 VPCs × 2 AZs = 18 NAT Gateways @ $32.85/month = $591.30/month
 18 explicit aws_nat_gateway + aws_eip resource blocks
 ```
 
@@ -284,10 +284,10 @@ Annual: $7,095.60
 
 **Break-even analysis:**
 ```
-Savings from NAT reduction: $388.80/month
-TGW data processing budget: $388.80 / $0.02/GB = 19,440 GB/month
+Savings from NAT reduction: $394.20/month
+TGW data processing budget: $394.20 / $0.02/GB = 19,710 GB/month
 
-If inter-VPC traffic < 19TB/month → significant savings
+If inter-VPC traffic < 19.7TB/month → significant savings
 Typical enterprise: 2-10TB/month → ✓ Cost-effective
 ```
 
@@ -354,7 +354,7 @@ EIGW: $0/hour per gateway
 Data transfer: $0.09/GB (same as IPv4 NAT)
 
 For 9 VPCs:
-Imperative pattern (NAT per VPC): 18 × $32.40 = $583.20/month + 18 resource blocks
+Imperative pattern (NAT per VPC): 18 × $32.85 = $591.30/month + 18 resource blocks
 Automated pattern (EIGW per VPC): $0/month (gateway cost) + 9 resource blocks
 
 IPv6 adoption is pure cost optimization (for egress) with simpler configuration
@@ -415,9 +415,9 @@ IPv6: 1,000 GB × $0.09 = $90
 Wait, that's more expensive!
 
 But: No TGW hop for IPv6 egress = faster latency
-And: No NAT gateway monthly cost = $32.40/month saved
+And: No NAT gateway monthly cost = $32.85/month saved
 
-Break-even: If IPv6 traffic < ~350GB/month per VPC
+Break-even: If IPv6 traffic < ~360GB/month per VPC
 Above that: IPv4 centralized is cheaper per GB
 Below that: IPv6 saves on NAT GW fixed costs
 ```

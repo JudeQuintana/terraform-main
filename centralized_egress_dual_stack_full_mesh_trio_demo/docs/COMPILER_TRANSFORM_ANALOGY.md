@@ -411,61 +411,69 @@ def generate_routes(vpcs: Map[String, VPC]) -> Set[Route]:
 
 **Time Complexity:**
 ```
-O(N²RC) where:
+O(N(N-1)RC) = O(N²RC) where:
   N = number of VPCs
-  R = route tables per VPC (constant ≈ 4)
-  C = CIDRs per VPC (constant ≈ 4)
+  R = route tables per VPC (typically 4-8, bounded constant)
+  C = CIDRs per VPC (typically 2-4 for IPv4 primary + secondary + IPv6, bounded constant)
 
 Since R and C are bounded constants:
-O(N²) - quadratic in VPC count
+O(N(N-1)) = O(N²) - quadratic in VPC count
+
+Precise formula: N×(N-1) accounts for self-exclusion
 ```
 
 **Space Complexity:**
 ```
-Output size: N²RC route objects
+Output size: N×(N-1)×R×C route objects
 Memory: O(N²) - proportional to output size
 ```
 
 **Comparison to Imperative Terraform:**
 ```
 Imperative Terraform: O(N²) time to write resource blocks, O(N²) space for config
-Automated Terraform: O(N²) time to compute, O(N²) space for output
+Automated Terraform: O(N²) time to compute (actually O(N(N-1)RC)), O(N²) space for output
 
 BUT: Computation time is ~seconds, manual authoring time is ~hours
 Factor: ~1000× faster for same asymptotic complexity
+
+For N=9 VPCs, R=6 route tables, C=2 CIDRs:
+  Manual: 9×8×6×2 = 864 route blocks × 2 min/block = ~29 hours
+  Automated: ~5 seconds computation time
+  Speedup: ~20,800× faster
 ```
 
 ### Category Theory Perspective
 
-The transformation exhibits **functor properties**:
+The transformation exhibits **functor-like properties** that enable compositional reasoning:
 
-**Definition:** A functor `F` maps objects and morphisms between categories while preserving structure.
+**Conceptual mapping:** The route generation can be viewed through a category-theoretic lens, though not as a strict mathematical functor.
 
-**Applied to infrastructure:**
+**Infrastructure as categories:**
 
 ```
 Category C_VPC (VPC domain):
   - Objects: VPC configurations
-  - Morphisms: Relationships between VPCs
+  - Morphisms: Connectivity relationships between VPCs
 
 Category C_Routes (Route domain):
   - Objects: Route configurations
-  - Morphisms: Dependencies between routes
+  - Morphisms: Routing dependencies between route tables
 
-Functor F: C_VPC → C_Routes
+Transformation F: C_VPC → C_Routes
   - F(vpc) = routes generated from vpc
-  - F(vpc1 → vpc2) = routes between vpc1 and vpc2
+  - F(vpc_connectivity) = corresponding route entries
 ```
 
-**Functor Laws:**
+**Compositional properties:**
 
-1. **Identity:** `F(id_vpc) = id_routes`
-   - Empty VPC map produces empty route set
+1. **Structure preservation:** VPC relationships map to route relationships
+   - VPC mesh topology → Route table mesh structure
 
-2. **Composition:** `F(g ∘ f) = F(g) ∘ F(f)`
-   - Combining VPCs then generating routes = Generating routes then combining
+2. **Predictable composition:** Combining transformations yields expected results
+   - Adding VPC → Adding corresponding routes to all existing VPCs
+   - Removing VPC → Removing corresponding routes from all VPCs
 
-**Practical implication:** Module transformations compose predictably, enabling modular design.
+**Practical implication:** These functor-like properties enable predictable module composition and formal reasoning about transformation correctness, even if not satisfying strict category theory definitions.
 
 ---
 
@@ -912,8 +920,11 @@ app1 = {
   azs = { a = {}, b = {} }
 }
 
-# DSL generates (128 routes per VPC pair × 8 pairs = 1,024 routes):
-# Amplification factor: 68×
+# DSL generates for N=9 VPCs:
+#   Total routes: N×(N-1)×R×C = 9×8×6×2 = 864 routes
+#   Plus security rules: N²×protocols = 9×9×6 = 486 rules (approx)
+#   Total resources from 135 lines of config: ~1,350 core routing/security resources
+# Amplification factor: ~10× (1,350 / 135)
 ```
 
 **Rationale:** High-level declarations expand into low-level details.
