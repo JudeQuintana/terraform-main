@@ -575,6 +575,8 @@ Destination         Target
 
 ### Migration Pattern
 
+**Important:** You **cannot** directly convert a private subnet to isolated (or vice versa) with the same CIDR. AWS requires subnet destruction and recreation because they use different route table associations.
+
 **Phase 1: Start with private subnets**
 ```hcl
 private_subnets = [
@@ -589,13 +591,32 @@ aws ec2 describe-flow-logs --filter "Name=resource-id,Values=subnet-xyz"
 # If destination is only internal IPs → candidate for isolated
 ```
 
-**Phase 3: Convert to isolated (gradual rollout)**
+**Phase 3: Plan subnet replacement (requires destroy/recreate)**
 ```hcl
+# Option A: Use different CIDR (zero downtime)
+private_subnets = [
+  { name = "db-tier", cidr = "10.60.10.0/24" }  # Keep existing
+]
+isolated_subnets = [
+  { name = "db-tier-v2", cidr = "10.60.11.0/24" }  # New CIDR
+]
+# Migrate workloads, then remove private subnet
+
+# Option B: Same CIDR (requires downtime)
+# 1. Remove private subnet definition
+# 2. Apply → destroys subnet
+# 3. Add isolated subnet with same CIDR
+# 4. Apply → creates new subnet
 isolated_subnets = [
   { name = "db-tier", cidr = "10.60.10.0/24" }
 ]
-# Remove NAT Gateway route, keeping only mesh routes
 ```
+
+**Migration Impact:**
+- Workloads in the subnet must be stopped/recreated
+- ENIs (network interfaces) cannot be reused
+- Security group rules remain valid (CIDR-based)
+- Plan for maintenance window if using same CIDR
 
 ## Hybrid Connectivity: TGW + VPC Peering
 

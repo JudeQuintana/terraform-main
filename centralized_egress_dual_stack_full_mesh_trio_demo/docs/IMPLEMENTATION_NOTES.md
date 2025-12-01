@@ -452,6 +452,8 @@ The test suite proves:
 
 ## Common Pitfalls and Solutions
 
+**Note:** All pitfalls below are caught by variable validation at `terraform plan` time, providing clear error messages that guide users to correct their configuration **before** any AWS API calls are made.
+
 ### Pitfall 1: Forgetting remove_az During AZ Removal
 
 **Problem:**
@@ -460,6 +462,8 @@ $ terraform destroy -target=module.vpcs_use1["general3"].aws_nat_gateway.this_pu
 
 Error: centralized_egress.central = true requires 1 NATGW per AZ
 ```
+
+**Validation catches this:** Module enforces NAT Gateway count matches AZ count unless `remove_az = true`.
 
 **Solution:**
 ```hcl
@@ -495,6 +499,8 @@ azs = {
 Error: Only 1 subnet (private or public) can have special = true per AZ
 ```
 
+**Validation catches this:** Module enforces the special subnet constraint via precondition checks.
+
 **Solution:** Choose one subnet per AZ to be special (typically private for egress VPCs, public for others).
 
 ### Pitfall 3: Enabling eigw Without IPv6 Subnets
@@ -516,6 +522,8 @@ azs = {
 Error: If eigw = true, at least 1 private IPv6 dual-stack subnet must exist
 ```
 
+**Validation catches this:** Module validates that EIGW configuration requires at least one dual-stack private subnet.
+
 **Solution:** Add `ipv6_cidr` to at least one private subnet, or remove `eigw = true`.
 
 ### Pitfall 4: VPC Peering only_route on One Side Only
@@ -535,6 +543,8 @@ vpc_peering_deluxe = {
 ```
 
 **Behavior:** Module falls back to routing **all** subnets (both sides must specify).
+
+**Validation catches this:** Module validates that if `only_route` is used, both local and peer must specify CIDRs.
 
 **Solution:** Either specify `only_route` on both sides, or omit it entirely for full mesh.
 
