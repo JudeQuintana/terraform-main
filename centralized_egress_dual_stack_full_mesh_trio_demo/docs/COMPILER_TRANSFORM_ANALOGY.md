@@ -920,14 +920,20 @@ app1 = {
   azs = { a = {}, b = {} }
 }
 
-# DSL generates for N=9 VPCs:
-#   Total routes: N×(N-1)×R×C = 9×8×6×2 = 864 routes
-#   Plus security rules: N²×protocols = 9×9×6 = 486 rules (approx)
-#   Total resources from 135 lines of config: ~1,350 core routing/security resources
-# Amplification factor: ~10× (1,350 / 135)
+# DSL generates for N=9 VPCs (measured deployment):
+#   Route resources: 852 routes (capacity: 1,152 at theoretical max)
+#   Security group rules: 108 rules (capacity: 432 at theoretical max)
+#   Total resource blocks: 960 measured (capacity: 1,584 at theoretical max)
+#   
+#   From 135 lines of VPC definitions:
+#   Measured amplification: 960 / 135 = 7.1× 
+#   Maximum capacity amplification: 1,584 / 135 = 11.7×
+#
+# Note: Measured deployment optimizes based on actual routing needs
+# (e.g., isolated subnets omit default routes, fewer route tables per VPC)
 ```
 
-**Rationale:** High-level declarations expand into low-level details.
+**Rationale:** High-level declarations expand into low-level details automatically.
 
 #### **4. Zero-Cost Abstractions**
 

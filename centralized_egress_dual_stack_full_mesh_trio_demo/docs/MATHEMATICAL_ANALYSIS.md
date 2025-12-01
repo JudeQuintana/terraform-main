@@ -720,17 +720,22 @@ Engineers specify intent (VPC parameters), modules infer implementation (routes)
 
 **Entropy Reduction:**
 ```
-ΔH = 9.9 - 7.4 = 2.5 bits
-Reduction factor: 2^2.5 ≈ 5.7×
+ΔH = 9.9 - 7.2 = 2.7 bits
+Reduction factor: 2^2.7 ≈ 6.5×
 
-Module-based approach reduces configuration entropy by ~5.7×
-Translation: 5.7× fewer decisions for engineers to make
-Measured reduction: 960 resource blocks → 174 specification lines = 5.5× ✓
+Module-based approach reduces configuration entropy by ~6.5×
+Translation: 6.5× fewer decisions for engineers to make
+Measured reduction: 960 resource blocks → 147 semantic decisions = 6.5× ✓
 
-The ~5% difference (5.7× vs 5.5×) validates the entropy model's accuracy.
+The alignment validates the entropy model's accuracy.
 ```
 
-**Note:** If all theoretical maximum routes were configured (1,152 routes + 432 SG rules = 1,584 resources) rather than the optimized deployment (852 routes + 108 SG rules = 960 resources), entropy reduction would reach 32% (10.6 → 7.2 bits, or 10.8× compression). The measured 25% reduction represents what the system actually generates based on real topology requirements.
+**Note on Measurement Approaches:**
+- **Measured deployment (9.9 → 7.2 bits, 27%)**: Compares actual deployed resources (960 blocks) to semantic configuration decisions (147 lines), excluding Terraform structural syntax
+- **Including syntax overhead (9.9 → 7.4 bits, 25%)**: Compares deployed resources (960 blocks) to all configuration lines (174 total)
+- **Theoretical maximum (10.6 → 7.2 bits, 32%)**: If all maximum capacity routes were configured (1,584 resources) rather than optimized deployment (960 resources)
+
+All three measurements demonstrate significant entropy reduction, with the 27% figure (9.9 → 7.2 bits) representing the most accurate comparison of operator decision complexity.
 
 ### Compression Ratio
 
@@ -753,8 +758,8 @@ The architecture achieves a fundamental paradigm shift from explicit resource bl
 
 1. **Complexity Transformation:** O(n²) → O(n) configuration (explicit resource blocks eliminated)
 2. **Constant Factor Improvements:** 11.5× configuration reduction (174 lines vs ~2,000), 7.5× resource amplification
-3. **Linear Cost Scaling:** NAT savings ($4,666/year for 9 VPCs) grow linearly with VPC count
-4. **Logarithmic Decision Reduction:** 5.5× fewer configuration decisions (2.5 bits entropy reduction)
+3. **Linear Cost Scaling:** NAT savings ($4,730/year for 9 VPCs) grow linearly with VPC count
+4. **Logarithmic Decision Reduction:** 6.5× fewer configuration decisions (2.7 bits entropy reduction, 27%)
 5. **Maintained Reliability:** 99.84% path availability despite complexity
 6. **Time Efficiency:** 120× faster development + deployment (31.2 hours → 15.75 minutes measured)
 

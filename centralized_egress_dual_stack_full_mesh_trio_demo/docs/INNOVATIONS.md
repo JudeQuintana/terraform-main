@@ -2,7 +2,14 @@
 
 ## Overview
 
-This architecture introduces several novel patterns in infrastructure-as-code that fundamentally change how cloud networks are configured and scaled.
+This architecture introduces several novel patterns in infrastructure-as-code that fundamentally change how cloud networks are configured and scaled. Through compositional Terraform modules and pure function transformations, it achieves:
+
+- **92% code reduction**: 174 lines vs. ~2,000 lines of imperative Terraform (11.5× reduction)
+- **67% cost savings**: $4,730/year through centralized NAT Gateway architecture
+- **120× faster deployment**: 31.2 hours → 15.75 minutes for 9-VPC setup
+- **27% entropy reduction**: 9.9 → 7.2 bits (6.5× fewer configuration decisions)
+
+These metrics are measured and validated in the companion WHITEPAPER.md (Section 7: Evaluation).
 
 ## 1. Functional Route Generation: O(n²) → O(n) Transformation
 

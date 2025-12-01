@@ -90,7 +90,7 @@ This directory contains comprehensive documentation for the Centralized Egress D
 | O(n²) → O(n) transformation (imperative → automated) | WHITEPAPER.md §6 | MATHEMATICAL_ANALYSIS.md |
 | Route growth analysis (Θ(n²)) | WHITEPAPER.md §6.2 | MATHEMATICAL_ANALYSIS.md |
 | Security rule growth | WHITEPAPER.md §6.3 | MATHEMATICAL_ANALYSIS.md |
-| Configuration entropy reduction (33%) | WHITEPAPER.md §6.6 | MATHEMATICAL_ANALYSIS.md |
+| Configuration entropy reduction (27%) | WHITEPAPER.md §6.6 | MATHEMATICAL_ANALYSIS.md |
 | Engineering productivity (imperative vs automated) | WHITEPAPER.md §7.3 | MATHEMATICAL_ANALYSIS.md |
 | Formal theorem (linear config for quadratic resources) | WHITEPAPER.md §6.7 | MATHEMATICAL_ANALYSIS.md |
 | Compiler IR transforms | COMPILER_TRANSFORM_ANALOGY.md | WHITEPAPER.md §5.1 |
@@ -162,7 +162,7 @@ Yes. The WHITEPAPER.md shows production validation with formal mathematical anal
   - Modern Terraform v1.11.4 + M1 ARM + AWS Provider v5.95.0
   - 1,308 resources in 12.55 min terraform apply
   - Eliminates writing explicit resource blocks (routes, security rules)
-- 33% configuration entropy reduction: 10.7 → 7.2 bits (§7.8)
+- 27% configuration entropy reduction: 9.9 → 7.2 bits (§6.6, §7.8)
 - 0% error rate vs ~3% imperative (29 errors eliminated) (§7.7)
 - 100% connectivity validation via AWS Route Analyzer across all 72 bidirectional paths (§7.6.1)
 
