@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This architecture achieves a **fundamental algorithmic transformation**: mesh network configuration that traditionally scales as O(n²) with explicit resource block specification is reduced to O(n) through functional composition and automatic relationship generation using pure function modules.
+This architecture achieves a **fundamental algorithmic transformation**: mesh network configuration that traditionally scales as O(n²) with explicit resource block specification is reduced to O(n) through functional composition and automatic relationship generation using pure function modules (zero-resource Terraform modules that create no AWS infrastructure).
 
 ## The Quadratic Problem
 
@@ -263,7 +263,7 @@ for this_vpc in vpcs:
 ```
 Complexity: O(V × R × V × C) = O(V² × R × C)
 
-**Module-Based Generative Approach (pure function):**
+**Module-Based Generative Approach (pure function module):**
 ```hcl
 # Step 1: Collect all network CIDRs with their route tables
 network_cidrs_with_route_table_ids = [
@@ -720,7 +720,9 @@ Engineers specify intent (VPC parameters), modules infer implementation (routes)
 
 **Entropy Reduction:**
 ```
+Comparing measured deployment to semantic decisions:
 ΔH = 9.9 - 7.2 = 2.7 bits
+Reduction percentage: (2.7 / 9.9) × 100% = 27%
 Reduction factor: 2^2.7 ≈ 6.5×
 
 Module-based approach reduces configuration entropy by ~6.5×
@@ -733,7 +735,7 @@ The alignment validates the entropy model's accuracy.
 **Note on Measurement Approaches:**
 - **Measured deployment (9.9 → 7.2 bits, 27%)**: Compares actual deployed resources (960 blocks) to semantic configuration decisions (147 lines), excluding Terraform structural syntax
 - **Including syntax overhead (9.9 → 7.4 bits, 25%)**: Compares deployed resources (960 blocks) to all configuration lines (174 total)
-- **Theoretical maximum (10.6 → 7.2 bits, 32%)**: If all maximum capacity routes were configured (1,584 resources) rather than optimized deployment (960 resources)
+- **Theoretical maximum (10.6 → 7.4 bits, 30%)**: If all maximum capacity routes were configured (1,584 resources) rather than optimized deployment (960 resources)
 
 All three measurements demonstrate significant entropy reduction, with the 27% figure (9.9 → 7.2 bits) representing the most accurate comparison of operator decision complexity.
 

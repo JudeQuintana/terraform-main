@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides operational insights and implementation details that complement the architecture documentation. These findings explain how the automated Terraform modules generate resources programmatically, eliminating the need for explicit resource blocks found in imperative Terraform approaches. All insights derive from analyzing the source code of the underlying pure function modules.
+This document provides operational insights and implementation details that complement the architecture documentation. These findings explain how the automated Terraform modules generate resources programmatically, eliminating the need for explicit resource blocks found in imperative Terraform approaches. All insights derive from analyzing the source code of the underlying pure function modules (zero-resource Terraform modules that perform computation without creating AWS infrastructure).
 
 ## Validation and Constraints
 

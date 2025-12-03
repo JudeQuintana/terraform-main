@@ -27,7 +27,7 @@ This document explores the deep theoretical parallels between compiler design an
 
 Located within the Centralized Router module as an embedded submodule:
 - **Repository:** [`terraform-aws-centralized-router/modules/generate_routes_to_other_vpcs`](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/main/modules/generate_routes_to_other_vpcs)
-- **Type:** Function module (zero AWS resources)
+- **Type:** Pure function module (zero-resource Terraform module—creates no AWS resources)
 - **Purpose:** Pure computation that transforms VPC topology into route objects
 
 ### Module Signature
@@ -436,10 +436,10 @@ Automated Terraform: O(N²) time to compute (actually O(N(N-1)RC)), O(N²) space
 BUT: Computation time is ~seconds, manual authoring time is ~hours
 Factor: ~1000× faster for same asymptotic complexity
 
-For N=9 VPCs, R=6 route tables, C=2 CIDRs:
-  Manual: 9×8×6×2 = 864 route blocks × 2 min/block = ~29 hours
+For N=9 VPCs, R=4 route tables, C=4 CIDRs:
+  Manual: 9×8×4×4 = 1,152 route blocks × 2 min/block = ~38 hours
   Automated: ~5 seconds computation time
-  Speedup: ~20,800× faster
+  Speedup: ~27,360× faster
 ```
 
 ### Category Theory Perspective

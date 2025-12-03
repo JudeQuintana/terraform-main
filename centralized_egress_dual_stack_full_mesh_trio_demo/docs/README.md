@@ -137,11 +137,11 @@ This directory contains comprehensive documentation for the Centralized Egress D
 
 ### "How does this relate to compiler design?"
 
-See **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** for a detailed explanation of how the `generate_routes_to_other_vpcs` module mirrors compiler intermediate representation (IR) transforms through pure function composition.
+See **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** for a detailed explanation of how the `generate_routes_to_other_vpcs` pure function module (zero-resource Terraform module) mirrors compiler intermediate representation (IR) transforms through pure function composition.
 
 ### "What makes this different from traditional IaC?"
 
-The key innovation is treating infrastructure generation as **computation** rather than configuration. Instead of imperative Terraform (explicit resource blocks), this architecture uses pure functions (like compiler passes) to automatically generate O(n²) resources from O(n) specifications. See:
+The key innovation is treating infrastructure generation as **computation** rather than configuration. Instead of imperative Terraform (explicit resource blocks), this architecture uses pure function modules (like compiler passes) to automatically generate O(n²) resources from O(n) specifications. See:
 - Academic overview: WHITEPAPER.md, Sections 5 & 6
 - Technical explanation: INNOVATIONS.md, Section 1
 - Theoretical foundation: COMPILER_TRANSFORM_ANALOGY.md
