@@ -13,12 +13,14 @@ This directory contains comprehensive documentation for the Centralized Egress D
    - Key innovations (11 major contributions)
    - Mathematical foundations (formal proofs, complexity analysis)
    - Production-validated results
+   - Visual diagrams: Compiler pipeline (AST → IR → Code Generation)
 
 2. **[COMPILER_TRANSFORM_ANALOGY.md](./COMPILER_TRANSFORM_ANALOGY.md)** - Deep dive into theoretical CS foundations
    - How `generate_routes_to_other_vpcs` mirrors compiler IR transforms
    - Pure function properties and formal verification
    - Lambda calculus, category theory, and type theory perspectives
    - Future research directions
+   - Detailed visual diagram: 3-stage transformation pipeline with pseudocode
 
 3. **[MATHEMATICAL_ANALYSIS.md](./MATHEMATICAL_ANALYSIS.md)** - Complete mathematical proofs
    - Complexity analysis (O(n²) → O(n) transformation)
@@ -119,7 +121,7 @@ This directory contains comprehensive documentation for the Centralized Egress D
 | Cartesian product (setproduct) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | Test suite (15 test cases) | IMPLEMENTATION_NOTES.md | INNOVATIONS.md |
 | **Cost & Performance** | | |
-| NAT Gateway cost model | WHITEPAPER.md §6.4 | MATHEMATICAL_ANALYSIS.md |
+| NAT Gateway cost model (Table 1: Traditional vs Centralized) | WHITEPAPER.md §6.4 | MATHEMATICAL_ANALYSIS.md |
 | TGW vs Peering break-even | WHITEPAPER.md §6.5 | MATHEMATICAL_ANALYSIS.md |
 | VPC Peering surface area reduction (97%) | WHITEPAPER.md §5.7 | INNOVATIONS.md |
 | Cost optimization projections | WHITEPAPER.md §6.11 | MATHEMATICAL_ANALYSIS.md |
@@ -188,5 +190,5 @@ Same license as the parent repository.
 
 ---
 
-**Last Updated:** 2025-12-02
-**Version:** 1.6 (Added Discussion §8, Conclusion §9, future work roadmap including TLA+ verification, Zero Trust, ML optimization, hierarchical mesh, IPv6-only architectures)
+**Last Updated:** 2025-12-03
+**Version:** 1.7 (Added ASCII diagrams for compiler pipeline in WHITEPAPER.md §2.2 and §5.1, detailed 3-stage transformation diagram in COMPILER_TRANSFORM_ANALOGY.md, NAT Gateway Cost Comparison table in WHITEPAPER.md §6.4)

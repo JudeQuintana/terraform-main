@@ -185,6 +185,25 @@ This section establishes precise definitions for key terms used throughout the p
 - **Infrastructure context**: The VPC topology map (collection of VPC objects with attributes) serves as the AST—input to transformation functions
 - **Transformation**: AST (VPC configs) → IR passes (route generation) → Code (AWS resources)
 
+```
+Compiler Pipeline Summary:
+
+  AST                    IR Passes              Code Generation
+  (Input)                (Transform)            (Output)
+
+┌──────────┐          ┌──────────────┐        ┌───────────────┐
+│ VPC      │          │ Pure         │        │ AWS           │
+│ Topology │  ─────>  │ Function     │ ────>  │ Resources     │
+│ Map      │          │ Modules      │        │ (routes, SGs) │
+│          │          │              │        │               │
+│ O(n)     │          │ Expand to    │        │ O(n²)         │
+│ objects  │          │ O(n²) specs  │        │ resources     │
+└──────────┘          └──────────────┘        └───────────────┘
+
+ Example: 9 VPCs      → 852 routes            → 1,308 AWS resources
+          174 lines   → inferred relationships → 7.5× amplification
+```
+
 **Peering Threshold**
 - **Definition**: The traffic volume at which VPC Peering becomes more cost-effective than Transit Gateway for a specific path
 - **Break-even calculation**: V_{break-even} = (TGW cost/GB − Peering cost/GB)^{-1} × Fixed cost savings
@@ -911,6 +930,26 @@ Output: N×R×(N-1)×C route objects (O(n²) resources)
 Where:
   R = route tables per VPC (typically 4-8)
   C = total CIDRs per VPC (primary + secondary IPv4/IPv6)
+```
+
+**Compiler-Style Transformation Pipeline:**
+
+```
+   AST (Input)              IR Pass (Transform)           Code Gen (Output)
+
+┌─────────────────┐       ┌──────────────────┐        ┌──────────────────┐
+│ VPC Topology    │       │ Pure Function    │        │ AWS Routes       │
+│ Map             │ ────> │ Module           │ ────>  │                  │
+│                 │       │                  │        │ 852 route        │
+│ 9 VPC objects   │       │ Expands n VPCs   │        │ entries          │
+│ 174 LOC         │       │ to n² routes     │        │ 1,308 resources  │
+└─────────────────┘       └──────────────────┘        └──────────────────┘
+
+     O(n)                  Zero resources                    O(n²)
+  configuration            created (pure                  infrastructure
+                           computation)
+
+                          Amplification: 7.5×
 ```
 
 **Key Characteristics of the Pure Function Module (Zero-Resource Terraform Module):**
@@ -1986,6 +2025,22 @@ Monthly savings:   (18 - 6) × $32.85 = $394.20
 Annual savings:    $394.20 × 12 = $4,730 annually (rounded from $4,730.40)
 ```
 
+**Table 1: NAT Gateway Cost Comparison (Traditional vs. Centralized Egress)**
+
+| Model | NAT Count | Monthly Cost | Annual Cost | Scaling Behavior |
+|-------|-----------|--------------|-------------|------------------|
+| Traditional Per-VPC NAT | 18 | $591.30 | $7,095.60 | O(n) with VPC count |
+| Centralized Egress NAT | 6 | $197.10 | $2,365.20 | O(1) per region |
+| **Savings** | **–12** | **–$394.20** | **–$4,730.40** | **Constant-cost margin** |
+
+*Based on 9 VPCs across 3 regions (us-east-1, us-east-2, us-west-2), 2 availability zones per region, $32.85/month per NAT Gateway (us-east-1 pricing as of November 2025).*
+
+**Cost Model Interpretation:**
+
+The traditional per-VPC model exhibits linear scaling behavior—each additional VPC incurs 2a NAT Gateway instances (one per availability zone). At 9 VPCs, this produces 18 gateway instances costing $591.30 monthly. The centralized egress architecture consolidates all IPv4 outbound traffic through dedicated egress VPCs, requiring only 2a gateways per region regardless of the number of private VPCs. With 3 regions, this yields a constant infrastructure footprint of 6 NAT Gateways at $197.10 monthly—a 67% cost reduction.
+
+The $4,730 annual savings represents the constant-cost margin that persists as long as the centralized architecture is maintained. This margin grows linearly as additional VPCs are deployed (each new VPC saves $65.70 annually in avoided NAT Gateway costs), while the centralized infrastructure remains fixed at 6 gateways. The O(1) scaling property ensures predictable, bounded egress costs independent of mesh size.
+
 **Yearly savings scale linearly:**
 
 ```
@@ -2075,7 +2130,7 @@ Configuration decisions ≈ 147 (measured semantic decisions)
   - 135 lines: VPC definitions (9 VPCs × 15 lines avg)
   - 12 lines: Protocol specifications (SSH, ICMP)
   - 27 lines: Regional/cross-region setup (boilerplate excluded)
-  
+
   Note: Excludes 27 lines of Terraform structural syntax (module blocks,
   variable declarations) that don't represent operator decisions
 
@@ -3300,12 +3355,6 @@ Formal proofs would satisfy audit requirements and enable generative testing whe
 **Hierarchical Mesh for Hyperscale:** Implement multi-tier TGW topologies (hub-and-spoke with regional aggregation) to scale beyond practical full-mesh operational limits. This 3-region architecture demonstrates a K₃ complete graph with cross-region TGW peering, where each regional TGW supports up to 5,000 VPC attachments (15,000 VPCs total capacity). For deployments exceeding 10-15 regions or requiring geographic segmentation, a hierarchical pattern becomes advantageous: Tier 1 hub TGWs (US, EU, APAC) in full mesh, Tier 2 spoke TGWs per business unit or sub-region, Tier 3 VPCs attached to spoke TGWs. This extends capacity to 250,000+ VPCs (50 Tier 2 TGWs × 5,000 VPCs) while maintaining O(n) configuration complexity through recursive pattern composition. Trade-offs include increased latency (2-hop vs. 1-hop routing for cross-tier communication) and hub bandwidth constraints requiring careful capacity planning.
 
 **IPv6-Only Architectures:** Develop NAT-free deployment patterns with NAT64/DNS64 integration, AWS Network Firewall egress governance, and IPv6-native operational tooling. This represents the long-term evolution of cloud networking, eliminating all NAT Gateway infrastructure ($0/month fixed costs) while maintaining security and compliance controls. Migration path: Phase 1 dual-stack (current), Phase 2 IPv6-preferred with IPv4 fallback, Phase 3 IPv6-only with NAT64 for legacy service access. This aligns with IETF IPv6 adoption goals and AWS's increasing support for IPv6-native services.
-
-### 8.5 Discussion Conclusion
-
-This architecture achieves a fundamental transformation in cloud network engineering: reducing configuration complexity from O(n²) to O(n) through pure function composition while maintaining all O(n²) mesh relationships required for full connectivity. The system generates 1,308 AWS resources from 174 configuration lines (7.5× measured amplification, 10.3× at full 1,800-resource capacity), representing a 92% code reduction compared to imperative Terraform (~2,000 lines). It eliminates 31 hours of manual configuration effort per deployment (120× speedup) and reduces NAT Gateway costs by 67% ($4,730 annual savings for 9-VPC deployment)—all while achieving zero configuration errors through referential transparency and 27% configuration entropy reduction (9.9 → 7.2 bits).
-
-The contribution extends beyond AWS-specific optimization to establish foundational principles: treating infrastructure topology as a compilation problem with provable correctness, encoding network intent as pure functions with denotational semantics, and transforming quadratic configuration burden into linear specification through automated inference. These principles generalize to any cloud provider or on-premises environment, positioning this work as a reusable blueprint for next-generation declarative infrastructure systems.
 
 ---
 
