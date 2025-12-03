@@ -8,7 +8,7 @@ This architecture demonstrates a **production-grade, self-organizing multi-regio
 - **67% cost savings**: Centralized NAT Gateway architecture ($4,730/year measured)
 - **120× faster deployment**: 15.75 minutes vs. 31.2 hours for 9-VPC setup (development + deployment)
   - Terraform v1.11.4 + M1 ARM architecture + AWS Provider v5.95.0
-  - 1,308 resources in 12.55 minutes terraform apply time
+  - 1,308 resources (852 routes + 108 SG rules + TGW + peering + attachments + misc resources) in 12.55 minutes terraform apply time
 - **Near-zero errors**: Mathematical generation eliminates manual mistakes
 
 **Note:** References to "measured in Section 7" refer to evaluation metrics documented in the companion WHITEPAPER.md (Section 7: Evaluation).

@@ -1,5 +1,5 @@
 From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition
-A White Paper for IEEE Technical Community on Cloud Computing
+A White Paper for the Cloud Networking Community
 
 Author: Jude Quintana
 
