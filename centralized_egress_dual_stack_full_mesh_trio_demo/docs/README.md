@@ -124,6 +124,14 @@ This directory contains comprehensive documentation for the Centralized Egress D
 | VPC Peering surface area reduction (97%) | WHITEPAPER.md §5.7 | INNOVATIONS.md |
 | Cost optimization projections | WHITEPAPER.md §6.11 | MATHEMATICAL_ANALYSIS.md |
 | Scaling projections | WHITEPAPER.md §6.10 | MATHEMATICAL_ANALYSIS.md |
+| **Discussion & Future Directions** | | |
+| Architectural trade-offs (TGW vs Peering, centralized vs distributed egress) | WHITEPAPER.md §8.1 | ARCHITECTURE.md |
+| Limitations and constraints (AWS platform limits, Terraform state dependency, IPv6 maturity) | WHITEPAPER.md §8.2 | ARCHITECTURE.md |
+| Generalizability (GCP, Azure, on-premises BGP/OSPF) | WHITEPAPER.md §8.3 | INNOVATIONS.md |
+| Future work (TLA+ formal verification, Zero Trust integration, ML-driven optimization) | WHITEPAPER.md §8.4 | INNOVATIONS.md |
+| Hierarchical mesh for hyperscale (250,000+ VPCs capacity) | WHITEPAPER.md §8.4 | MATHEMATICAL_ANALYSIS.md |
+| IPv6-only architectures (NAT64/DNS64, Network Firewall) | WHITEPAPER.md §8.4 | INNOVATIONS.md |
+| Paper conclusion (comprehensive summary of contributions and impact) | WHITEPAPER.md §9 | - |
 
 ## Frequently Asked Questions
 
@@ -180,5 +188,5 @@ Same license as the parent repository.
 
 ---
 
-**Last Updated:** 2025-11-29
-**Version:** 1.5 (Section 7 reframed: imperative vs automated Terraform comparison, 120× productivity improvement, AWS Route Analyzer validation, IPAM prerequisites)
+**Last Updated:** 2025-12-02
+**Version:** 1.6 (Added Discussion §8, Conclusion §9, future work roadmap including TLA+ verification, Zero Trust, ML optimization, hierarchical mesh, IPv6-only architectures)
