@@ -1,5 +1,19 @@
-From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition
-A White Paper for the Cloud Networking Community
+```
+     ____.             ________        ________
+    |    |____  ___.__.\_____  \       \_____  \   ____   ____
+    |    \__  \<   |  | /  / \  \       /   |   \ /    \_/ __ \
+/\__|    |/ __ \\___  |/   \_/.  \     /    |    \   |  \  ___/
+\________(____  / ____|\_____\ \_/_____\_______  /___|  /\___  >
+              \/\/            \__>_____/       \/     \/     \/
+
+--=[ PrEsENtZ ]=--
+
+--=[ From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition ]=--
+
+--=[ A white paper on Centralized Egress within a Dual Stack Full Mesh topology across 3 regions ]=--
+
+--=[ #StayUP | #End2EndBurner ]=--
+```
 
 Author: Jude Quintana
 
@@ -3395,7 +3409,115 @@ Cloud infrastructure engineering stands at an inflection point: traditional impe
 
 ---
 
-## 10. References
+### 10. Artifact Availability
+
+All research artifacts developed for this work—including source modules, functional route-generation logic, full-stack deployment examples, and evaluation scripts—are publicly available to support reproducibility and further research.
+
+#### 10.1 Primary Integration Repository (Composition Layer)
+
+The terraform-main repository composes the modules listed below into complete cloud networking topologies (centralized egress full mesh trio, mega mesh, demo deployments, evaluation scripts):
+
+Integration & Demos:
+https://github.com/JudeQuintana/terraform-main
+
+This repository includes:
+
+Centralized Egress Dual Stack Full Mesh Topology across 3 regions
+
+Building and scaling several other cloud network topologies from base networking components
+
+Using Route Analyzer to validate connectivity end to end
+
+Core Source Modules (Individual Repositories)
+
+These modules implement the architecture and functional transformations described in this paper.
+Each is maintained in its own independent repository and versioned on the Terraform Registry.
+
+Routing & Mesh Construction
+
+Centralized Router:
+GitHub: https://github.com/JudeQuintana/terraform-aws-centralized-router
+
+Generate Routes to Other VPCs (Centralized Router submodule):
+https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/main/modules/generate_routes_to_other_vpcs
+
+Registry: JudeQuintana/centralized-router/aws
+
+Full Mesh Trio:
+GitHub: https://github.com/JudeQuintana/terraform-aws-full-mesh-trio
+
+Registry: JudeQuintana/full-mesh-trio/aws
+
+VPC Peering Deluxe:
+GitHub: https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe
+
+Registry: JudeQuintana/vpc-peering-deluxe/aws
+
+VPC Construction (Per-VPC Module)
+
+Tiered VPC-NG:
+GitHub: https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng
+
+Registry: JudeQuintana/tiered-vpc-ng/aws
+
+Security Group Inference Modules
+
+Intra-VPC Security Group Rule:
+GitHub: https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule
+
+Registry: JudeQuintana/intra-vpc-security-group-rule/aws
+
+Full Mesh Intra-VPC Security Group Rules:
+GitHub: https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules
+
+Registry: JudeQuintana/full-mesh-intra-vpc-security-group-rules/aws
+
+IPv6 Intra-VPC Security Group Rule:
+GitHub: https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule
+
+Registry: JudeQuintana/ipv6-intra-vpc-security-group-rule/aws
+
+IPv6 Full Mesh Intra-VPC Security Group Rules:
+GitHub: https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules
+
+Registry: JudeQuintana/ipv6-full-mesh-intra-vpc-security-group-rules/aws
+
+#### 10.2 Supplemental Engineering Resources (Historical / Development Repositories)
+
+The following repository contains the original prototype versions of the core modules prior to being separated into their production-ready, versioned individual repositories:
+
+terraform-modules (Historical Development Workspace):
+https://github.com/JudeQuintana/terraform-modules
+
+This repository documents the early evolution of module structure, functional route inference prototypes, and intermediate versions of the Tiered VPC-NG, Centralized Router, and related security-group inference modules.
+It is included for transparency and historical completeness but is not the canonical source of the final modules used in this work.
+
+#### 10.3 Reproducibility
+
+All evaluation artifacts—including measured deployment times, route-table verification output, entropy calculations, cost models, and property-based tests—are reproducible using the commands and modules documented in the source repositories.
+
+The atomic routing unit (generate_routes_to_other_vpcs) is provided as a pure function module within the centralized-router repository.
+
+#### 10.4 Supplemental Engineering Notes (Non-Peer-Reviewed)
+
+Several engineering blog posts documented early stages of the design and informed the development of the modules used in this work. These posts capture intermediate reasoning, early prototypes, and the evolution of the functional routing transform:
+
+Terraform Opinion #23: Use list of objects over map of maps: https://jq1.io/posts/opinion_23/
+
+Synthesizing Tiered VPC in Terraform: https://jq1.io/posts/tiered_vpc/
+
+Building a generate routes function using Terraform test: https://jq1.io/posts/generating_routes/
+
+Terraform Networking Trifecta (TNT): https://jq1.io/posts/tnt/
+
+Component Engineering Process (“Slappin’ Chrome on the WIP”):
+https://jq1.io/posts/slappin_chrome_on_the_wip/
+
+These resources are included for completeness and historical context; they are not part of the peer-reviewed literature.
+
+---
+
+## 11. References
 
 ### Software-Defined Networking
 
@@ -3525,15 +3647,15 @@ Amazon Web Services, "AWS VPC IPv6-Only Subnets: Design Patterns and Performance
 
 ## Acknowledgments
 
-The author thanks the IEEE Technical Community on Cloud Computing for providing a forum for this research, and the broader cloud infrastructure community for valuable feedback on early implementations of these patterns.
+The author thanks the ancestors who paved the path for this personal spirtual journey of growth and for the love and support of my family and friends.
 
 ---
 
 ## Author Information
 
 **Jude Quintana**
-Independent Cloud Architecture Researcher
-Email: [contact information]
+Cloud Tribalist Urban Survivalist - Independent Cloud Architecture Researcher 
+Email: jude@jq1.io
 GitHub: https://github.com/JudeQuintana/terraform-main
 
 ---
