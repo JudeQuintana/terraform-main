@@ -145,6 +145,10 @@ IMPLEMENTATION_NOTES.md   COMPILER_TRANSFORM_ANALOGY.md
 | Hierarchical mesh for hyperscale (250,000+ VPCs capacity) | WHITEPAPER.md §8.4 | MATHEMATICAL_ANALYSIS.md |
 | IPv6-only architectures (NAT64/DNS64, Network Firewall) | WHITEPAPER.md §8.4 | INNOVATIONS.md |
 | Paper conclusion (comprehensive summary of contributions and impact) | WHITEPAPER.md §9 | - |
+| **Artifact Availability** | | |
+| Source code repositories and modules (Centralized Router, Full Mesh Trio, Tiered VPC-NG, etc.) | WHITEPAPER.md §10 | - |
+| Integration & demo repository (terraform-main) | WHITEPAPER.md §10.1 | - |
+| Core source modules (routing, mesh construction, VPC construction, security groups) | WHITEPAPER.md §10.1 | - |
 
 ## Frequently Asked Questions
 
@@ -156,6 +160,7 @@ IMPLEMENTATION_NOTES.md   COMPILER_TRANSFORM_ANALOGY.md
 - **Need operational details or troubleshooting?** → IMPLEMENTATION_NOTES.md
 - **Curious about the math?** → MATHEMATICAL_ANALYSIS.md
 - **Want to understand the theory?** → COMPILER_TRANSFORM_ANALOGY.md
+- **Looking for source code repositories?** → WHITEPAPER.md §10 (Artifact Availability)
 
 ### "How does this relate to compiler design?"
 
@@ -171,7 +176,7 @@ The key innovation is treating infrastructure generation as **computation** rath
 
 ### "Can I use these patterns for my own infrastructure?"
 
-Yes! The modules are open source and composable. Start with ARCHITECTURE.md to understand the patterns, then refer to INNOVATIONS.md for specific techniques (security groups, routing, cost optimization). See IMPLEMENTATION_NOTES.md for validation rules, common pitfalls, and troubleshooting guidance.
+Yes! The modules are open source and composable. Start with ARCHITECTURE.md to understand the patterns, then refer to INNOVATIONS.md for specific techniques (security groups, routing, cost optimization). See IMPLEMENTATION_NOTES.md for validation rules, common pitfalls, and troubleshooting guidance. All source code repositories are listed in WHITEPAPER.md §10 (Artifact Availability).
 
 ### "Is this production-ready?"
 
@@ -203,4 +208,4 @@ Same license as the parent repository.
 ---
 
 **Last Updated:** 2025-12-03
-**Version:** 1.8 (Added WHITEPAPER_ABSTRACT_SUMMARY.md with condensed overview of 5 breakthrough achievements)
+**Version:** 1.9 (Updated to reflect WHITEPAPER.md §10 Artifact Availability section with source code repository links)

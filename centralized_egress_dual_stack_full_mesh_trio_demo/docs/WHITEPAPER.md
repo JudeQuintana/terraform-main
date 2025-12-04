@@ -10,7 +10,7 @@
 
 --=[ From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition ]=--
 
---=[ A white paper on Centralized Egress within a Dual Stack Full Mesh topology across 3 regions ]=--
+--=[ Scalable Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh topology ]=--
 
 --=[ #StayUP | #End2EndBurner ]=--
 ```
@@ -3510,7 +3510,7 @@ Building a generate routes function using Terraform test: https://jq1.io/posts/g
 
 Terraform Networking Trifecta (TNT): https://jq1.io/posts/tnt/
 
-Component Engineering Process (“Slappin’ Chrome on the WIP”):
+High powered Shokunin components (“Slappin’ Chrome on the WIP”):
 https://jq1.io/posts/slappin_chrome_on_the_wip/
 
 These resources are included for completeness and historical context; they are not part of the peer-reviewed literature.
@@ -3654,7 +3654,7 @@ The author thanks the ancestors who paved the path for this personal spirtual jo
 ## Author Information
 
 **Jude Quintana**
-Cloud Tribalist Urban Survivalist - Independent Cloud Architecture Researcher 
+Cloud Tribalist Urban Survivalist - Independent Cloud Architecture Researcher
 Email: jude@jq1.io
 GitHub: https://github.com/JudeQuintana/terraform-main
 

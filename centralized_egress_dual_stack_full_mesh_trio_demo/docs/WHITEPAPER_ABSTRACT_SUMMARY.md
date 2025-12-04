@@ -1,7 +1,6 @@
 **From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition**
 
-Centralized Egress Dual Stack Full Mesh Trio Demo:
-Scalable Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions.
+Scalable Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh topology.
 
 Using a combination of ChatGPT 5.1 and Copilot Sonnet 4.5 to assist this analysis.
 
