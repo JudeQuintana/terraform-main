@@ -10,9 +10,9 @@
 
 --=[ From O(n²) to O(n): Automated Multi-VPC Mesh Configuration Through Functional Composition ]=--
 
---=[ Scalable Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh topology ]=--
+--=[ A personal contribution to the cloud networking community ]=--
 
---=[ #StayUP | #End2EndBurner ]=--
+--=[ Create -> Iterate -> Combine | #End2EndBurner ]=--
 ```
 
 Author: Jude Quintana
@@ -3422,7 +3422,8 @@ https://github.com/JudeQuintana/terraform-main
 
 This repository includes:
 
-Centralized Egress Dual Stack Full Mesh Topology across 3 regions
+Centralized Egress Dual Stack Full Mesh Topology across 3 regions (this paper)
+https://github.com/JudeQuintana/terraform-main/centralized_egress_dual_stack_full_mesh_trio_demo
 
 Building and scaling several other cloud network topologies from base networking components
 
@@ -3502,18 +3503,75 @@ The atomic routing unit (generate_routes_to_other_vpcs) is provided as a pure fu
 
 Several engineering blog posts documented early stages of the design and informed the development of the modules used in this work. These posts capture intermediate reasoning, early prototypes, and the evolution of the functional routing transform:
 
-Terraform Opinion #23: Use list of objects over map of maps: https://jq1.io/posts/opinion_23/
-
-Synthesizing Tiered VPC in Terraform: https://jq1.io/posts/tiered_vpc/
-
-Building a generate routes function using Terraform test: https://jq1.io/posts/generating_routes/
-
-Terraform Networking Trifecta (TNT): https://jq1.io/posts/tnt/
-
-High powered Shokunin components (“Slappin’ Chrome on the WIP”):
-https://jq1.io/posts/slappin_chrome_on_the_wip/
+- Terraform Opinion #23: Use list of objects over map of maps: https://jq1.io/posts/opinion_23/
+- Synthesizing Tiered VPC in Terraform: https://jq1.io/posts/tiered_vpc/
+- Building a generate routes function using Terraform test: https://jq1.io/posts/generating_routes/
+- Terraform Networking Trifecta (TNT): https://jq1.io/posts/tnt/
+- High powered Shokunin components (“Slappin’ Chrome on the WIP”): https://jq1.io/posts/slappin_chrome_on_the_wip/
 
 These resources are included for completeness and historical context; they are not part of the peer-reviewed literature.
+
+### 10.4 Extended Scalability Demonstration: Mega Mesh
+
+In addition to the 3-region centralized-egress dual-stack topology evaluated in this work, the routing transform has also been validated on a larger topology consisting of 10 Transit Gateways (N=10), using the mega mesh module.
+
+This configuration automatically generates all 45 pairwise routing relationships (F(N)=N(N−1)/2) using the identical generate_routes_to_other_vpcs transform.
+
+Demo: https://github.com/JudeQuintana/terraform-main/tree/main/mega_mesh_demo
+
+Module: https://github.com/JudeQuintana/terraform-aws-mega-mesh
+
+Diagram: https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png
+
+This topology achieves automatic routing across all 45 pairwise relationships (F(N)=N(N−1)/2), using the identical generate_routes_to_other_vpcs IR transform.
+The mega mesh implementation is IPv4-only, but it demonstrates that the atomic routing unit generalizes correctly to larger meshes without modification.
+
+#### 10.5 Super Router
+
+The routing transform was also validated in a decentralized multi-hub topology (“Super Router”), representing a more complex structure than either the dual-stack full-mesh trio or the 10-VPC mega mesh.
+This experiment composes two independent star topologies (hub-and-spoke VPC groups) and bridges them through a shared Super Router, forming a two-hub interconnected routing domain.
+
+The Super Router topology consists of two independent hub-and-spoke clusters, each centered on its own Transit Gateway. These clusters are then inter-connected through a Super Router module, forming a bi-hub graph where each hub maintains its own adjacency set while exchanging routes across the shared edge.
+
+In graph terms, this topology is a pair of star graphs (S₁, S₂) joined by a single interconnecting edge, creating a two-center hierarchical routing domain with multiple propagation pathways.
+
+This structure validates that the atomic routing unit (generate_routes_to_other_vpcs) supports:
+
+decentralized routing domains
+
+multi-hub architectures
+
+hierarchical graph compositions
+
+non-mesh topologies
+
+adjacency sets with selective propagation
+
+Unlike the centralized-egress trio or the mega mesh, the Super Router demonstrates the ability of the IR transform to operate in topologies where routing relationships are not globally symmetric, and where multiple attachment domains must be resolved independently.
+
+Implementation details:
+
+IPv4 only (no IPv6, no secondary CIDRs)
+
+No IPAM used
+
+Built using Tiered VPC-NG (v1.0.1), Centralized Router (v1.0.1), and Super Router (v1.0.0)
+
+Connectivity validated using AWS Route Analyzer
+
+Diagram:
+https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png
+
+Repositories (for reproduction):
+
+Demo Composition:
+https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo
+
+Super Router Module:
+https://github.com/JudeQuintana/terraform-aws-super-router
+
+Super Intra-VPC SG Rules:
+https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
 
 ---
 
@@ -3647,7 +3705,7 @@ Amazon Web Services, "AWS VPC IPv6-Only Subnets: Design Patterns and Performance
 
 ## Acknowledgments
 
-The author thanks the ancestors who paved the path for this personal spirtual journey of growth and for the love and support of my family and friends.
+The author thanks the ancestors who paved the path for this personal spiritual journey of growth, for the love and support of my family and friends.
 
 ---
 
@@ -3656,7 +3714,7 @@ The author thanks the ancestors who paved the path for this personal spirtual jo
 **Jude Quintana**
 Cloud Tribalist Urban Survivalist - Independent Cloud Architecture Researcher
 Email: jude@jq1.io
-GitHub: https://github.com/JudeQuintana/terraform-main
+GitHub: https://github.com/JudeQuintana
 
 ---
 
