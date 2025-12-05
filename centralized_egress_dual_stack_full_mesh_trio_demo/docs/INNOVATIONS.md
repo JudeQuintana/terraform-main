@@ -4,6 +4,7 @@
 
 This architecture introduces several novel patterns in infrastructure-as-code that fundamentally change how cloud networks are configured and scaled. Through compositional Terraform modules and pure function transformations, it achieves:
 
+- **Complexity transformation**: O(N² + V²) → O(N + V) where N = Transit Gateways, V = VPCs
 - **92% code reduction**: 174 lines vs. ~2,000 lines of imperative Terraform (11.5× reduction)
 - **67% cost savings**: $4,730/year through centralized NAT Gateway architecture
 - **120× faster deployment**: 31.2 hours → 15.75 minutes for 9-VPC setup
@@ -11,29 +12,34 @@ This architecture introduces several novel patterns in infrastructure-as-code th
 
 These metrics are measured and validated in the companion WHITEPAPER.md (Section 7: Evaluation).
 
-## 1. Functional Route Generation: O(n²) → O(n) Transformation
+**Key Distinction:** Transit Gateways (N) form the mesh backbone with O(N²) adjacency complexity, while VPCs (V) attach to TGWs and require O(V²) route propagation. This architecture reduces both to linear specification: O(N + V).
+
+## 1. Functional Route Generation: O(V²) VPC Propagation from O(V) Input
 
 ### The Problem
 
-Imperative Terraform requires explicit resource blocks for N×(N-1) relationships:
+Imperative Terraform requires explicit resource blocks for V×(V-1) VPC-level relationships:
 
 ```
 3 VPCs = 6 relationships → ~200 lines of resource blocks
 9 VPCs = 72 relationships → ~2,000 lines of resource blocks
 20 VPCs = 380 relationships → ~10,000 lines of resource blocks
 
-Work scales as O(n²) - adding one VPC requires writing resource blocks for all existing VPCs
+Work scales as O(V²) - adding one VPC requires writing route resource blocks for all existing VPCs
+
+Note: This is VPC-level route propagation complexity. TGW-level mesh adjacency (O(N²) for N TGWs)
+scales independently and is handled by the Full Mesh Trio module (Section 5).
 ```
 
 ### The Innovation
 
-The `generate_routes_to_other_vpcs` module (embedded in Centralized Router) is a **pure function module**:
+The `generate_routes_to_other_vpcs` module (embedded in Centralized Router) is a **pure function module (zero-resource Terraform module)**:
 
 ```hcl
 # No resources created, just computation
 module "generate_routes" {
-  vpcs = module.vpcs_region  # Input: N VPCs
-  # Output: N×(N-1) route objects
+  vpcs = module.vpcs_region  # Input: V VPCs
+  # Output: V×(V-1) route objects
 }
 
 # Returns:
@@ -52,26 +58,33 @@ toset([
 
 ### The Mathematics
 
-**Input Complexity:** O(n) - Define each VPC once
+**Input Complexity:** O(V) - Define each VPC once
 
-**Output Complexity:** O(n²) - Module generates all relationships
+**Output Complexity:** O(V²) - Module generates all VPC-level route propagation
 
 **Formula:**
 ```
-For N VPCs with R route tables each and C CIDRs (primary + secondary combined):
-Routes generated = N × R × (N-1) × C
+For V VPCs with R route tables each and C CIDRs (primary + secondary combined):
+Routes generated = V × R × (V-1) × C
 
 Note: C includes all CIDRs per VPC:
   C = 1 (primary IPv4) + secondary IPv4s + 1 (primary IPv6) + secondary IPv6s
 
 Example (9 VPCs with average 4 total CIDRs each):
-Routes = 9 × 4 × 8 × 4 = 1,152 routes
+
+Theoretical maximum: 9 × 4 × 8 × 4 = 1,152 routes
+  (All VPCs with maximum CIDR diversity)
+
+Measured deployment: 852 routes
+  (Optimized topology with isolated subnets, selective protocol enablement)
+
 Configuration: 174 lines total measured in Section 7 evaluation
   - VPC definitions: 135 lines (15 per VPC)
   - Protocol definitions: 12 lines
   - Regional setup: 27 lines
 
-Amplification: 1,152 / 135 = 8.5×
+Amplification (measured): 852 / 135 = 6.3×
+Amplification (theoretical max): 1,152 / 135 = 8.5×
 ```
 
 ### Why This Matters
@@ -93,12 +106,19 @@ Imperative Terraform requires explicit security group rule resource blocks for m
 
 ```
 Per VPC: 8 other VPCs × 2 protocols × 2 IP versions × 1.5 avg CIDRs = 48 rules
-Total: 9 VPCs × 48 rules = 432 explicit aws_security_group_rule blocks
+Total: 9 VPCs × 48 rules = 432 explicit aws_security_group_rule blocks (theoretical maximum)
+
+Note: The 1.5 average reflects that some VPCs contain both primary and secondary CIDR blocks
+(IPv4/IPv6), while others use only primary blocks. Measured average across deployment ≈ 1.5
+CIDRs per VPC.
+
+Measured deployment: 108 foundational security rules
+  (Optimized topology, selective protocol enablement for SSH and ICMP only)
 ```
 
 Plus risk of circular references (VPC allowing traffic from itself) when writing rules manually.
 
-**Note:** The auto-generated rules provide **coarse-grained mesh connectivity** (all ports, all protocols) suitable for network validation and dev/test environments. Production deployments typically layer application-specific security groups on top of this foundation, implementing least-privilege policies for specific services. See the whitepaper's Security Architecture section for detailed trade-off analysis.
+**Note:** The auto-generated rules provide **foundational mesh connectivity** (SSH, ICMP) suitable for network validation and dev/test environments. Production deployments typically layer application-specific security groups on top of this foundation, implementing least-privilege policies for specific services. See the whitepaper's Security Architecture section for detailed trade-off analysis.
 
 ### The Innovation
 
@@ -433,15 +453,18 @@ Below that: IPv6 saves on NAT GW fixed costs
 
 ---
 
-## 5. Full Mesh Trio: Three-Region Transitive Routing
+## 5. Full Mesh Trio: Three-Region Transitive Routing (TGW-Level O(N²) Complexity)
 
 ### The Problem
 
-Connecting 3 regions with imperative Terraform requires:
-- 3 TGW peering connections (explicit resource blocks)
+Connecting N=3 Transit Gateways (regions) with imperative Terraform requires O(N²) configuration:
+- 3 TGW peering connections: N(N-1)/2 = 3×2/2 = 3 (explicit resource blocks)
 - 6 route propagation directions (explicit resource blocks)
 - Route table management per region (explicit resource blocks)
 - Testing all 6 paths (manual validation)
+
+Note: This is TGW-level mesh adjacency complexity, independent of VPC-level route propagation (O(V²)).
+VPCs inherit global reachability transitively through the TGW mesh.
 
 ### The Innovation
 
@@ -471,14 +494,17 @@ module "full_mesh_trio" {
 
 ```
 Graph Theory:
-- Vertices: 3 TGWs (one per region)
-- Edges: 3 peering connections
-- Topology: K₃ complete graph (every node connected to every other)
+- Vertices: 3 TGWs (one per region) — only TGWs form the mesh adjacency
+- Edges: 3 peering connections — N(N-1)/2 = 3 for N=3 TGWs
+- Topology: K₃ complete graph (every TGW connected to every other TGW)
+
+Critical: VPCs do not participate in mesh adjacency. They attach to their regional TGW and
+inherit global reachability transitively via TGW route propagation.
 
 This enables transitive routing:
 VPC in use1 can reach VPC in usw2 via:
-  - Direct path: use1 → usw2 peering
-  - Or via: use1 → use2 → usw2 (if preferred)
+  - TGW path: VPC → use1 TGW → usw2 TGW → VPC (transitive)
+  - Alternative: VPC → use1 TGW → use2 TGW → usw2 TGW → VPC (multi-hop)
 ```
 
 ### Route Advertisement Mathematics
@@ -726,12 +752,13 @@ centralized_egress = { private = true }
 **Title:** "A Domain-Specific Language for Cloud Network Topologies: Compositional Abstractions for Mesh Configuration"
 
 **Contributions:**
-1. Novel functional route generation pattern (O(n²) from O(n) input)
-2. Hierarchical security composition with self-exclusion algorithm
-3. Intent-based egress policy specification
-4. Proof of linear configuration complexity for quadratic relationships
-5. Production validation with real cost/performance metrics
-6. Formal verification through comprehensive test suite
+1. Novel functional route generation pattern (O(V²) VPC propagation from O(V) input)
+2. TGW mesh orchestration (O(N²) adjacency from O(N) declarations)
+3. Hierarchical security composition with self-exclusion algorithm
+4. Intent-based egress policy specification
+5. Proof of linear configuration complexity for quadratic relationships (O(N² + V²) → O(N + V))
+6. Production validation with real cost/performance metrics
+7. Formal verification through comprehensive test suite
 
 **Formal Verification:**
 
@@ -771,13 +798,13 @@ This level of testing is **uncommon in infrastructure-as-code** and supports the
 ### Technical Impact
 
 | Innovation | Complexity Reduction | Scaling |
-|-----------|---------------------|---------|
-| Functional route generation | O(n²) → O(n) | Linear config for quadratic relationships |
+|-----------|---------------------|---------|-------|
+| Functional route generation | O(V²) → O(V) VPC propagation | Linear config for quadratic VPC routes |
+| Full mesh trio | O(N²) → O(N) TGW adjacency | Linear config for quadratic TGW peering |
 | Hierarchical security | 36× code reduction | Add protocol: 2 lines → 432 rules |
-| Centralized egress | 67% cost reduction | Savings scale with VPC count |
-| Dual stack | Independent optimization | Flexible per workload |
-| Full mesh trio | 20× config reduction | Cross-region in 3 lines |
-| VPC peering selective | 97% attack surface reduction | Micro-segmentation |
+| Centralized egress | 67% cost reduction | O(1) NAT scaling (constant per region) |
+| Dual stack | Independent optimization | Flexible IPv4/IPv6 per workload |
+| VPC peering selective | 97% attack surface reduction | Micro-segmentation overlay |
 
 ### Economic Impact
 
