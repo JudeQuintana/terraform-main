@@ -190,6 +190,8 @@ The remaining quadratic complexity is pushed entirely into deterministic, pure-f
 
 This shift—from hand-managed relationships to compiler-generated topology—is the core conceptual contribution of the architecture.
 
+A complete, production-grade implementation of this AST → Regional IR → Global IR pipeline is provided in the centralized egress dual-stack full-mesh trio demo, which composes Tiered VPC-NG, Centralized Router, Full Mesh Trio, VPC Peering Deluxe, and foundational security rules into a unified topology compiler. This integration demonstrates the system operating end-to-end across three regions, nine VPCs, centralized egress, dual-stack CIDR propagation, and mixed TGW + VPC-peering edges. The demo serves as the reference implementation upon which the empirical results and analyses in this paper are based.
+
 ### 2.3 Contributions
 
 This work makes five core contributions that, together, establish a new declarative and compiler-based model for multi-region AWS network topology synthesis.
