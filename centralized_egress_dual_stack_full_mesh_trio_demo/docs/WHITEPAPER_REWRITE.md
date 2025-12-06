@@ -172,7 +172,7 @@ This aligns with compiler peephole or profile-guided optimization: selective ref
 
 ⸻
 
-**Overall Key Insight**
+**Summary of Compiler Architecture**
 
 By treating cloud topology as a compilation problem with:
 1. AST (Tiered VPC-NG)
@@ -200,9 +200,14 @@ This work makes five core contributions that, together, establish a new declarat
 
 1. Complexity Transformation: From O(N² + V²) to O(N + V)
 
-AWS networking today requires imperatively specifying all TGW adjacencies (O(N²)) and all VPC-level routing and security relationships (O(V²)). This architecture reduces operator input to O(N + V) declarative topology intent while generating the full O(N² + V²) relationship set deterministically through compiler-style IR passes.
+AWS networking today requires imperatively specifying all TGW adjacencies (O(N²)) and all VPC-level routing and security relationships (O(V²)). This architecture reduces operator input to O(N + V) declarative topology intent while deterministically generating the full O(N² + V²) relationship set through compiler-style IR passes.
 
-This paper introduces an architecture that:
+This reduction is achieved through:
+- Tiered VPC-NG (AST construction)
+- Centralized Router (regional IR: O(V²) expansion)
+- Full Mesh Trio (global IR: O(N²) adjacency + cross-region O(V²))
+
+The architecture:
 - accepts O(N + V) declarative input
 - infers all TGW mesh adjacencies (O(N²))
 - infers all VPC-level propagation relationships (O(V²))
@@ -227,7 +232,7 @@ This transformation forms the theoretical basis for the architecture.
 
 This work introduces a multi-pass compilation pipeline for cloud networking, implemented entirely through Terraform pure-function modules:
 1. AST Construction (Tiered VPC-NG):
-- A typed, validated representation of all VPCs, CIDRs, subnets, NAT policies, and dual-stack attributes.
+- A typed, validated representation of all VPCs, CIDRs, subnets, NAT policies, and dual-stack attributes
 
 2. Regional IR (Centralized Router):
 - one TGW per region
