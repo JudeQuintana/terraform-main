@@ -104,6 +104,8 @@ The topology compiler consists of three required stages (AST construction, Regio
 ⸻
 
 **Stage 1 — AST Construction (Tiered VPC-NG)**
+CIDR Allocation Assumption:
+This architecture assumes that all VPC and subnet CIDRs are globally non-overlapping across regions. Neither Centralized Router nor Full Mesh Trio performs overlapping CIDR detection; instead, Tiered VPC-NG enforces CIDR correctness only within a single VPC. This mirrors AWS Transit Gateway’s routing model, which does not support overlapping address spaces. Correct global CIDR allocation is therefore a prerequisite for deterministic topology synthesis.
 
 Tiered VPC-NG serves as the abstract syntax tree (AST) for the topology:
 - Each VPC is a typed object specifying CIDRs, tiers (private/public/isolated), IPv4/IPv6 combinations, NAT policies, and egress attributes.
@@ -191,6 +193,8 @@ The remaining quadratic complexity is pushed entirely into deterministic, pure-f
 This shift—from hand-managed relationships to compiler-generated topology—is the core conceptual contribution of the architecture.
 
 A complete, production-grade implementation of this AST → Regional IR → Global IR pipeline is provided in the centralized egress dual-stack full-mesh trio demo, which composes Tiered VPC-NG, Centralized Router, Full Mesh Trio, VPC Peering Deluxe, and foundational security rules into a unified topology compiler. This integration demonstrates the system operating end-to-end across three regions, nine VPCs, centralized egress, dual-stack CIDR propagation, and mixed TGW + VPC-peering edges. The demo serves as the reference implementation upon which the empirical results and analyses in this paper are based.
+
+In dual-stack deployments, this model enables asymmetric egress semantics: IPv4 traffic is routed through centralized NAT Gateways to achieve O(1) cost scaling, while IPv6 traffic follows decentralized, NAT-free egress paths, leveraging native IPv6 routing and TGW propagation. This behavior is demonstrated end-to-end in the centralized egress dual-stack full-mesh trio reference implementation.
 
 ### 2.3 Contributions
 
