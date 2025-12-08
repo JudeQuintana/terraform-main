@@ -61,8 +61,8 @@ Together, these produce brittle, labor-intensive topologies and five systemic fa
 **Quadratic VPC-level configuration burden:**
 Adding the V-th VPC requires updating V–1 existing VPCs with new routes and security rules (O(V²)). Even modest environments (e.g., V=20) exceed 300 engineering hours for initial configuration.
 
-**Quadratic TGW adjacency growth in multi-region networks:**
-Full-mesh routing across N regions requires N(N–1)/2 TGW peering relationships, each with routing and propagation tasks. At only N=5, operators already manage 10 TGW adjacencies with region-specific constraints and propagation rules.
+**Quadratic TGW adjacency growth in multi-region networks**:
+Full-mesh routing across N regions requires N(N–1)/2 TGW adjacencies (TGW-to-TGW peering relationships), each involving attachment creation, route-table association, and propagation configuration. At N = 5 regions, this already entails 5 Transit Gateways and 10 TGW adjacencies, each with region-specific constraints and routing semantics.
 
 **High configuration error rates:**
 Imperative creation of hundreds of VPC-level and TGW-level relationships leads to:
@@ -93,7 +93,7 @@ This prevents networks from achieving deterministic, infra-as-code workflows.
 
 ### 2.2 Key Insight
 
-Modern AWS networking lacks a declarative abstraction for expressing multi-region, multi-VPC mesh topologies. Engineers must imperatively implement all TGW-to-TGW adjacencies (O(N²)) and all VPC-level routing relationships (O(V²)) by hand. The central insight of this architecture is that these quadratic relationships can be inferred rather than declared.
+Modern AWS networking lacks a declarative abstraction for expressing multi-region, multi-VPC mesh topologies. Engineers must imperatively implement all TGW-to-TGW adjacencies (O(N²)) and all VPC-level routing relationships (O(V²)), explicitly specifying each relationship rather than declaring topology intent. The central insight of this architecture is that these quadratic relationships can be inferred rather than declared.
 
 This system achieves a complexity transformation:
 
@@ -195,7 +195,7 @@ The remaining quadratic complexity is pushed entirely into deterministic, pure-f
 - entropy reduction
 - repeatable, testable infrastructure synthesis
 
-This shift—from hand-managed relationships to compiler-generated topology—is the core conceptual contribution of the architecture.
+This shift—from imperative, relationship-level configuration to compiler-generated topology is the core conceptual contribution of the architecture.
 
 A complete, production-grade implementation of this AST → Regional IR → Global IR pipeline is provided in the centralized egress dual-stack full-mesh trio demo, which composes Tiered VPC-NG, Centralized Router, Full Mesh Trio, VPC Peering Deluxe, the IPv4/IPv6 intra-VPC and full-mesh security group rule modules, and centralized egress into a unified topology compiler. This integration demonstrates the system operating end-to-end across three regions, nine VPCs, centralized egress, dual-stack CIDR propagation, and mixed TGW + VPC-peering edges. The demo serves as the reference implementation upon which the empirical results and analyses in this paper are based.
 
