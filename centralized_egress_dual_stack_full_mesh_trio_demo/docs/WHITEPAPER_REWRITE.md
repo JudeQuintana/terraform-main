@@ -21,13 +21,13 @@
 
 Modern AWS multi-VPC architectures face a fundamental scalability challenge: full-mesh connectivity across N Transit Gateways (TGWs) requires N(N–1)/2 adjacencies (O(N²)), while V attached VPCs incur O(V²) routing and security propagation. Because VPCs inherit connectivity transitively through TGWs, expansion across regions and address families (IPv4/IPv6) produces thousands of configuration artifacts and substantial recurring NAT Gateway cost. Imperative implementation approaches typically fail to scale beyond 10–15 TGWs or 50+ VPCs.
 
-This paper presents a production-validated multi-region architecture that reduces topology implementation from O(N² + V²) imperative configuration to O(N + V) declarative specification. Using compositional Terraform modules and pure-function IR transformations, the system automatically infers TGW adjacencies, generates routing tables, and applies foundational security rules. In a 3-TGW, 9-VPC, 3-region deployment, the architecture synthesizes 1,308 AWS resources from 174 lines of configuration, achieving a 7.5× code-amplification factor and reducing implementation time from 31.2 hours to 15.75 minutes (a 120× speedup). Centralized egress enables O(1) NAT Gateway scaling, reducing gateways from 18 to 6 and lowering cost by 67%. The 1,308-resource total includes all AWS infrastructure objects (routes, security rules, attachments, subnets, route tables, and gateways), whereas the 852-route and 108-rule figures refer specifically to routing artifacts.
+This paper presents a production-validated multi-region architecture that reduces topology implementation from O(N² + V²) imperative configuration to O(N + V) declarative specification. Using compositional Terraform modules and pure-function IR transformations, the system automatically infers TGW adjacencies, generates routing tables, and synthesizes baseline security rules derived from topology intent. In a 3-TGW, 9-VPC, 3-region deployment, the architecture synthesizes 1,308 AWS resources from 174 lines of configuration, achieving a 7.5× code-amplification factor and reducing implementation time from 31.2 hours to 15.75 minutes (a 120× speedup). Centralized egress enables O(1) NAT Gateway scaling, reducing gateways from 18 to 6 and lowering cost by 67%. The 1,308-resource total includes all AWS infrastructure objects (routes, security rules, attachments, subnets, route tables, and gateways), whereas the 852-route and 108-rule figures refer specifically to routing artifacts.
 
 Mathematical analysis confirms linear configuration growth, a 27% entropy reduction, and formal cost-performance trade-offs between TGW and VPC Peering paths. The system functions as an embedded DSL for AWS mesh networking, applying compiler-style IR passes to provide deterministic, declarative topology programming with referential transparency.
 
 ## 2. Introduction
 
-Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloads, enforce blast-radius boundaries, and support multi-region resilience. Mature cloud organizations routinely operate 15–50 VPCs across several AWS regions, with some enterprises exceeding 100 VPCs globally. However, creating consistent connectivity across these environments exposes a fundamental scaling challenge: while VPCs do not peer directly, the underlying Transit Gateway (TGW) mesh requires explicit configuration of all adjacency relationships.
+Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloads, enforce blast-radius boundaries, and support multi-region resilience. Mature cloud organizations routinely operate 15–50 VPCs across several AWS regions, with some enterprises exceeding 100 VPCs globally. However, creating consistent connectivity across these environments exposes a fundamental scaling challenge: while VPCs are not directly peered in TGW-centric architectures, the underlying Transit Gateway (TGW) mesh requires explicit configuration of all adjacency relationships.
 
 For N Transit Gateways forming a full mesh, the number of TGW-to-TGW peering relationships grows quadratically:
 
@@ -174,7 +174,7 @@ This aligns with compiler peephole or profile-guided optimization: selective ref
 
 ⸻
 
-Parallel Security Propagation Layer.
+Parallel Security Propagation Layer:
 The same compilation pipeline used for routing is mirrored at the security layer. Each Tiered VPC-NG instance exposes an intra_vpc_security_group_id that downstream modules use to synthesize security relationships. At the regional layer, the Intra VPC Security Group Rule modules (IPv4 and IPv6 variants) construct O(V²) ingress-only allow rules between all non-self VPC network CIDRs, forming a regional SG mesh. At the global layer, the Full Mesh Intra VPC Security Group Rules modules replicate these rules across regions, producing a three-region SG mesh that aligns with the routing mesh. These SG meshes are designed to make end-to-end reachability testing easy in the reference implementation; they are not positioned as a least-privilege production policy, but as a concrete example of how security propagation can be compiled from the same topology AST.
 
 ⸻
@@ -260,7 +260,7 @@ This work introduces a multi-pass compilation pipeline for cloud networking, imp
 - O(1) selective direct edges for low-latency or cost-sensitive paths
 - subnet-level microsegmentation
 
-All IR passes are expressed as pure-function Terraform modules—zero-resource transformations that operate solely on data structures. This design provides referential transparency, deterministic outputs, and amenability to formal reasoning.
+The critical Regional IR pass is implemented as a pure-function Terraform module—a zero-resource transformation that operates solely on data structures. The Global IR pass composes these verified regional outputs using deterministic, resource-creating modules.
 
 This is the first system to apply compiler theory to AWS network topology generation.
 
