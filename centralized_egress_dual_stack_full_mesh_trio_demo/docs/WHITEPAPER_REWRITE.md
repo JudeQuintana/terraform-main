@@ -174,11 +174,6 @@ This aligns with compiler peephole or profile-guided optimization: selective ref
 
 ⸻
 
-Parallel Security Propagation Layer:
-The same compilation pipeline used for routing is mirrored at the security layer. Each Tiered VPC-NG instance exposes an intra_vpc_security_group_id that downstream modules use to synthesize security relationships. At the regional layer, the Intra VPC Security Group Rule modules (IPv4 and IPv6 variants) construct O(V²) ingress-only allow rules between all non-self VPC network CIDRs, forming a regional SG mesh. At the global layer, the Full Mesh Intra VPC Security Group Rules modules replicate these rules across regions, producing a three-region SG mesh that aligns with the routing mesh. These SG meshes are designed to make end-to-end reachability testing easy in the reference implementation; they are not positioned as a least-privilege production policy, but as a concrete example of how security propagation can be compiled from the same topology AST.
-
-⸻
-
 **Summary of Compiler Architecture**
 
 By treating cloud topology as a compilation problem with:
@@ -195,11 +190,14 @@ The remaining quadratic complexity is pushed entirely into deterministic, pure-f
 - entropy reduction
 - repeatable, testable infrastructure synthesis
 
-This shift—from imperative, relationship-level configuration to compiler-generated topology-is the core conceptual contribution of the architecture.
+This shift from imperative, relationship-level configuration to compiler-generated topology is the core conceptual contribution of the architecture.
 
 A complete, production-grade implementation of this AST → Regional IR → Global IR pipeline is provided in the centralized egress dual-stack full-mesh trio demo, which composes Tiered VPC-NG, Centralized Router, Full Mesh Trio, VPC Peering Deluxe, the IPv4/IPv6 intra-VPC and full-mesh security group rule modules, and centralized egress into a unified topology compiler. This integration demonstrates the system operating end-to-end across three regions, nine VPCs, centralized egress, dual-stack CIDR propagation, and mixed TGW + VPC-peering edges. The demo serves as the reference implementation upon which the empirical results and analyses in this paper are based.
 
 In dual-stack deployments, this model enables asymmetric egress semantics: IPv4 traffic is routed through centralized NAT Gateways to achieve O(1) cost scaling, while IPv6 traffic follows decentralized, NAT-free egress paths, leveraging native IPv6 routing and TGW propagation. This behavior is demonstrated end-to-end in the centralized egress dual-stack full-mesh trio reference implementation.
+
+**Parallel Security Propagation Layer:**
+The same compilation pipeline used for routing is mirrored at the security layer. Each Tiered VPC-NG instance exposes an intra_vpc_security_group_id that downstream modules use to synthesize security relationships. At the regional layer, the Intra VPC Security Group Rule modules (IPv4 and IPv6 variants) construct O(V²) ingress-only allow rules between all non-self VPC network CIDRs, forming a regional SG mesh. At the global layer, the Full Mesh Intra VPC Security Group Rules modules replicate these rules across regions, producing a three-region SG mesh that aligns with the routing mesh. These SG meshes are designed to make end-to-end reachability testing easy in the reference implementation; they are not positioned as a least-privilege production policy, but as a concrete example of how security propagation can be compiled from the same topology AST.
 
 ### 2.3 Contributions
 
@@ -210,11 +208,6 @@ This work makes five core contributions that, together, establish a new declarat
 1. Complexity Transformation: From O(N² + V²) to O(N + V)
 
 AWS networking today requires imperatively specifying all TGW adjacencies (O(N²)) and all VPC-level routing and security relationships (O(V²)). This architecture reduces operator input to O(N + V) declarative topology intent while deterministically generating the full O(N² + V²) relationship set through compiler-style IR passes.
-
-This reduction is achieved through:
-- Tiered VPC-NG (AST construction)
-- Centralized Router (regional IR: O(V²) expansion)
-- Full Mesh Trio (global IR: O(N²) adjacency + cross-region O(V²))
 
 The architecture:
 - accepts O(N + V) declarative input
@@ -239,7 +232,7 @@ This transformation forms the theoretical basis for the architecture.
 
 2. Multi-Pass Compiler for Cloud Topology (AST → IR → IR → Code)
 
-This work introduces a multi-pass compilation pipeline for cloud networking, implemented as a multi-pass compilation pipeline, with pure-function Terraform modules generating and transforming intermediate representations that are subsequently composed into concrete infrastructure:
+This work introduces a multi-pass compilation pipeline for cloud networking, implemented through pure-function Terraform modules that generate and transform intermediate representations subsequently composed into concrete infrastructure:
 1. AST Construction (Tiered VPC-NG):
 - A typed, validated representation of all VPCs, CIDRs, subnets, NAT policies, and dual-stack attributes
 
