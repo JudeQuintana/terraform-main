@@ -145,6 +145,8 @@ This mirrors a compiler’s middle-end optimization pass: expanding abstract dec
 
 **Stage 3 — Global IR Pass (Full Mesh Trio)**
 
+In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N = 3 regions, used as the production reference implementation for empirical evaluation.
+
 Full Mesh Trio composes multiple regional meshes into a global mesh:
 - Establishes all N×N TGW peering adjacencies.
 - Creates cross-region V×V routing expansions so that VPCs in different regions inherit full reachability.
@@ -191,6 +193,8 @@ This shift from imperative, relationship-level configuration to compiler-generat
 A complete, production-grade implementation of this AST → Regional IR → Global IR pipeline is provided in the centralized egress dual-stack full-mesh trio demo, which composes Tiered VPC-NG, Centralized Router, Full Mesh Trio, VPC Peering Deluxe, the IPv4/IPv6 intra-VPC and full-mesh security group rule modules, and centralized egress into a unified topology compiler. This integration demonstrates the system operating end-to-end across three regions, nine VPCs, centralized egress, dual-stack CIDR propagation, and mixed TGW + VPC-peering edges. The demo serves as the reference implementation upon which the empirical results and analyses in this paper are based.
 
 In dual-stack deployments, this model enables asymmetric egress semantics: IPv4 traffic is routed through centralized NAT Gateways to achieve O(1) cost scaling, while IPv6 traffic follows decentralized, NAT-free egress paths, leveraging native IPv6 routing and TGW propagation. This behavior is demonstrated end-to-end in the centralized egress dual-stack full-mesh trio reference implementation.
+
+While the empirical evaluation in this paper focuses on a three-region (N = 3) deployment, the same TGW adjacency synthesis logic has also been validated on a larger topology with N = 10 Transit Gateways in a separate Mega Mesh demonstration, confirming identical asymptotic scaling behavior.
 
 **Parallel Security Propagation Layer:**
 The same compilation pipeline used for routing is mirrored at the security layer. Each Tiered VPC-NG instance exposes an intra_vpc_security_group_id that downstream modules use to synthesize security relationships. At the regional layer, the Intra VPC Security Group Rule modules (IPv4 and IPv6 variants) construct O(V²) ingress-only allow rules between all non-self VPC network CIDRs, forming a regional SG mesh. At the global layer, the Full Mesh Intra VPC Security Group Rules modules replicate these rules across regions, producing a three-region SG mesh that aligns with the routing mesh. These SG meshes are designed to make end-to-end reachability testing easy in the reference implementation; they are not positioned as a least-privilege production policy, but as a concrete example of how security propagation can be compiled from the same topology AST.
