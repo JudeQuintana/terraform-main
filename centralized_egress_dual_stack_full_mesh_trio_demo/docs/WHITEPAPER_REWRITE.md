@@ -12,8 +12,6 @@
 
 --=[ A personal contribution to the cloud networking community ]=--
 
---=[ Create -> Iterate -> Combine | #End2EndBurner ]=--
-
 --=[ Author: Jude Quintana ]=--
 ```
 
