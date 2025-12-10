@@ -34,13 +34,9 @@ F(N) = N(N−1)/2 = O(N²),  where N = number of TGWs
 ```
 
 For V VPCs attached across these TGWs, operators must also configure route tables, security group rules, TGW attachments, and propagation settings across multiple availability zones and CIDR blocks. VPC-level routing and security relationships scale as O(V²), independently of TGW adjacency. Even a modest 9-VPC deployment across 3 TGWs produces:
-
 - 1,152 route entries (theoretical maximum assuming full dual-stack, multi-CIDR routing)
-
 - 432 security group rules (theoretical maximum for two protocols across IPv4/IPv6 families)
-
 - ≈1,800 total AWS resources
-
 - ≈45 engineering hours for imperative implementation
 
 Measured production deployments typically generate fewer entries (e.g., 852 routes and 108 foundational security rules) due to topology optimizations such as isolated subnets and selective protocol enablement. These measured and theoretical values both validate O(V²) scaling for VPC-level artifacts; derivations appear in the supplemental materials.
@@ -50,19 +46,21 @@ As cloud estates expand beyond ~15 VPCs, these quadratic VPC-level configuration
 ### 2.1 Problem Statement
 
 AWS exposes powerful networking primitives—VPCs, Transit Gateways (TGWs), NAT Gateways, Egress-only Internet Gateways (EIGWs), and IPv4/IPv6 CIDR blocks—but provides no abstraction for expressing multi-region mesh topologies declaratively. Engineers must imperatively implement routing, peering, propagation, and security relationships across regions, creating two independent quadratic scaling problems:
-
 - O(N²) TGW mesh adjacency for N Transit Gateways
 - O(V²) VPC-level routing and security propagation for V VPCs
 
 Together, these produce brittle, labor-intensive topologies and five systemic failure modes:
 
 **Quadratic VPC-level configuration burden:**
+
 Adding the V-th VPC requires updating V–1 existing VPCs with new routes and security rules (O(V²)). Even modest environments (e.g., V=20) exceed 300 engineering hours for initial configuration.
 
 **Quadratic TGW adjacency growth in multi-region networks**:
+
 Full-mesh routing across N regions requires N(N–1)/2 TGW adjacencies (TGW-to-TGW peering relationships), each involving attachment creation, route-table association, and propagation configuration. At N = 5 regions, this already entails 5 Transit Gateways and 10 TGW adjacencies, each with region-specific constraints and routing semantics.
 
 **High configuration error rates:**
+
 Imperative creation of hundreds of VPC-level and TGW-level relationships leads to:
 - routing inconsistency
 - propagation drift
@@ -72,11 +70,13 @@ Imperative creation of hundreds of VPC-level and TGW-level relationships leads t
 Industry analyses attribute 60–80% of outages to configuration errors.
 
 **Excessive NAT Gateway cost due to per-VPC egress:**
+
 Default architectures deploy NAT Gateways in every VPC × every AZ, yielding V × A gateways where constant infrastructure would suffice.
 
 Example: With V = 9 and A = 2, operators deploy 18 NAT Gateways at approximately $591/month ($7,092 annually), even though centralized egress requires only 6. This represents a 67% avoidable cost overhead.
 
 **Non-repeatable and non-verifiable topology logic:**
+
 Critical connectivity logic lives in:
 - tribal knowledge
 - ad hoc runbooks
@@ -101,7 +101,8 @@ The topology compiler consists of three required stages (AST construction, Regio
 
 ⸻
 
-**Stage 1 — AST Construction (Tiered VPC-NG)**
+**Stage 1 — AST Construction (Tiered VPC-NG):**
+
 CIDR Allocation Assumption:
 This architecture assumes that all VPC and subnet CIDRs are globally non-overlapping across regions. Neither Centralized Router nor Full Mesh Trio performs overlapping CIDR detection; instead, Tiered VPC-NG enforces CIDR correctness only within a single VPC. This mirrors AWS Transit Gateway’s routing model, which does not support overlapping address spaces. Correct global CIDR allocation is therefore a prerequisite for deterministic topology synthesis.
 
@@ -114,7 +115,7 @@ This stage contains no routing logic. It defines what exists, not how it connect
 
 ⸻
 
-**Stage 2 — Regional IR Pass (Centralized Router)**
+**Stage 2 — Regional IR Pass (Centralized Router):**
 
 Centralized Router transforms the VPC AST for a single region into a regional intermediate representation (IR):
 - Creates exactly one TGW per region.
@@ -141,7 +142,7 @@ This mirrors a compiler’s middle-end optimization pass: expanding abstract dec
 
 ⸻
 
-**Stage 3 — Global IR Pass (Full Mesh Trio)**
+**Stage 3 — Global IR Pass (Full Mesh Trio):**
 
 In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N = 3 regions, used as the production reference implementation for empirical evaluation.
 
@@ -158,7 +159,7 @@ This stage corresponds to a compiler’s late-stage code generation: assembling 
 
 ⸻
 
-**Stage 4 - Optional Optimization Pass — VPC Peering Deluxe (Selective Direct Edges)**
+**Stage 4 - Optional Optimization Pass — VPC Peering Deluxe (Selective Direct Edges):**
 
 On top of the TGW-based global mesh, specific traffic flows may require:
 - lower latency
@@ -174,7 +175,7 @@ This aligns with compiler peephole or profile-guided optimization: selective ref
 
 ⸻
 
-**Summary of Compiler Architecture**
+**Summary of Compiler Architecture:**
 
 By treating cloud topology as a compilation problem with:
 1. AST (Tiered VPC-NG)
@@ -195,6 +196,7 @@ In dual-stack deployments, this model enables asymmetric egress semantics: IPv4 
 While the empirical evaluation in this paper focuses on a three-region (N = 3) deployment, the same TGW adjacency synthesis logic has also been validated on a larger topology with N = 10 Transit Gateways in a separate Mega Mesh demonstration, confirming identical asymptotic scaling behavior.
 
 **Parallel Security Propagation Layer:**
+
 The same compilation pipeline used for routing is mirrored at the security layer. Each Tiered VPC-NG instance exposes an intra_vpc_security_group_id that downstream modules use to synthesize security relationships. At the regional layer, the Intra VPC Security Group Rule modules (IPv4 and IPv6 variants) construct O(V²) ingress-only allow rules between all non-self VPC network CIDRs, forming a regional SG mesh. At the global layer, the Full Mesh Intra VPC Security Group Rules modules replicate these rules across regions, producing a three-region SG mesh that aligns with the routing mesh. These SG meshes are designed to make end-to-end reachability testing easy in the reference implementation; they are not positioned as a least-privilege production policy, but as a concrete example of how security propagation can be compiled from the same topology AST.
 
 ### 2.3 Contributions
@@ -219,6 +221,7 @@ This is achieved through:
 - Full Mesh Trio (global IR: O(N²) peering + cross-region O(V²) expansion)
 
 The result is a provable complexity reduction:
+
 ```
 Imperative:   O(N² + V²) relationships to specify
 Declarative:  O(N + V) topology intent to declare
@@ -255,7 +258,6 @@ To the author’s knowledge, this work represents the first formal application o
 
 Verified IR Transformation:
 - The Regional IR pass—responsible for all O(V²) routing expansion—is implemented as a pure-function Terraform module and is formally verified through deterministic, property-based tests that validate routing invariants across diverse multi-VPC configurations.
-
 - The Global IR pass (Full Mesh Trio) composes these verified regional outputs to synthesize N×N TGW adjacencies and cross-region propagation. While the Global IR layer does not yet include a dedicated formal test suite, its behavior is strictly compositional: it combines pre-verified regional IRs without mutating their routing semantics. As a result, the correctness guarantees established for the Regional IR pass transfer cleanly to the global topology.
 
 ⸻
@@ -313,7 +315,7 @@ Because all routing and security expansions are produced via pure, deterministic
 
 This positions the system not as a Terraform module collection but as a verifiable topology compiler.
 
-Summary of Contributions
+**Summary of Contributions**
 
 In total, this paper presents:
 - A provable complexity transformation
@@ -330,13 +332,13 @@ This work intersects prior efforts in infrastructure as code (IaC), cloud networ
 
 Rather than evaluating these approaches comparatively, this section briefly summarizes representative systems to situate the problem space addressed by this work.
 
-**AWS Native Networking Frameworks**
+**AWS Native Networking Frameworks:**
 
 AWS provides reference architectures and managed frameworks such as AWS Landing Zone, Control Tower, Network Firewall Manager, and CloudFormation StackSets. These offerings focus on standardizing account structure, security baselines, and deployment workflows across large AWS environments.
 
 In the networking domain, these tools emphasize reliable resource provisioning and governance, leaving detailed Transit Gateway (TGW) peering relationships, routing configuration, and cross-region connectivity decisions to operators or higher-level tooling.
 
-**Infrastructure-as-Code Frameworks**
+**Infrastructure-as-Code Frameworks:**
 
 General-purpose IaC frameworks—including Terraform, Pulumi, and the AWS Cloud Development Kit (CDK)—enable programmatic definition and composition of cloud infrastructure resources.
 
@@ -344,7 +346,7 @@ These systems provide abstraction mechanisms, language bindings, and module reus
 
 This work builds on Terraform’s compositional model, using it as a substrate for expressing higher-level topology intent.
 
-**AWS-Specific Terraform Modules**
+**AWS-Specific Terraform Modules:**
 
 The Terraform ecosystem includes a rich set of AWS networking modules maintained by the community and AWS Solutions Architects. Examples include terraform-aws-vpc, terraform-aws-transit-gateway, and terraform-aws-cloudwan.
 
@@ -352,25 +354,25 @@ These modules encapsulate best practices for VPC creation, subnet layout, TGW at
 
 Each module targets a specific networking scope—such as individual VPCs, regional TGWs, or Cloud WAN segments—while allowing operators to compose larger topologies through explicit configuration and cross-references.
 
-**Cloud WAN and Policy-Driven Networking**
+**Cloud WAN and Policy-Driven Networking:**
 
 AWS Cloud WAN introduces a managed, policy-driven approach to global networking, allowing operators to define routing intent via centralized policy documents. Cloud WAN abstracts regional networking constructs behind a global control plane and enables automated routing behavior based on attachment roles and segments.
 
 Cloud WAN represents a distinct architectural model from Transit Gateway–based designs, trading explicit TGW-to-TGW peering configuration for managed policy evaluation within AWS’s global network.
 
-**Network Automation and Orchestration Tools**
+**Network Automation and Orchestration Tools:**
 
 Configuration management and automation platforms such as Ansible, along with vendor-specific systems (e.g., Cisco NSO or AWS Systems Manager), enable repeatable execution of network configuration workflows. These tools excel at orchestrating changes across devices or cloud resources using imperative task definitions and templates.
 
 While effective for execution and lifecycle management, these approaches typically operate on explicitly defined configurations rather than inferred topology intent.
 
-**Intent-Based and Declarative Networking Research**
+**Intent-Based and Declarative Networking Research:**
 
 Academic and industrial research has produced a range of intent-based and declarative networking systems, including Frenetic, Pyretic, NetKAT, P4, and related SDN frameworks. These systems focus primarily on compiling high-level forwarding policies into data-plane behavior for programmable networks.
 
 Although operating in a different domain, these efforts demonstrate the benefits of declarative specification and compilation techniques for managing network complexity.
 
-**Summary**
+**Summary:**
 
 Taken together, existing tools and frameworks address important aspects of cloud networking: resource provisioning, governance, policy expression, execution automation, and data-plane compilation. This work is positioned within this broader landscape and explores how compiler-inspired techniques can be applied to cloud control-plane configuration, specifically in the context of AWS Transit Gateway–based multi-region topologies.
 
