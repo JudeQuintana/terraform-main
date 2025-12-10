@@ -320,94 +320,52 @@ Together, these contributions represent a new paradigm for expressing and synthe
 
 ## 2.4 Related Work
 
-This work intersects prior efforts in infrastructure as code (IaC), cloud networking automation, intent-based networking, and compiler-driven network synthesis. However, existing approaches either focus on imperative automation, resource-level abstraction, or protocol-level compilation, and do not address the specific problem of scalable multi-region AWS Transit Gateway mesh synthesis with explicit complexity reduction.
+This work intersects prior efforts in infrastructure as code (IaC), cloud networking automation, intent-based networking, and declarative or compiler-inspired network configuration. A wide range of tools and frameworks address aspects of multi-VPC and multi-region networking in AWS, each emphasizing different layers of abstraction, operational goals, and trade-offs.
+
+Rather than evaluating these approaches comparatively, this section briefly summarizes representative systems to situate the problem space addressed by this work.
 
 **AWS Native Networking Frameworks**
 
-AWS provides reference architectures and automation frameworks such as Landing Zone, Control Tower, Network Firewall Manager, and CloudFormation StackSets. These tools standardize account structure, security baselines, and deployment workflows but operate strictly at the resource orchestration level.
+AWS provides reference architectures and managed frameworks such as AWS Landing Zone, Control Tower, Network Firewall Manager, and CloudFormation StackSets. These offerings focus on standardizing account structure, security baselines, and deployment workflows across large AWS environments.
 
-While they simplify provisioning, they do not provide:
-- a declarative abstraction for multi-region TGW mesh intent,
-- automatic inference of TGW adjacencies,
-- or synthesis of VPC-level routing propagation.
-
-As a result, operators still imperatively configure TGW peerings, route tables, and propagation rules, inheriting the same O(N² + V²) scaling characteristics described in Section 2.1.
+In the networking domain, these tools emphasize reliable resource provisioning and governance, leaving detailed Transit Gateway (TGW) peering relationships, routing configuration, and cross-region connectivity decisions to operators or higher-level tooling.
 
 **Infrastructure-as-Code Frameworks**
 
-General-purpose IaC tools—Terraform, Pulumi, and AWS CDK—provide higher-level composition, language bindings, and improved developer ergonomics. However, these systems remain structural abstractions, not semantic ones:
-- Terraform modules encapsulate resources but do not infer topology.
-- CDK constructs generate CloudFormation but require imperatively defined relationships.
-- Pulumi offers richer languages but identical relationship semantics.
+General-purpose IaC frameworks—including Terraform, Pulumi, and the AWS Cloud Development Kit (CDK)—enable programmatic definition and composition of cloud infrastructure resources.
 
-In all cases, TGW adjacencies and VPC-level routing must still be explicitly specified. The quadratic configuration burden is therefore preserved, merely expressed in a different syntax.
+These systems provide abstraction mechanisms, language bindings, and module reuse that improve developer ergonomics and reduce configuration duplication. Connectivity relationships such as TGW peerings, VPC attachments, and routing behavior are explicitly specified by users, reflecting the flexibility and generality of these tools.
 
-This work builds on Terraform's compositional model but shifts the abstraction boundary: operators declare topology intent, while relationship synthesis is performed by compiler-style IR passes.
+This work builds on Terraform’s compositional model, using it as a substrate for expressing higher-level topology intent.
 
 **AWS-Specific Terraform Modules**
 
-The Terraform community and AWS Solutions Architects have developed specialized modules for AWS networking, including vpc, transit-gateway, and cloudwan modules. These provide reusable VPC definitions, TGW attachment automation, and Cloud WAN policy management.
+The Terraform ecosystem includes a rich set of AWS networking modules maintained by the community and AWS Solutions Architects. Examples include terraform-aws-vpc, terraform-aws-transit-gateway, and terraform-aws-cloudwan.
 
-The terraform-aws-vpc module and the terraform-aws-modules community library provide reusable VPC definitions and hub-spoke patterns. However, these remain resource-centric abstractions: operators must still explicitly wire VPC attachments to Transit Gateways, manually propagate routes across regions, and imperatively define all TGW peering relationships. Multi-region mesh topologies therefore require operators to orchestrate dozens of module calls with explicit cross-references, preserving the O(N² + V²) configuration burden at the module composition layer.
+These modules encapsulate best practices for VPC creation, subnet layout, TGW attachment, and Cloud WAN policy configuration. They are commonly used to implement hub-and-spoke or centralized connectivity models and significantly reduce boilerplate configuration.
 
-The terraform-aws-modules/terraform-aws-transit-gateway module simplifies Transit Gateway creation and VPC attachment within a single region, but does not address multi-region TGW peering or cross-region route propagation. Operators must still imperatively define each TGW adjacency and VPC-level routing relationship across regions.
+Each module targets a specific networking scope—such as individual VPCs, regional TGWs, or Cloud WAN segments—while allowing operators to compose larger topologies through explicit configuration and cross-references.
 
-The aws-ia/terraform-aws-vpc module (maintained by AWS Solutions Architects) provides comprehensive VPC creation with automatic subnet calculation, NAT Gateway configuration, and optional TGW or Cloud WAN attachment. However, each VPC remains an independent resource definition. Multi-VPC topologies require explicit cross-references, and operators must manually propagate routing and security rules across V VPCs, preserving the O(V²) configuration burden at the composition layer.
+**Cloud WAN and Policy-Driven Networking**
 
-The aws-ia/terraform-aws-cloudwan module addresses multi-region networking through AWS Cloud WAN—a policy-driven global network service distinct from Transit Gateway. It provides predefined "Central VPC" types (egress, inspection, ingress, shared services) with automatic routing based on VPC role. While Cloud WAN's policy engine offers declarative segment and attachment configuration, the module still requires imperative VPC definitions for each Central VPC, and the policy document itself must explicitly enumerate attachment rules and segment associations. Additionally, Cloud WAN's architecture differs fundamentally from Transit Gateway: it uses a managed global network with policy-based routing rather than explicit TGW-to-TGW adjacencies synthesized from topology intent.
+AWS Cloud WAN introduces a managed, policy-driven approach to global networking, allowing operators to define routing intent via centralized policy documents. Cloud WAN abstracts regional networking constructs behind a global control plane and enables automated routing behavior based on attachment roles and segments.
 
-In contrast, this work targets Transit Gateway architectures specifically and introduces a compiler-based approach where O(N + V) topology intent (N TGWs + V VPCs) automatically synthesizes all O(N²) TGW adjacencies and O(V²) VPC propagation relationships through deterministic IR passes. The distinction is between resource-level abstraction (modules that simplify individual VPC or TGW creation) and topology-level synthesis (a compiler that infers all connectivity relationships from high-level intent).
+Cloud WAN represents a distinct architectural model from Transit Gateway–based designs, trading explicit TGW-to-TGW peering configuration for managed policy evaluation within AWS’s global network.
 
-**Network Automation Tools**
+**Network Automation and Orchestration Tools**
 
-Configuration management tools such as Ansible and vendor-specific platforms (e.g., Cisco NSO, DNA Center for enterprise networks; AWS Systems Manager for cloud automation) automate network configuration through imperative workflows, templates, and orchestration. These systems excel at executing sequences of configuration actions but do not provide declarative topology semantics.
+Configuration management and automation platforms such as Ansible, along with vendor-specific systems (e.g., Cisco NSO or AWS Systems Manager), enable repeatable execution of network configuration workflows. These tools excel at orchestrating changes across devices or cloud resources using imperative task definitions and templates.
 
-While effective for device-level and resource-level automation, they lack:
-- declarative topology intent (operators specify "how," not "what"),
-- referential transparency (repeated execution may yield different results),
-- or complexity-aware synthesis (configuration burden scales with resource count).
+While effective for execution and lifecycle management, these approaches typically operate on explicitly defined configurations rather than inferred topology intent.
 
-They optimize execution reliability, not topology specification, and therefore do not reduce the asymptotic configuration cost.
+**Intent-Based and Declarative Networking Research**
 
-**Intent-Based and Declarative Networking**
+Academic and industrial research has produced a range of intent-based and declarative networking systems, including Frenetic, Pyretic, NetKAT, P4, and related SDN frameworks. These systems focus primarily on compiling high-level forwarding policies into data-plane behavior for programmable networks.
 
-Academic and industrial research has explored intent-based and declarative networking through systems such as Frenetic, Pyretic, NetKAT, Nettle, P4, and Propane/AT. These frameworks compile high-level policies into forwarding behavior, often within SDN or programmable data-plane environments.
+Although operating in a different domain, these efforts demonstrate the benefits of declarative specification and compilation techniques for managing network complexity.
 
-This work differs in domain and abstraction level:
-- It targets cloud infrastructure topology (VPCs, TGWs, routes), not data-plane forwarding behavior (packet processing, match-action tables).
-- It operates over AWS control-plane APIs, not programmable switches.
-- Its primary contribution is reducing operator input complexity (O(N² + V²) → O(N + V)), not verifying forwarding correctness.
+**Summary**
 
-However, it shares a philosophical foundation: representing network intent declaratively and compiling it into concrete configuration.
+Taken together, existing tools and frameworks address important aspects of cloud networking: resource provisioning, governance, policy expression, execution automation, and data-plane compilation. This work is positioned within this broader landscape and explores how compiler-inspired techniques can be applied to cloud control-plane configuration, specifically in the context of AWS Transit Gateway–based multi-region topologies.
 
-**Compiler-Theoretic Distinction**
-
-Unlike prior systems, this architecture explicitly models cloud networking as a multi-pass compilation problem:
-- Tiered VPC-NG serves as an AST describing topology structure.
-- Centralized Router performs a verified Regional IR expansion (O(V²)).
-- Full Mesh Trio composes Regional IRs into a Global IR with O(N²) TGW adjacencies.
-- Optional VPC Peering Deluxe performs localized optimization without changing global complexity.
-
-Existing approaches focus on resource-level orchestration or protocol-level synthesis but do not provide a topology compiler that reduces operator burden from O(N² + V²) to O(N + V) through deterministic IR transformations.
-
-**Summary of Gaps**
-
-Across all categories, existing systems address orthogonal concerns: AWS tools standardize account structure; IaC frameworks improve resource composition; automation tools optimize execution; SDN compilers target data planes. None address the core problem of scalable multi-region AWS Transit Gateway mesh synthesis with provable complexity reduction.
-
-Table 1: Comparison of AWS networking approaches across key dimensions. Only this work achieves linear input complexity (O(N+V)) with automatic topology synthesis and verified correctness. Verification in this context refers to property-based testing and formal validation of deterministic IR transformations, rather than whole-system formal proofs.
-
-| System/Tool | Input Complexity | Multi-Region TGW | Topology Synthesis | Verified |
-|-------------|------------------|------------------|-------------------|----------|
-| AWS Landing Zone | O(N²+V²) | Manual | No | No |
-| Terraform modules | O(N²+V²) | Manual | No | No |
-| Cloud WAN | O(policy size) | Yes (policy) | Partial | No |
-| This work | O(N+V) | Automatic | Yes | Yes |
-
-**Positioning Summary**
-
-While prior work addresses automation, IaC ergonomics, or policy compilation, none provide:
-- a compiler-theoretic framework for AWS multi-TGW topology,
-- explicit separation of AST, Regional IR, and Global IR,
-- or a demonstrated reduction in configuration complexity class.
-
-This work complements existing IaC and cloud networking tools by introducing a new abstraction layer: topology compilation, rather than imperative topology scripting.
+The related work section will be revisited and expanded as the architectural model and evaluation are finalized.
