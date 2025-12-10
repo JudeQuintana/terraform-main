@@ -258,6 +258,8 @@ Verified IR Transformation:
 
 - The Global IR pass (Full Mesh Trio) composes these verified regional outputs to synthesize N×N TGW adjacencies and cross-region propagation. While the Global IR layer does not yet include a dedicated formal test suite, its behavior is strictly compositional: it combines pre-verified regional IRs without mutating their routing semantics. As a result, the correctness guarantees established for the Regional IR pass transfer cleanly to the global topology.
 
+⸻
+
 3. Embedded DSL for Declarative Multi-Region AWS Networking
 
 Across all modules, the system defines a restricted, composable language for expressing topologies:
@@ -274,6 +276,8 @@ This embedded DSL provides:
 - economy of expression: ~15 lines per VPC defines complete regional + global routing
 
 The DSL is encoded through Terraform module composition and expressed entirely through zero-resource functional modules, rather than through Terraform resources themselves.
+
+⸻
 
 4. Production-Scale Performance: Amplification, Speedups, and O(1) Egress
 
@@ -296,6 +300,8 @@ These performance and cost characteristics demonstrate practical viability at en
 
 In contrast to traditional AWS reference architectures, which scale NAT Gateways, routing tables, and security rules linearly with VPC count, this system keeps egress cost and routing complexity bounded and constant at the regional layer.
 
+⸻
+
 5. Formal Reasoning, Entropy Reduction, and Verifiable Infrastructure
 
 Because all routing and security expansions are produced via pure, deterministic IR transforms, the architecture supports formal reasoning uncommon in cloud networking:
@@ -310,11 +316,11 @@ This positions the system not as a Terraform module collection but as a verifiab
 Summary of Contributions
 
 In total, this paper presents:
--	A provable complexity transformation
--	A multi-pass compiler for AWS networking
--	A declarative embedded DSL for topology synthesis
--	Production-scale performance + O(1) egress scaling
--	Formal verification through pure-function IR passes
+- A provable complexity transformation
+- A multi-pass compiler for AWS networking
+- A declarative embedded DSL for topology synthesis
+- Production-scale performance + O(1) egress scaling
+- Formal verification through pure-function IR passes
 
 Together, these contributions represent a new paradigm for expressing and synthesizing multi-region AWS network topologies.
 
