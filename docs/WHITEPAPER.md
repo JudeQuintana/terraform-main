@@ -411,6 +411,8 @@ https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual
 - Additional demonstration topologies and scaling experiments (e.g., Mega Mesh, Super Router)
 - Scripts for deployment measurement, route-table verification, and connectivity analysis (via AWS Route Analyzer)
 
+Diagram: https://jq1-io.s3.us-east-1.amazonaws.com/dual-stack/centralized-egress-dual-stack-full-mesh-trio-v3-3.png
+
 This repository represents the composition layer of the topology compiler, showing how the individual modules form complete, multi-region topologies.
 
 ⸻
