@@ -486,7 +486,7 @@ https://github.com/JudeQuintana/terraform-aws-mega-mesh
 Diagram:
 https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png
 
-This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same IR  transform, confirming that the routing logic scales to larger meshes without modification.
+This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same IR  transform, confirming that the routing logic scales to larger meshes without modification. (IPv4-only; no secondary CIDRs; no IPAM.)
 
 ⸻
 
