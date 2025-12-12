@@ -332,11 +332,15 @@ This work intersects prior efforts in infrastructure as code (IaC), cloud networ
 
 Rather than evaluating these approaches comparatively, this section briefly summarizes representative systems to situate the problem space addressed by this work.
 
+⸻
+
 **AWS Native Networking Frameworks:**
 
 AWS provides reference architectures and managed frameworks such as AWS Landing Zone, Control Tower, Network Firewall Manager, and CloudFormation StackSets. These offerings focus on standardizing account structure, security baselines, and deployment workflows across large AWS environments.
 
 In the networking domain, these tools emphasize reliable resource provisioning and governance, leaving detailed Transit Gateway (TGW) peering relationships, routing configuration, and cross-region connectivity decisions to operators or higher-level tooling.
+
+⸻
 
 **Infrastructure-as-Code Frameworks:**
 
@@ -346,6 +350,8 @@ These systems provide abstraction mechanisms, language bindings, and module reus
 
 This work builds on Terraform’s compositional model, using it as a substrate for expressing higher-level topology intent.
 
+⸻
+
 **AWS-Specific Terraform Modules:**
 
 The Terraform ecosystem includes a rich set of AWS networking modules maintained by the community and AWS Solutions Architects. Examples include terraform-aws-vpc, terraform-aws-transit-gateway, and terraform-aws-cloudwan.
@@ -354,11 +360,15 @@ These modules encapsulate best practices for VPC creation, subnet layout, TGW at
 
 Each module targets a specific networking scope such as individual VPCs, regional TGWs, or Cloud WAN segments while allowing operators to compose larger topologies through explicit configuration and cross-references.
 
+⸻
+
 **Cloud WAN and Policy-Driven Networking:**
 
 AWS Cloud WAN introduces a managed, policy-driven approach to global networking, allowing operators to define routing intent via centralized policy documents. Cloud WAN abstracts regional networking constructs behind a global control plane and enables automated routing behavior based on attachment roles and segments.
 
 Cloud WAN represents a distinct architectural model from Transit Gateway–based designs, trading explicit TGW-to-TGW peering configuration for managed policy evaluation within AWS’s global network.
+
+⸻
 
 **Network Automation and Orchestration Tools:**
 
@@ -366,11 +376,15 @@ Configuration management and automation platforms such as Ansible, along with ve
 
 While effective for execution and lifecycle management, these approaches typically operate on explicitly defined configurations rather than inferred topology intent.
 
+⸻
+
 **Intent-Based and Declarative Networking Research:**
 
 Academic and industrial research has produced a range of intent-based and declarative networking systems, including Frenetic, Pyretic, NetKAT, P4, and related SDN frameworks. These systems focus primarily on compiling high-level forwarding policies into data-plane behavior for programmable networks.
 
 Although operating in a different domain, these efforts demonstrate the benefits of declarative specification and compilation techniques for managing network complexity.
+
+⸻
 
 **Summary:**
 
