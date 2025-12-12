@@ -525,10 +525,11 @@ Early design reasoning and prototype discussions are documented in engineering b
 
 These posts offer historical context but are not part of the peer-reviewed contributions.
 
+⸻
+
 Together, these artifacts provide a complete, transparent, and fully reproducible implementation of the topology compiler described in this paper.
 
 ⸻
 
 This white paper reflects v1.0 of a long-term research and engineering effort.
 Future versions will refine the compiler architecture, formal verification suite, and extended scalability results as the ecosystem evolves. Feedback and contributions are welcome.
-
