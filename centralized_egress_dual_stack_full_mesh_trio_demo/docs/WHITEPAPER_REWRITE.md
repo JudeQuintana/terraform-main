@@ -414,7 +414,7 @@ Centralized Router
 GitHub: https://github.com/JudeQuintana/terraform-aws-centralized-router
 Registry: JudeQuintana/centralized-router/aws
 
-Pure-Function Route Generator (Regional IR Pass)
+Pure-Function Route Generator (Regional IR Pass) with 15 case test suite
 https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/main/modules/generate_routes_to_other_vpcs
 
 Full Mesh Trio (Global IR Pass, N=3 reference)
