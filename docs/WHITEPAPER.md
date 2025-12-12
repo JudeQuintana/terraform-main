@@ -536,8 +536,10 @@ Early design reasoning and prototype discussions are documented in engineering b
 - Opinion #23 - List of objects vs. map of maps: https://jq1.io/posts/opinion_23/
 - Synthesizing Tiered VPC in Terraform (AST development): https://jq1.io/posts/tiered_vpc/
 - Building a route generator via Terraform test (atomic unit development): https://jq1.io/posts/generating_routes/
-- Terraform Networking Trifecta (TNT): https://jq1.io/posts/tnt/
+- TNT: Terraform Networking Trifecta (regional IR development) https://jq1.io/posts/tnt/
 - Slappin’ Chrome on the WIP (Shokunin Style Components): https://jq1.io/posts/slappin_chrome_on_the_wip/
+- Super Powered, Super Sharp, Super Router!: https://jq1.io/posts/super_router/
+- $init super refactor: https://jq1.io/posts/init_super_refactor/
 
 These posts offer historical context but are not part of the peer-reviewed contributions.
 
