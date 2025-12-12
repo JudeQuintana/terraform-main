@@ -315,6 +315,8 @@ Because all routing and security expansions are produced via pure, deterministic
 
 This positions the system not as a Terraform module collection but as a verifiable topology compiler.
 
+⸻
+
 **Summary of Contributions**
 
 In total, this paper presents:
@@ -386,7 +388,7 @@ Although operating in a different domain, these efforts demonstrate the benefits
 
 ⸻
 
-**Summary:**
+**Summary of Related Work:**
 
 Taken together, existing tools and frameworks address important aspects of cloud networking: resource provisioning, governance, policy expression, execution automation, and data-plane compilation. This work is positioned within this broader landscape and explores how compiler-inspired techniques can be applied to cloud control-plane configuration, specifically in the context of AWS Transit Gateway–based multi-region topologies.
 
