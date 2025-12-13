@@ -403,11 +403,11 @@ All artifacts produced for this work including source modules, functional route-
 **Integration Repository (Composition Layer)**
 
 Primary Integration & Demo Repository:
-https://github.com/JudeQuintana/terraform-main
+- Github: https://github.com/JudeQuintana/terraform-main
 
 This repository composes the individual source modules into complete, reproducible topologies. It includes:
 - Centralized Egress Dual-Stack Full Mesh Trio (N=3 TGWs) - the reference implementation on which this paper’s evaluation is based.
-https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo
+  - Github: https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo
 - Additional demonstration topologies and scaling experiments (e.g., Mega Mesh, Super Router)
 - Scripts for deployment measurement, route-table verification, and connectivity analysis (via AWS Route Analyzer)
 
@@ -422,44 +422,49 @@ This repository represents the composition layer of the topology compiler, showi
 Each architectural component described in this paper is implemented as an independent, versioned Terraform module. These repositories reflect the authoritative implementations of the IR transforms and topology-generation logic.
 
 VPC Construction
-Tiered VPC-NG (AST Construction Layer)
-GitHub: https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng
-Registry: JudeQuintana/tiered-vpc-ng/aws
+
+Tiered VPC-NG (AST Construction Layer):
+- GitHub: https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng
+- Registry: JudeQuintana/tiered-vpc-ng/aws
 
 Routing & Mesh Construction
 
-Centralized Router
-GitHub: https://github.com/JudeQuintana/terraform-aws-centralized-router
-Registry: JudeQuintana/centralized-router/aws
+Centralized Router:
+- GitHub: https://github.com/JudeQuintana/terraform-aws-centralized-router
+- Registry: JudeQuintana/centralized-router/aws
 
 Pure-Function Route Generator (Regional IR Pass) with 15 case test suite
-https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/main/modules/generate_routes_to_other_vpcs
+- GitHub: https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/main/modules/generate_routes_to_other_vpcs
 
-Full Mesh Trio (Global IR Pass, N=3 reference)
-GitHub: https://github.com/JudeQuintana/terraform-aws-full-mesh-trio
-Registry: JudeQuintana/full-mesh-trio/aws
+Full Mesh Trio (Global IR Pass, N=3 reference):
+- GitHub: https://github.com/JudeQuintana/terraform-aws-full-mesh-trio
+- Registry: JudeQuintana/full-mesh-trio/aws
 
-VPC Peering Deluxe (Optional Optimization Pass)
-GitHub: https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe
-Registry: JudeQuintana/vpc-peering-deluxe/aws
+VPC Peering Deluxe (Optional Optimization Pass):
+- GitHub: https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe
+- Registry: JudeQuintana/vpc-peering-deluxe/aws
 
 ⸻
 
 **Security Group Inference Modules**
 
 (IPv4 and IPv6 variants, regional and global IR layers)
-- Intra-VPC Security Group Rule
-https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule
-Registry: JudeQuintana/intra-vpc-security-group-rule/aws
-- Full Mesh Intra-VPC SG Rules
-https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules
-Registry: JudeQuintana/full-mesh-intra-vpc-security-group-rules/aws
-- IPv6 Intra-VPC Security Group Rule
-https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule
-Registry: JudeQuintana/ipv6-intra-vpc-security-group-rule/aws
-- IPv6 Full Mesh Intra-VPC SG Rules
-https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules
-Registry: JudeQuintana/ipv6-full-mesh-intra-vpc-security-group-rules/aws
+
+Intra-VPC Security Group Rule:
+- Github: https://github.com/JudeQuintana/terraform-aws-intra-vpc-security-group-rule
+- Registry: JudeQuintana/intra-vpc-security-group-rule/aws
+
+Full Mesh Intra-VPC SG Rules:
+- Github: https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules
+- Registry: JudeQuintana/full-mesh-intra-vpc-security-group-rules/aws
+
+IPv6 Intra-VPC Security Group Rule:
+- Github: https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule
+- Registry: JudeQuintana/ipv6-intra-vpc-security-group-rule/aws
+
+IPv6 Full Mesh Intra-VPC SG Rules:
+- Github: https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules
+- Registry: JudeQuintana/ipv6-full-mesh-intra-vpc-security-group-rules/aws
 
 These modules mirror the routing compiler pipeline and demonstrate how security propagation can be derived from topology intent; they are not prescriptive least-privilege policies.
 
@@ -467,8 +472,8 @@ These modules mirror the routing compiler pipeline and demonstrate how security 
 
 **Supplemental Engineering Resources (Historical / Prototype Repositories)**
 
-terraform-modules (Historical Workspace)
-https://github.com/JudeQuintana/terraform-modules
+terraform-modules (Historical Workspace):
+- https://github.com/JudeQuintana/terraform-modules
 
 This repository contains early prototypes of:
 - Tiered VPC-NG
@@ -496,13 +501,12 @@ The atomic routing unit, generate_routes_to_other_vpcs, is implemented as a pure
 Beyond the 3-region evaluation topology, the routing transform was validated on a 10-TGW full mesh:
 
 Demo:
-https://github.com/JudeQuintana/terraform-main/tree/main/mega_mesh_demo
+- Github: https://github.com/JudeQuintana/terraform-main/tree/main/mega_mesh_demo
 
-Module:
-https://github.com/JudeQuintana/terraform-aws-mega-mesh
+Mega Mesh:
+- Github: https://github.com/JudeQuintana/terraform-aws-mega-mesh
 
-Diagram:
-https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png
+Diagram: https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png
 
 This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same IR  transform, confirming that the routing logic scales to larger meshes without modification. (IPv4-only; no secondary CIDRs; no IPAM.)
 
@@ -512,15 +516,14 @@ This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same 
 
 A further evaluation validated the routing transform in a decentralized, hierarchical topology:
 
-Demo:
-https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo
+Super Router Demo: https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo
 
-Modules:
-- Super Router: https://github.com/JudeQuintana/terraform-aws-super-router
-- Super Intra-VPC SG Rules: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
+Super Router:
+- Github: https://github.com/JudeQuintana/terraform-aws-super-router
+Super Intra-VPC SG Rules:
+- Github: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
 
-Diagram:
-https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png
+Diagram: https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png
 
 This topology composes two independent hub-and-spoke routing domains and connects them through a logical "Super Router" implemented as two Transit Gateways acting as a single inter-hub routing unit; the IR treats them as a unified propagation domain. This design demonstrates:
 - decentralized adjacency domains
