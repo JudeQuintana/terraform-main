@@ -234,6 +234,7 @@ This transformation forms the theoretical basis for the architecture.
 2. Multi-Pass Compiler for Cloud Topology (AST → IR → IR → Code)
 
 This work introduces a multi-pass compilation pipeline for cloud networking, implemented through pure-function Terraform modules that generate and transform intermediate representations subsequently composed into concrete infrastructure:
+
 **AST Construction (Tiered VPC-NG):**
 - A typed, validated representation of all VPCs, CIDRs, subnets, NAT policies, and dual-stack attributes
 
