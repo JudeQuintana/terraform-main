@@ -527,13 +527,15 @@ Super Intra-VPC SG Rules:
 
 Diagram: https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png
 
-This topology composes two independent hub-and-spoke routing domains and connects them through a logical "Super Router" implemented as two Transit Gateways acting as a single inter-hub routing unit; the IR treats them as a unified propagation domain. This design demonstrates:
-- decentralized adjacency domains
-- selective propagation sets
-- hierarchical multi-hub routing structure
-- compositional semantics beyond symmetric meshes
+This topology composes two independent hub-and-spoke routing domains and connects them through a logical Super Router, implemented as two Transit Gateways that collectively act as a single inter-hub routing unit. At the IR level, these TGWs are modeled as a unified propagation domain rather than as independent peers.
 
-This confirms that the IR transform generalizes beyond full meshes to asymmetric, hierarchical, and multi-hub routing graphs. (IPv4-only; no secondary CIDRs; no IPAM.)
+Super Router design demonstrates:
+- decentralized adjacency domains, where routing relationships are scoped locally rather than globally,
+- selective propagation sets, enabling controlled prefix visibility across domain boundaries,
+- a hierarchical multi-hub routing structure, separating intra-domain and inter-domain connectivity,
+- and compositional semantics beyond symmetric full-mesh topologies.
+
+Collectively, this confirms that the IR transform generalizes beyond flat full meshes to asymmetric, hierarchical, and multi-hub routing graphs. In compiler terms, Super Router represents the "nested scope + function call" inflection point: it shows that topology domains can be composed hierarchically through well-defined interfaces, establishing the system as a general topology compiler rather than a fixed mesh generator. (IPv4-only; no secondary CIDRs; no IPAM.)
 
 ⸻
 
