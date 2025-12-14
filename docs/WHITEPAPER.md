@@ -193,7 +193,7 @@ A complete, production-grade implementation of this AST → Regional IR → Glob
 
 In dual-stack deployments, this model enables asymmetric egress semantics: IPv4 traffic is routed through centralized NAT Gateways to achieve O(1) cost scaling, while IPv6 traffic follows decentralized, NAT-free egress paths, leveraging native IPv6 routing and TGW propagation. This behavior is demonstrated end-to-end in the centralized egress dual-stack full-mesh trio reference implementation.
 
-While the empirical evaluation in this paper focuses on a three-region (N = 3) deployment, the same TGW adjacency synthesis logic has also been validated on a larger topology with N = 10 Transit Gateways in a separate Mega Mesh demonstration, confirming identical asymptotic scaling behavior.
+While the empirical evaluation in this paper focuses on a three-region (N = 3) deployment, the same TGW adjacency synthesis logic has also been validated on a larger topology with N = 10 Transit Gateways in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
 
 **Parallel Security Propagation Layer:**
 
