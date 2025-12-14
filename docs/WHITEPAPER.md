@@ -261,6 +261,8 @@ Verified IR Transformation:
 - The Regional IR pass, responsible for all O(V²) routing expansion, is implemented as a pure-function Terraform module and is formally verified through deterministic, property-based tests that validate routing invariants across diverse multi-VPC configurations.
 - The Global IR pass (Full Mesh Trio) composes these verified regional outputs to synthesize N×N TGW adjacencies and cross-region propagation. While the Global IR layer does not yet include a dedicated formal test suite, its behavior is strictly compositional: it combines pre-verified regional IRs without mutating their routing semantics. As a result, the correctness guarantees established for the Regional IR pass transfer cleanly to the global topology.
 
+The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces—analogous to nested scopes and function calls in programming language compilers.
+
 ⸻
 
 3. Embedded DSL for Declarative Multi-Region AWS Networking
