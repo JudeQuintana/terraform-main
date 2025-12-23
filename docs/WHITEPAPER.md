@@ -126,7 +126,7 @@ Centralized Router transforms the VPC AST for a single region into a regional in
 Crucially:
 - Centralized Router is responsible for O(V²) relationships within a region.
 - It does not perform TGW-to-TGW adjacency, it assumes one TGW per region.
-- All IR passes are implemented as pure-function Terraform modules, which are zero-resource transformations that operate exclusively on data structures, enabling deterministic outputs, referential transparency, property-based testing, and formal verification of routing logic.
+- The Regional IR pass, responsible for all O(V²) routing expansion, is implemented as a pure-function Terraform module. This zero-resource transformation operates exclusively on data structures, enabling deterministic outputs, referential transparency, property-based testing, and formal verification of routing logic.
 
 The IR emitted from this stage is:
 
@@ -147,9 +147,10 @@ This mirrors a compiler’s middle-end optimization pass: expanding abstract dec
 In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N = 3 regions, used as the production reference implementation for empirical evaluation.
 
 Full Mesh Trio composes multiple regional meshes into a global mesh:
-- Establishes all N×N TGW peering adjacencies.
+- Establishes all N(N−1)/2 TGW peering adjacencies.
 - Creates cross-region V×V routing expansions so that VPCs in different regions inherit full reachability.
 - Merges three regional IRs (one per region) into a single global IR representing a multi-region mesh.
+- The Global IR pass deterministically composes these verified regional outputs using resource-creating modules, preserving correctness while synthesizing cross-region topology.
 
 Thus:
 - Full Mesh Trio is responsible for O(N²) TGW relationships and cross-region O(V²) propagation.
@@ -185,7 +186,7 @@ By treating cloud topology as a compilation problem with:
 
 the system transforms an O(N² + V²) imperative configuration burden into O(N + V) declarative input.
 
-The remaining quadratic complexity is pushed entirely into deterministic IR transformations. The Regional IR pass, the semantic core of the system, is implemented as a pure-function module and mechanically verified, while the Global IR deterministically composes these verified outputs into a multi-region topology.
+The remaining quadratic complexity is pushed entirely into deterministic IR transformations. The Regional IR pass, the semantic core of the system, is implemented as a pure-function module and mechanically verified at the Regional IR layer while the Global IR deterministically composes these verified outputs into a multi-region topology.
 
 This shift from imperative, relationship-level configuration to compiler-generated topology is the core conceptual contribution of the architecture.
 
@@ -255,7 +256,7 @@ This work introduces a multi-pass compilation pipeline for cloud networking, imp
 - O(1) selective direct edges for low-latency or cost-sensitive paths
 - subnet-level microsegmentation
 
-To the author’s knowledge, this work represents the first formal application of compiler-style abstractions, explicit AST construction, Regional IR expansion, and Global IR composition to the synthesis of multi-region AWS Transit Gateway network topologies.
+To the author’s knowledge, this work represents one of the first systems to apply compiler-style abstractions, explicit AST construction, Regional IR expansion, and Global IR composition to the synthesis of multi-region AWS Transit Gateway network topologies.
 
 Verified IR Transformation:
 - The Regional IR pass, responsible for all O(V²) routing expansion, is implemented as a pure-function Terraform module and is formally verified through deterministic, property-based tests that validate routing invariants across diverse multi-VPC configurations.
