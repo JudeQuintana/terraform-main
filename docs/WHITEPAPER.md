@@ -126,7 +126,7 @@ Centralized Router transforms the VPC AST for a single region into a regional in
 Crucially:
 - Centralized Router is responsible for O(V²) relationships within a region.
 - It does not perform TGW-to-TGW adjacency, it assumes one TGW per region.
-- All IR passes are implemented as pure-function Terraform modules — zero-resource transformations that operate exclusively on data structures, enabling deterministic outputs, referential transparency, property-based testing, and formal verification of routing logic.
+- All IR passes are implemented as pure-function Terraform modules, which are zero-resource transformations that operate exclusively on data structures, enabling deterministic outputs, referential transparency, property-based testing, and formal verification of routing logic.
 
 The IR emitted from this stage is:
 
@@ -159,7 +159,7 @@ This stage corresponds to a compiler’s late-stage code generation: assembling 
 
 ⸻
 
-**Stage 4 - Optional Optimization Pass - VPC Peering Deluxe (Selective Direct Edges):**
+**Stage 4 - Optional Optimization Pass - Selective Direct Edges (VPC Peering Deluxe):**
 
 On top of the TGW-based global mesh, specific traffic flows may require:
 - lower latency
@@ -261,7 +261,7 @@ Verified IR Transformation:
 - The Regional IR pass, responsible for all O(V²) routing expansion, is implemented as a pure-function Terraform module and is formally verified through deterministic, property-based tests that validate routing invariants across diverse multi-VPC configurations.
 - The Global IR pass (Full Mesh Trio) composes these verified regional outputs to synthesize N×N TGW adjacencies and cross-region propagation. While the Global IR layer does not yet include a dedicated formal test suite, its behavior is strictly compositional: it combines pre-verified regional IRs without mutating their routing semantics. As a result, the correctness guarantees established for the Regional IR pass transfer cleanly to the global topology.
 
-The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces—analogous to nested scopes and function calls in programming language compilers.
+The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces: analogous to nested scopes and function calls in programming language compilers.
 
 ⸻
 
@@ -538,6 +538,8 @@ Super Router design demonstrates:
 - and compositional semantics beyond symmetric full-mesh topologies.
 
 Collectively, this confirms that the IR transform generalizes beyond flat full meshes to asymmetric, hierarchical, and multi-hub routing graphs. In compiler terms, Super Router represents the "nested scope + function call" inflection point: it shows that topology domains can be composed hierarchically through well-defined interfaces, establishing the system as a general topology compiler rather than a fixed mesh generator. (IPv4-only; no secondary CIDRs; no IPAM.)
+
+The Super Router evaluation also validates hierarchical security propagation. The Super Intra-VPC SG Rules module mirrors the routing hierarchy: security rules are synthesized per hub domain and selectively propagated across the inter-hub boundary, with the paired Transit Gateways treated as a single logical security domain at the IR level. This demonstrates that security semantics can be compiled from the same topology structure as routing.
 
 ⸻
 
