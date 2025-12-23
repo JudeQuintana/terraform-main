@@ -194,8 +194,6 @@ A complete, production-grade implementation of this AST → Regional IR → Glob
 
 In dual-stack deployments, this model enables asymmetric egress semantics: IPv4 traffic is routed through centralized NAT Gateways to achieve O(1) cost scaling, while IPv6 traffic follows decentralized, NAT-free egress paths, leveraging native IPv6 routing and TGW propagation. This behavior is demonstrated end-to-end in the centralized egress dual-stack full-mesh trio reference implementation.
 
-While the empirical evaluation in this paper focuses on a three-region (N = 3) deployment, the same TGW adjacency synthesis logic has also been validated on a larger topology with N = 10 Transit Gateways in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
-
 **Parallel Security Propagation Layer:**
 
 The same compilation pipeline used for routing is mirrored at the security layer. Each Tiered VPC-NG instance exposes an intra_vpc_security_group_id that downstream modules use to synthesize security relationships. At the regional layer, the Intra VPC Security Group Rule modules (IPv4 and IPv6 variants) construct O(V²) ingress-only allow rules between all non-self VPC network CIDRs, forming a regional SG mesh. At the global layer, the Full Mesh Intra VPC Security Group Rules modules replicate these rules across regions, producing a three-region SG mesh that aligns with the routing mesh. These SG meshes are designed to make end-to-end reachability testing easy in the reference implementation; they are not positioned as a least-privilege production policy, but as a concrete example of how security propagation can be compiled from the same topology AST.
@@ -261,6 +259,8 @@ To the author’s knowledge, this work represents one of the first systems to ap
 Verified IR Transformation:
 - The Regional IR pass, responsible for all O(V²) routing expansion, is implemented as a pure-function Terraform module and is formally verified through deterministic, property-based tests that validate routing invariants across diverse multi-VPC configurations.
 - The Global IR pass (Full Mesh Trio) composes these verified regional outputs to synthesize N×N TGW adjacencies and cross-region propagation. While the Global IR layer does not yet include a dedicated formal test suite, its behavior is strictly compositional: it combines pre-verified regional IRs without mutating their routing semantics. As a result, the correctness guarantees established for the Regional IR pass transfer cleanly to the global topology.
+
+Beyond the three-region (N = 3) evaluation topology, the TGW adjacency synthesis logic has been validated on a 10-TGW full mesh (N = 10, 45 adjacencies) in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
 
 The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces: analogous to nested scopes and function calls in programming language compilers.
 
