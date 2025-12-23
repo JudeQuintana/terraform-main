@@ -12,7 +12,7 @@ variable "ec2_instances" {
   })
   default = {
     key_name      = "my-ec2-key" # EC2 key pair name to use when launching an instance in us-west-2
-    instance_type = "t2.micro"
+    instance_type = "t3.micro"
   }
 }
 
