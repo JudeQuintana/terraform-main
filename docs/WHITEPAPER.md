@@ -30,7 +30,7 @@ Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloa
 For N Transit Gateways forming a full mesh, the number of TGW-to-TGW peering relationships grows quadratically:
 
 ```
-F(N) = N(N−1)/2 = O(N²),  where N = number of TGWs
+F(N) = N(N−1)/2 = O(N²), where N = number of TGWs
 ```
 
 For V VPCs attached across these TGWs, operators must also configure route tables, security group rules, TGW attachments, and propagation settings across multiple availability zones and CIDR blocks. VPC-level routing and security relationships scale as O(V²), independently of TGW adjacency. Even a modest 9-VPC deployment across 3 TGWs produces:
@@ -110,6 +110,7 @@ Tiered VPC-NG serves as the abstract syntax tree (AST) for the topology:
 - Each VPC is a typed object specifying CIDRs, tiers (private/public/isolated), IPv4/IPv6 combinations, NAT policies, and egress attributes.
 - Validations enforce semantic correctness (unique CIDRs, dual-stack integrity, NAT constraints, AZ structure).
 - The output is a VPC AST map of size V, supplying the compiler with structured inputs.
+- Exposes an intra_vpc_security_group_id interface for downstream security synthesis.
 
 This stage contains no routing logic. It defines what exists, not how it connects.
 
