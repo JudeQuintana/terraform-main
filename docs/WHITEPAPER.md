@@ -17,7 +17,7 @@
 
 ## 1. Abstract
 
-Modern AWS multi-VPC architectures face a fundamental scalability challenge: full-mesh connectivity across N Transit Gateways (TGWs) requires N(N–1)/2 adjacencies, realized in AWS as Transit Gateway peering attachments (O(N²)), while V attached VPCs incur O(V²) routing and security propagation. Because VPCs inherit connectivity transitively through TGWs, expansion across regions and address families (IPv4/IPv6) produces thousands of configuration artifacts and substantial recurring NAT Gateway cost. Imperative implementation approaches typically fail to scale beyond 10–15 TGWs or 50+ VPCs.
+Modern AWS multi-VPC architectures face a fundamental scalability challenge: full-mesh connectivity across N Transit Gateways (TGWs) requires N(N-1)/2 adjacencies, realized in AWS as Transit Gateway peering attachments (O(N²)), while V attached VPCs incur O(V²) routing and security propagation. Because VPCs inherit connectivity transitively through TGWs, expansion across regions and address families (IPv4/IPv6) produces thousands of configuration artifacts and substantial recurring NAT Gateway cost. Imperative implementation approaches typically fail to scale beyond 10-15 TGWs or 50+ VPCs.
 
 This paper presents a production-validated multi-region architecture that reduces topology implementation from O(N² + V²) imperative configuration to O(N + V) declarative specification. Using compositional Terraform modules and pure-function IR transformations, the system automatically infers TGW adjacencies, generates routing tables, and synthesizes baseline security rules derived from topology intent. In a 3-TGW, 9-VPC, 3-region deployment, the architecture synthesizes 1,308 AWS resources from 174 lines of configuration, achieving a 7.5× code-amplification factor and reducing implementation time from 31.2 hours to 15.75 minutes (a 120× speedup). Centralized egress enables O(1) NAT Gateway scaling, reducing gateways from 18 to 6 and lowering cost by 67%. The 1,308-resource total includes all AWS infrastructure objects (routes, security rules, attachments, subnets, route tables, and gateways), whereas the 852-route and 108-rule figures refer specifically to routing artifacts.
 
@@ -25,7 +25,7 @@ Mathematical analysis confirms linear configuration growth, a 27% entropy reduct
 
 ## 2. Introduction
 
-Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloads, enforce blast-radius boundaries, and support multi-region resilience. Mature cloud organizations routinely operate 15–50 VPCs across several AWS regions, with some enterprises exceeding 100 VPCs globally. However, creating consistent connectivity across these environments exposes a fundamental scaling challenge: while VPCs are not directly peered in TGW-centric architectures, the underlying Transit Gateway (TGW) mesh requires explicit configuration of all adjacency relationships.
+Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloads, enforce blast-radius boundaries, and support multi-region resilience. Mature cloud organizations routinely operate 15-50 VPCs across several AWS regions, with some enterprises exceeding 100 VPCs globally. However, creating consistent connectivity across these environments exposes a fundamental scaling challenge: while VPCs are not directly peered in TGW-centric architectures, the underlying Transit Gateway (TGW) mesh requires explicit configuration of all adjacency relationships.
 
 For N Transit Gateways forming a full mesh, the number of TGW-to-TGW peering relationships grows quadratically:
 
@@ -53,11 +53,11 @@ Together, these produce brittle, labor-intensive topologies and five systemic fa
 
 **Quadratic VPC-level configuration burden:**
 
-Adding the V-th VPC requires updating V–1 existing VPCs with new routes and security rules (O(V²)). Even modest environments (e.g., V=20) exceed 300 engineering hours for initial configuration.
+Adding the V-th VPC requires updating V-1 existing VPCs with new routes and security rules (O(V²)). Even modest environments (e.g., V=20) exceed 300 engineering hours for initial configuration.
 
 **Quadratic TGW adjacency growth in multi-region networks**:
 
-Full-mesh routing across N regions requires N(N–1)/2 TGW adjacencies (TGW-to-TGW peering relationships), each involving attachment creation, route-table association, and propagation configuration. At N = 5 regions, this already entails 5 Transit Gateways and 10 TGW adjacencies, each with region-specific constraints and routing semantics.
+Full-mesh routing across N regions requires N(N-1)/2 TGW adjacencies (TGW-to-TGW peering relationships), each involving attachment creation, route-table association, and propagation configuration. At N = 5 regions, this already entails 5 Transit Gateways and 10 TGW adjacencies, each with region-specific constraints and routing semantics.
 
 **High configuration error rates:**
 
@@ -67,7 +67,7 @@ Imperative creation of hundreds of VPC-level and TGW-level relationships leads t
 - asymmetric connectivity
 - intermittent cross-region failures
 
-Industry analyses attribute 60–80% of outages to configuration errors.
+Industry analyses attribute 60-80% of outages to configuration errors.
 
 **Excessive NAT Gateway cost due to per-VPC egress:**
 
@@ -148,7 +148,7 @@ This mirrors a compiler’s middle-end optimization pass: expanding abstract dec
 In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N = 3 regions, used as the production reference implementation for empirical evaluation.
 
 Full Mesh Trio composes multiple regional meshes into a global mesh:
-- Establishes all N(N−1)/2 TGW peering adjacencies.
+- Establishes all NxN TGW peering adjacencies.
 - Creates cross-region V×V routing expansions so that VPCs in different regions inherit full reachability.
 - Merges three regional IRs (one per region) into a single global IR representing a multi-region mesh.
 - The Global IR pass deterministically composes these verified regional outputs using resource-creating modules, preserving correctness while synthesizing cross-region topology.
@@ -373,7 +373,7 @@ Each module targets a specific networking scope such as individual VPCs, regiona
 
 AWS Cloud WAN introduces a managed, policy-driven approach to global networking, allowing operators to define routing intent via centralized policy documents. Cloud WAN abstracts regional networking constructs behind a global control plane and enables automated routing behavior based on attachment roles and segments.
 
-Cloud WAN represents a distinct architectural model from Transit Gateway–based designs, trading explicit TGW-to-TGW peering configuration for managed policy evaluation within AWS’s global network.
+Cloud WAN represents a distinct architectural model from Transit Gateway-based designs, trading explicit TGW-to-TGW peering configuration for managed policy evaluation within AWS’s global network.
 
 ⸻
 
@@ -395,7 +395,7 @@ Although operating in a different domain, these efforts demonstrate the benefits
 
 **Summary of Related Work:**
 
-Taken together, existing tools and frameworks address important aspects of cloud networking: resource provisioning, governance, policy expression, execution automation, and data-plane compilation. This work is positioned within this broader landscape and explores how compiler-inspired techniques can be applied to cloud control-plane configuration, specifically in the context of AWS Transit Gateway–based multi-region topologies.
+Taken together, existing tools and frameworks address important aspects of cloud networking: resource provisioning, governance, policy expression, execution automation, and data-plane compilation. This work is positioned within this broader landscape and explores how compiler-inspired techniques can be applied to cloud control-plane configuration, specifically in the context of AWS Transit Gateway-based multi-region topologies.
 
 The related work section will be revisited and expanded as the architectural model and evaluation are finalized.
 
