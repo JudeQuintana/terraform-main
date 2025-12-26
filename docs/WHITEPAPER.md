@@ -148,7 +148,7 @@ This mirrors a compiler’s middle-end optimization pass: expanding abstract dec
 In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N = 3 regions, used as the production reference implementation for empirical evaluation.
 
 Full Mesh Trio composes multiple regional meshes into a global mesh:
-- Establishes all NxN TGW peering adjacencies.
+- Establishes all N×N TGW peering adjacencies.
 - Creates cross-region V×V routing expansions so that VPCs in different regions inherit full reachability.
 - Merges three regional IRs (one per region) into a single global IR representing a multi-region mesh.
 - The Global IR pass deterministically composes these verified regional outputs using resource-creating modules, preserving correctness while synthesizing cross-region topology.
