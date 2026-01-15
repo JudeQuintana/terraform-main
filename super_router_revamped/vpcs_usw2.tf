@@ -20,9 +20,9 @@ locals {
     {
       name = "app1"
       ipv4 = {
-        network_cidr = "10.0.0.0/18"
-        #secondary_cidrs = ["10.1.0.0/20"]
-        ipam_pool = local.ipv4_ipam_pool_usw2
+        network_cidr    = "10.0.0.0/18"
+        secondary_cidrs = ["10.1.0.0/20"]
+        ipam_pool       = local.ipv4_ipam_pool_usw2
         #centralized_egress = {
         #central = true
         #}
@@ -36,9 +36,9 @@ locals {
         }
         b = {
           # secondary cidr
-          #isolated_subnets = [
-          #{ name = "db1", cidr = "10.1.1.0/24" }
-          #]
+          isolated_subnets = [
+            { name = "db1", cidr = "10.1.1.0/24" }
+          ]
           private_subnets = [
             { name = "cluster2", cidr = "10.0.27.0/24" }
           ]
