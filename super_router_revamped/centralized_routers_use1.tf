@@ -3,13 +3,13 @@ locals {
     {
       name            = "wolverine"
       amazon_side_asn = 64519
-      blackhole_cidrs = local.blackhole.cidrs
+      blackhole       = local.blackhole
       vpcs            = module.vpcs_use1
     },
     {
       name            = "bishop"
       amazon_side_asn = 64524
-      blackhole_cidrs = local.blackhole.cidrs
+      blackhole       = local.blackhole
       vpcs            = module.vpcs_another_use1
     }
   ]

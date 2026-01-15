@@ -3,13 +3,13 @@ locals {
     {
       name            = "thunderbird"
       amazon_side_asn = 64520
-      blackhole_cidrs = local.blackhole.cidrs
+      blackhole       = local.blackhole
       vpcs            = module.vpcs_usw2
     },
     {
       name            = "storm"
       amazon_side_asn = 64525
-      blackhole_cidrs = local.blackhole.cidrs
+      blackhole       = local.blackhole
       vpcs            = module.vpcs_another_usw2
     }
   ]
