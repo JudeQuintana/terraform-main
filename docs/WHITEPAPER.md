@@ -17,7 +17,7 @@
 
 ## 1. Abstract
 
-Modern AWS multi-VPC architectures face a fundamental scalability challenge: full-mesh connectivity across N Transit Gateways (TGWs) requires N(N-1)/2 adjacencies, realized in AWS as Transit Gateway peering attachments (O(N²)), while V attached VPCs incur O(V²) routing and security propagation. Because VPCs inherit connectivity transitively through TGWs, expansion across regions and address families (IPv4/IPv6) produces thousands of configuration artifacts and substantial recurring NAT Gateway cost. Imperative implementation approaches typically fail to scale beyond 10-15 TGWs or 50+ VPCs.
+Modern AWS multi-VPC architectures face a fundamental scalability challenge: full-mesh connectivity across N Transit Gateways (TGWs) requires N(N–1)/2 adjacencies, realized in AWS as Transit Gateway peering attachments (O(N²)), while V attached VPCs incur O(V²) routing and security propagation. Because VPCs inherit connectivity transitively through TGWs, expansion across regions and address families (IPv4/IPv6) produces thousands of configuration artifacts and substantial recurring NAT Gateway cost. Imperative implementation approaches typically fail to scale beyond 10-15 TGWs or 50+ VPCs.
 
 This paper presents a production-validated multi-region architecture that reduces topology implementation from O(N² + V²) imperative configuration to O(N + V) declarative specification. Using compositional Terraform modules and pure-function IR transformations, the system automatically infers TGW adjacencies, generates routing tables, and synthesizes baseline security rules derived from topology intent. In a 3-TGW, 9-VPC, 3-region deployment, the architecture synthesizes 1,308 AWS resources from 174 lines of configuration, achieving a 7.5× code-amplification factor and reducing implementation time from 31.2 hours to 15.75 minutes (a 120× speedup). Centralized egress enables O(1) NAT Gateway scaling, reducing gateways from 18 to 6 and lowering cost by 67%. The 1,308-resource total includes all AWS infrastructure objects (routes, security rules, attachments, subnets, route tables, and gateways), whereas the 852-route and 108-rule figures refer specifically to routing artifacts.
 
@@ -30,7 +30,7 @@ Large-scale AWS environments commonly adopt a multi-VPC model to isolate workloa
 For N Transit Gateways forming a full mesh, the number of TGW-to-TGW peering relationships grows quadratically:
 
 ```
-F(N) = N(N−1)/2 = O(N²), where N = number of TGWs
+F(N) = N(N–1)/2 = O(N²), where N = number of TGWs
 ```
 
 For V VPCs attached across these TGWs, operators must also configure route tables, security group rules, TGW attachments, and propagation settings across multiple availability zones and CIDR blocks. VPC-level routing and security relationships scale as O(V²), independently of TGW adjacency. Even a modest 9-VPC deployment across 3 TGWs produces:
@@ -53,11 +53,11 @@ Together, these produce brittle, labor-intensive topologies and five systemic fa
 
 **Quadratic VPC-level configuration burden:**
 
-Adding the V-th VPC requires updating V-1 existing VPCs with new routes and security rules (O(V²)). Even modest environments (e.g., V=20) exceed 300 engineering hours for initial configuration.
+Adding the V-th VPC requires updating V–1 existing VPCs with new routes and security rules (O(V²)). Even modest environments (e.g. V=20) exceed 300 engineering hours for initial configuration.
 
 **Quadratic TGW adjacency growth in multi-region networks**:
 
-Full-mesh routing across N regions requires N(N-1)/2 TGW adjacencies (TGW-to-TGW peering relationships), each involving attachment creation, route-table association, and propagation configuration. At N = 5 regions, this already entails 5 Transit Gateways and 10 TGW adjacencies, each with region-specific constraints and routing semantics.
+Full-mesh routing across N regions requires N(N–1)/2 TGW adjacencies (TGW-to-TGW peering relationships), each involving attachment creation, route-table association, and propagation configuration. At N=5 regions, this already entails 5 Transit Gateways and 10 TGW adjacencies, each with region-specific constraints and routing semantics.
 
 **High configuration error rates:**
 
@@ -73,7 +73,7 @@ Industry analyses attribute 60-80% of outages to configuration errors.
 
 Default architectures deploy NAT Gateways in every VPC × every AZ, yielding V × A gateways where constant infrastructure would suffice.
 
-Example: With V = 9 and A = 2, operators deploy 18 NAT Gateways at approximately $591/month ($7,092 annually), even though centralized egress requires only 6. This represents a 67% avoidable cost overhead.
+Example: With V=9 and A=2, operators deploy 18 NAT Gateways at approximately $591/month ($7,092 annually), even though centralized egress requires only 6. This represents a 67% avoidable cost overhead.
 
 **Non-repeatable and non-verifiable topology logic:**
 
@@ -145,7 +145,7 @@ This mirrors a compiler’s middle-end optimization pass: expanding abstract dec
 
 **Stage 3 - Global IR Pass (Full Mesh Trio):**
 
-In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N = 3 regions, used as the production reference implementation for empirical evaluation.
+In this work, the Global IR is realized via the Full Mesh Trio module, a concrete instantiation of the general N-TGW mesh synthesis for N=3 regions, used as the production reference implementation for empirical evaluation.
 
 Full Mesh Trio composes multiple regional meshes into a global mesh:
 - Establishes all N×N TGW peering adjacencies.
@@ -261,7 +261,7 @@ Verified IR Transformation:
 - The Regional IR pass, responsible for all O(V²) routing expansion, is implemented as a pure-function Terraform module and is formally verified through deterministic, property-based tests that validate routing invariants across diverse multi-VPC configurations.
 - The Global IR pass (Full Mesh Trio) composes these verified regional outputs to synthesize N×N TGW adjacencies and cross-region propagation. While the Global IR layer does not yet include a dedicated formal test suite, its behavior is strictly compositional: it combines pre-verified regional IRs without mutating their routing semantics. As a result, the correctness guarantees established for the Regional IR pass transfer cleanly to the global topology.
 
-Beyond the three-region (N = 3) evaluation topology, the TGW adjacency synthesis logic has been validated on a 10-TGW full mesh (N = 10, 45 adjacencies) in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
+Beyond the three-region (N=3) evaluation topology, the TGW adjacency synthesis logic has been validated on a 10-TGW full mesh (N=10, 45 adjacencies) in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
 
 The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces: analogous to nested scopes and function calls in programming language compilers.
 
@@ -550,10 +550,10 @@ The Super Router evaluation also validates hierarchical security propagation. Th
 Early design reasoning and prototype discussions are documented in engineering blog posts:
 - Opinion #23 - List of objects vs. map of maps: https://jq1.io/posts/opinion_23/
 - Synthesizing Tiered VPC in Terraform (AST development): https://jq1.io/posts/tiered_vpc/
-- Building a route generator via Terraform test (atomic unit development): https://jq1.io/posts/generating_routes/
-- TNT: Terraform Networking Trifecta (regional IR development) https://jq1.io/posts/tnt/
+- Building a route generator via Terraform test (Atomic Unit development): https://jq1.io/posts/generating_routes/
+- TNT: Terraform Networking Trifecta (Regional IR development): https://jq1.io/posts/tnt/
 - Slappin’ Chrome on the WIP (Shokunin Style Components): https://jq1.io/posts/slappin_chrome_on_the_wip/
-- Super Powered, Super Sharp, Super Router!: https://jq1.io/posts/super_router/
+- Super Powered, Super Sharp, Super Router!: (Domain IR development): https://jq1.io/posts/super_router/
 - $init super refactor: https://jq1.io/posts/init_super_refactor/
 
 These posts offer historical context but are not part of the peer-reviewed contributions.
