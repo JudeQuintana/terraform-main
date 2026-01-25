@@ -2,16 +2,17 @@
 Build a decentralized hub and spoke topology both intra-region and cross-region.
 
 Refactor is a work in progress:
-- Requires IPAM (done)
-- Super router refactor for IPv4 network cidrs (works!)
-- Added support for IPv4 secondaries (works!)
+- [x] Requires IPAM (done)
+- [x] Super router refactor for IPv4 network cidrs (works!)
+- [x] Added support for IPv4 secondaries (works!)
 
 TODO:
-- Support IPv6 and secondaries for super router revamped.
-- Build IPv6 version of super intra vpc security group rules.
-- Enable centralized egress per centralized router.
-- Add intra and cross region vpc peering deluxe.
-
+- [x] Support IPv6 and secondaries for super router revamped.
+- [x] Enable centralized egress per centralized router.
+- [] Rename subnets
+- [] Build IPv6 version of super intra vpc security group rules.
+- [] Add intra and cross region vpc peering deluxe.
+- [] Update route validation for ipv4 and ipv6
 
 Demo:
 - Pre-requisite:

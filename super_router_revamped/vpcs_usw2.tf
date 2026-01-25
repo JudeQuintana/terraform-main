@@ -13,8 +13,23 @@ data "aws_vpc_ipam_pool" "ipv4_usw2" {
   }
 }
 
+data "aws_vpc_ipam_pool" "ipv6_usw2" {
+  provider = aws.usw2
+
+  filter {
+    name   = "description"
+    values = ["ipv6-test-usw2"]
+  }
+  filter {
+    name   = "address-family"
+    values = ["ipv6"]
+  }
+}
+
+
 locals {
   ipv4_ipam_pool_usw2 = data.aws_vpc_ipam_pool.ipv4_usw2
+  ipv6_ipam_pool_usw2 = data.aws_vpc_ipam_pool.ipv6_usw2
 
   tiered_vpcs_usw2 = [
     {
@@ -23,30 +38,44 @@ locals {
         network_cidr    = "10.0.0.0/18"
         secondary_cidrs = ["10.1.0.0/20"]
         ipam_pool       = local.ipv4_ipam_pool_usw2
-        #centralized_egress = {
-        #central = true
-        #}
+        centralized_egress = {
+          central = true
+        }
+      }
+      ipv6 = {
+        network_cidr = "2600:1f24:66:c000::/56"
+        ipam_pool    = local.ipv6_ipam_pool_usw2
       }
       azs = {
         a = {
+          eigw = true
+          private_subnets = [
+            { name = "haproxy1", cidr = "10.0.21.64/26", ipv6_cidr = "2600:1f24:66:c001::/64", special = true }
+          ]
           public_subnets = [
-            { name = "random1", cidr = "10.0.19.0/28", special = true },
-            { name = "haproxy1", cidr = "10.0.21.64/26" }
+            { name = "random1", cidr = "10.0.19.0/28", ipv6_cidr = "2600:1f24:66:c000::/64", natgw = true }
           ]
         }
         b = {
+          eigw = true
+          private_subnets = [
+            { name = "cluster2", cidr = "10.0.27.0/24", ipv6_cidr = "2600:1f24:66:c003::/64", special = true }
+          ]
+          public_subnets = [
+            { name = "cluster1", cidr = "10.0.28.0/24", ipv6_cidr = "2600:1f24:66:c004::/64", natgw = true }
+          ]
           # secondary cidr
           isolated_subnets = [
-            { name = "db1", cidr = "10.1.1.0/24" }
+            { name = "db1", cidr = "10.1.1.0/24", ipv6_cidr = "2600:1f24:66:c002::/64" }
           ]
+        }
+        c = {
+          eigw = true
           private_subnets = [
-            { name = "cluster2", cidr = "10.0.27.0/24" }
+            { name = "random2", cidr = "10.0.30.0/28", ipv6_cidr = "2600:1f24:66:c005::/64", special = true },
           ]
-          # Enable a NAT Gateway for all private subnets in the same AZ
-          # by adding the `natgw = true` attribute to any public subnet
           public_subnets = [
-            { name = "random2", cidr = "10.0.30.0/28", special = true },
-            { name = "haproxy2", cidr = "10.0.31.64/26" }
+            { name = "haproxy2", cidr = "10.0.31.0/26", ipv6_cidr = "2600:1f24:66:c006::/64", natgw = true }
           ]
         }
       }
@@ -56,15 +85,32 @@ locals {
       ipv4 = {
         network_cidr = "192.168.0.0/18"
         ipam_pool    = local.ipv4_ipam_pool_usw2
-        #centralized_egress = {
-        #private = true
-        #}
+        centralized_egress = {
+          private = true
+        }
+      }
+      ipv6 = {
+        network_cidr = "2600:1f24:66:c100::/56"
+        ipam_pool    = local.ipv6_ipam_pool_usw2
       }
       azs = {
-        c = {
+        a = {
+          eigw = true
           private_subnets = [
-            { name = "experiment1", cidr = "192.168.16.0/24", special = true }
+            { name = "experiment1", cidr = "192.168.0.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true }
           ]
+          b = {
+            eigw = true
+            private_subnets = [
+              { name = "cluster2", cidr = "192.168.1.0/24", ipv6_cidr = "2600:1f24:66:c101::/64", special = true }
+            ]
+          }
+          c = {
+            eigw = true
+            private_subnets = [
+              { name = "random2", cidr = "192.168.2.0/28", ipv6_cidr = "2600:1f24:66:c102::/64", special = true },
+            ]
+          }
         }
       }
     }
@@ -94,18 +140,37 @@ locals {
       ipv4 = {
         network_cidr = "172.16.0.0/18"
         ipam_pool    = local.ipv4_ipam_pool_usw2
-        #centralized_egress = {
-        #central = true
-        #}
+        centralized_egress = {
+          central = true
+        }
+      }
+      ipv6 = {
+        network_cidr = "2600:1f24:66:c200::/56"
+        ipam_pool    = local.ipv6_ipam_pool_usw2
       }
       azs = {
         a = {
           private_subnets = [
-            { name = "jenkins1", cidr = "172.16.1.0/24" }
+            { name = "jenkins1", cidr = "172.16.1.0/24", ipv6_cidr = "2600:1f24:66:c200::/64", special = true }
           ]
           public_subnets = [
-            { name = "random1", cidr = "172.16.6.0/26" },
-            { name = "various", cidr = "172.16.5.0/28", special = true }
+            { name = "various1", cidr = "172.16.5.0/28", ipv6_cidr = "2600:1f24:66:c202::/64", natgw = true }
+          ]
+        }
+        b = {
+          private_subnets = [
+            { name = "jenkins2", cidr = "172.16.7.0/24", ipv6_cidr = "2600:1f24:66:c201::/64", special = true }
+          ]
+          public_subnets = [
+            { name = "various3", cidr = "172.16.9.0/28", ipv6_cidr = "2600:1f24:66:c204::/64", natgw = true }
+          ]
+        }
+        c = {
+          private_subnets = [
+            { name = "jenkins3", cidr = "172.16.10.0/24", ipv6_cidr = "2600:1f24:66:c203::/64", special = true }
+          ]
+          public_subnets = [
+            { name = "various4", cidr = "172.16.12.0/28", ipv6_cidr = "2600:1f24:66:c207::/64", natgw = true }
           ]
         }
       }
@@ -115,17 +180,37 @@ locals {
       ipv4 = {
         network_cidr = "10.2.0.0/18"
         ipam_pool    = local.ipv4_ipam_pool_usw2
-        #centralized_egress = {
-        #private = true
-        #}
+        centralized_egress = {
+          private = true
+        }
+      }
+      ipv6 = {
+        network_cidr = "2600:1f24:66:c600::/56"
+        ipam_pool    = local.ipv6_ipam_pool_usw2
       }
       azs = {
-        c = {
+        a = {
           private_subnets = [
-            { name = "jenkins2", cidr = "10.2.0.0/24", special = true }
+            { name = "jenkins1", cidr = "10.2.0.0/24", ipv6_cidr = "2600:1f24:66:c600::/64", special = true }
           ]
           public_subnets = [
-            { name = "random1", cidr = "10.2.1.0/28" }
+            { name = "random1", cidr = "10.2.1.0/28", ipv6_cidr = "2600:1f24:66:c601::/64" }
+          ]
+        }
+        b = {
+          private_subnets = [
+            { name = "jenkins2", cidr = "10.2.3.0/24", ipv6_cidr = "2600:1f24:66:c602::/64", special = true }
+          ]
+          public_subnets = [
+            { name = "random2", cidr = "10.2.4.0/28", ipv6_cidr = "2600:1f24:66:c603::/64" }
+          ]
+        }
+        c = {
+          private_subnets = [
+            { name = "jenkins3", cidr = "10.2.5.0/24", ipv6_cidr = "2600:1f24:66:c604::/64", special = true }
+          ]
+          public_subnets = [
+            { name = "random4", cidr = "10.2.6.0/28", ipv6_cidr = "2600:1f24:66:c605::/64" }
           ]
         }
       }
