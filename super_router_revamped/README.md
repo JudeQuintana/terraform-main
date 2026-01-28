@@ -7,12 +7,15 @@ Refactor is a work in progress:
 - [x] Added support for IPv4 secondaries (works!)
 
 TODO:
-- [x] Support IPv6 and secondaries for super router revamped.
-- [x] Enable centralized egress per centralized router.
-- [] Rename subnets
-- [] Build IPv6 version of super intra vpc security group rules.
-- [] Add intra and cross region vpc peering deluxe.
+- [x] Support IPv6 and secondaries for super router revamped
+- [x] Enable centralized egress per centralized router
+- [x] Build IPv6 version of super intra vpc security group rules
+- [X] Update IPv6 blackhole cidrs
+- [] Add intra and cross region vpc peering deluxe
 - [] Update route validation for ipv4 and ipv6
+- [] Rename subnets
+- [] Update centralized egress docs for readme
+- [] Update readme prereqs
 
 Demo:
 - Pre-requisite:
