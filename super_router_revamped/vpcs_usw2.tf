@@ -43,8 +43,9 @@ locals {
         }
       }
       ipv6 = {
-        network_cidr = "2600:1f24:66:c000::/56"
-        ipam_pool    = local.ipv6_ipam_pool_usw2
+        network_cidr    = "2600:1f24:66:c000::/56"
+        secondary_cidrs = ["2600:1f24:66:cd00::/56"]
+        ipam_pool       = local.ipv6_ipam_pool_usw2
       }
       azs = {
         a = {
@@ -71,8 +72,9 @@ locals {
         }
         c = {
           eigw = true
+          # ipv6 secondary cidr
           private_subnets = [
-            { name = "random2", cidr = "10.0.30.0/28", ipv6_cidr = "2600:1f24:66:c005::/64", special = true },
+            { name = "random2", cidr = "10.0.30.0/28", ipv6_cidr = "2600:1f24:66:cd00::/60", special = true },
           ]
           public_subnets = [
             { name = "haproxy2", cidr = "10.0.31.0/26", ipv6_cidr = "2600:1f24:66:c006::/64", natgw = true }

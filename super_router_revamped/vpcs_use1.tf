@@ -160,7 +160,8 @@ locals {
             { name = "jenkins1", cidr = "10.1.65.0/24", ipv6_cidr = "2600:1f28:3d:c700::/64", special = true }
           ]
           public_subnets = [
-            { name = "natgw1", cidr = "10.1.69.0/24", ipv6_cidr = "2600:1f28:3d:c703::/64", natgw = true }
+            { name = "natgw1", cidr = "10.1.69.0/24", ipv6_cidr = "2600:1f28:3d:c703::/64", natgw = true },
+            { name = "random1", cidr = "10.1.74.0/24", ipv6_cidr = "2600:1f28:3d:c706::/64" }
           ]
         }
         b = {
