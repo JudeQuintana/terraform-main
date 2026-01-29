@@ -136,7 +136,6 @@ module "vpcs_use1" {
   tiered_vpc       = each.value
 }
 
-
 # Another
 locals {
   tiered_vpcs_another_use1 = [
