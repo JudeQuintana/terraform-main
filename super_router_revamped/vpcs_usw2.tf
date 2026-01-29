@@ -101,18 +101,18 @@ locals {
           private_subnets = [
             { name = "experiment1", cidr = "192.168.0.0/24", ipv6_cidr = "2600:1f24:66:c100::/64", special = true }
           ]
-          b = {
-            eigw = true
-            private_subnets = [
-              { name = "cluster2", cidr = "192.168.1.0/24", ipv6_cidr = "2600:1f24:66:c101::/64", special = true }
-            ]
-          }
-          c = {
-            eigw = true
-            private_subnets = [
-              { name = "random2", cidr = "192.168.2.0/28", ipv6_cidr = "2600:1f24:66:c102::/64", special = true },
-            ]
-          }
+        }
+        b = {
+          eigw = true
+          private_subnets = [
+            { name = "cluster2", cidr = "192.168.1.0/24", ipv6_cidr = "2600:1f24:66:c101::/64", special = true }
+          ]
+        }
+        c = {
+          eigw = true
+          private_subnets = [
+            { name = "random2", cidr = "192.168.2.0/28", ipv6_cidr = "2600:1f24:66:c102::/64", special = true },
+          ]
         }
       }
     }
