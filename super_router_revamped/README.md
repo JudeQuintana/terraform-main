@@ -11,9 +11,9 @@ TODO:
 - [x] Enable centralized egress per centralized router
 - [x] Build IPv6 version of super intra vpc security group rules
 - [X] Update IPv6 blackhole cidrs
-- [] Add intra and cross region vpc peering deluxe
-- [] Update route validation for ipv4 and ipv6
+- [X] Add intra and cross region vpc peering deluxe
 - [] Rename subnets
+- [] Update route validation for ipv4 and ipv6
 - [] Update centralized egress docs for readme
 - [] Update readme prereqs
 
