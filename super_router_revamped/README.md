@@ -10,15 +10,16 @@ TODO:
 - [x] Support IPv6 and secondaries for super router revamped
 - [x] Enable centralized egress per centralized router
 - [x] Build IPv6 version of super intra vpc security group rules
-- [X] Update IPv6 blackhole cidrs
-- [X] Add intra and cross region vpc peering deluxe
+- [x] Update IPv6 blackhole cidrs
+- [x] Add intra and cross region vpc peering deluxe
 - [] Rename subnets
-- [X] Update route validation for ipv4
+- [x] Update route validation for ipv4
 - [] Update route validation for ipv6
 - [] Update Super Router diagram with vpcs configured for centralized
   egress.
 - [] Update centralized egress docs for readme
 - [] Update readme prereqs
+- [] publish and update modules on TF registry
 
 Demo:
 - Pre-requisite:
