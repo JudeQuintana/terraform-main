@@ -18,3 +18,10 @@ variable "region_az_labels" {
     us-west-2c = "usw2c"
   }
 }
+
+variable "enable_s3_gateways" {
+  description = "Toggle s3 gateways in each VPC."
+  type        = bool
+  default     = false
+}
+
