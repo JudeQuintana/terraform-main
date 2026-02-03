@@ -24,13 +24,106 @@ TODO:
 Demo:
 - Pre-requisite:
   - AWS account, may need to increase your VPC and or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.
-  - IPAM CIDR pools in us-west-2 and us-east-1
+  - IPAM CIDR pools for IPv4 and IPv6 in us-west-2 and us-east-1
 This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in each region (6 total)
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 The resulting architecture is a decentralized hub spoke topology:
 ![super-router-shokunin](https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png)
 
+### VPC CIDRs
+- `us-west-2`
+  - app1 VPC Tier (`central = true`):
+    - IPv4: `10.0.0.0/18`
+    - IPv4 Secondaries: `10.1.0.0/20`
+    - IPv6: `2600:1f24:66:c000::/56`
+    - IPv6 Secondaries: `2600:1f24:66:cd00::/56`
+  - general1 VPC Tier (`private = true`):
+    - IPv4: `192.168.0.0/18`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f24:66:c100::/56`
+    - IPv6 Secondaries: None
+  - cicd1 VPC Tier (`central = true`):
+    - IPv4: `172.16.0.0/18`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f24:66:c200::/56`
+    - IPv6 Secondaries: None
+  - infra1 VPC Tier (`private = true`):
+    - IPv4: `10.2.0.0/18`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f24:66:c600::/56`
+    - IPv6 Secondaries: None
+
+- `us-east-1`
+  - app2 VPC Tier (`central = true`):
+    - IPv4: `10.0.64.0/20`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f28:3d:c000::/56`
+    - IPv6 Secondaries: None
+  - general2 VPC Tier (`private = true`):
+    - IPv4: `192.168.128.0/20`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f28:3d:c400::/56`
+    - IPv6 Secondaries: None
+  - cicd2 VPC Tier (`central = true`):
+    - IPv4: `10.1.64.0/20`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f28:3d:c700::/56`
+    - IPv6 Secondaries: None
+  - infra2 VPC Tier (`private = true`):
+    - IPv4: `192.168.64.0/20`
+    - IPv4 Secondaries: None
+    - IPv6: `2600:1f28:3d:c800::/56`
+    - IPv6 Secondaries: None
+
+### IPAM Configuration
+- There are many ways to configure IPAM so I manually created IPAM pools (advanced tier) in the AWS UI.
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
+- You'll need to configure your own IPv4 and IPv6 cidr pools/subpools.
+- Advanced Tier IPAM in `us-west-2`, and `us-east-1` operating reigons.
+  - In this demo, ipam pools for all locales are managed in the `us-west-2` region via AWS Console UI.
+  - No IPv4 regional pools at the moment.
+  - IPv6 subpools need a IPv6 regional pool with `/52` to be able to provision `/56` per locale.
+
+  - `us-west-2` (ipam locale)
+    - IPv4 Pool (private scope)
+      - Description: `ipv4-test-usw2`
+      - Provisioned CIDRs:
+        - `10.0.0.0/18`
+        - `10.1.0.0/20`
+        - `192.168.0.0/18`
+        - `172.16.0.0/18`
+        - `10.2.0.0/18 `
+    - IPv6 regional pool (public scope)
+      - `2600:1f24:66:c000::/52`
+        - IPv6 subpool (public scope)
+          - Description: `ipv6-test-usw2`
+          - Provisioned CIDRs:
+            - `2600:1f24:66:c000::/56`
+            - `2600:1f24:66:c100::/56`
+            - `2600:1f24:66:c200::/56`
+            - `2600:1f24:66:c600::/56`
+            - `2600:1f24:66:cd00::/56`
+
+  - `us-east-1` (ipam locale)
+    - IPv4 Pool (private scope)
+      - Description: `ipv4-test-use1`
+      - Provisioned CIDRs:
+        - `10.0.64.0/20`
+        - `10.1.64.0/20`
+        - `192.168.64.0/20`
+        - `192.168.128.0/20`
+    - IPv6 regional pool (public scope)
+      - `2600:1f28:3d:c000::/52`
+        - IPv6 subpool (public scope)
+          - Description: `ipv6-test-use1`
+          - Provisioned CIDRs:
+            - `2600:1f28:3d:c000::/56`
+            - `2600:1f28:3d:c400::/56`
+            - `2600:1f28:3d:c700::/56`
+            - `2600:1f28:3d:c800::/56`
+
+## Begin Demo
 It begins:
  - `terraform init`
 
