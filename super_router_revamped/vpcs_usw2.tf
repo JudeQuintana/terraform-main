@@ -74,7 +74,7 @@ locals {
           eigw = true
           # ipv6 secondary cidr
           private_subnets = [
-            { name = "random2", cidr = "10.0.30.0/28", ipv6_cidr = "2600:1f24:66:cd00::/60", special = true },
+            { name = "thing1", cidr = "10.0.30.0/28", ipv6_cidr = "2600:1f24:66:cd00::/60", special = true },
           ]
           public_subnets = [
             { name = "haproxy2", cidr = "10.0.31.0/26", ipv6_cidr = "2600:1f24:66:c006::/64", natgw = true }
@@ -169,7 +169,7 @@ locals {
         }
         c = {
           private_subnets = [
-            { name = "jenkins3", cidr = "172.16.10.0/24", ipv6_cidr = "2600:1f24:66:c203::/64", special = true }
+            { name = "thing4", cidr = "172.16.10.0/24", ipv6_cidr = "2600:1f24:66:c203::/64", special = true }
           ]
           public_subnets = [
             { name = "various4", cidr = "172.16.12.0/28", ipv6_cidr = "2600:1f24:66:c207::/64", natgw = true }
@@ -204,12 +204,12 @@ locals {
             { name = "jenkins2", cidr = "10.2.3.0/24", ipv6_cidr = "2600:1f24:66:c602::/64", special = true }
           ]
           public_subnets = [
-            { name = "random2", cidr = "10.2.4.0/28", ipv6_cidr = "2600:1f24:66:c603::/64" }
+            { name = "various2", cidr = "10.2.4.0/28", ipv6_cidr = "2600:1f24:66:c603::/64" }
           ]
         }
         c = {
           private_subnets = [
-            { name = "jenkins3", cidr = "10.2.5.0/24", ipv6_cidr = "2600:1f24:66:c604::/64", special = true }
+            { name = "thing5", cidr = "10.2.5.0/24", ipv6_cidr = "2600:1f24:66:c604::/64", special = true }
           ]
           public_subnets = [
             { name = "random4", cidr = "10.2.6.0/28", ipv6_cidr = "2600:1f24:66:c605::/64" }

@@ -12,9 +12,9 @@ TODO:
 - [x] Build IPv6 version of super intra vpc security group rules
 - [x] Update IPv6 blackhole cidrs
 - [x] Add intra and cross region vpc peering deluxe
-- [] Rename subnets
+- [x] Rename subnets
 - [x] Update route validation for ipv4
-- [] Update route validation for ipv6
+- [x] Update route validation for ipv6
 - [] Update Super Router diagram with vpcs configured for centralized
   egress.
 - [] Update centralized egress docs for readme
@@ -52,51 +52,96 @@ Routing and peering Validation with AWS Route Analyzer:
   - Select new global network -> go to `Transit Gateways` -> `Register
     Transit Gateway` -> Select TGWs -> `Register Transit Gateway` -> wait until all states say `Available`
   - Go to `Transit gateway network` -> `Route Analyzer`
-    - IPv4:
-        - Intra-Region Test 1 (general1 usw2c to thunderbird usw2a)
-          - Source:
-            - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-random2-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
-            - IP Address: `192.168.2.7` (`random2` private subnet)
-          - Destination:
-            - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
-            - IP Address: `172.16.5.9` (`various1` public subnet)
-          - Select `Run Route Analysis`
-            - Forward and Return Paths should both have a `Connected` status.
-        - Intra-Region Test 2 (infra2 use1c to app2 use1c)
-          - Source:
-            - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
-            - IP Address: `192.168.67.8` (`jenkins3` private subnet)
-          - Destination:
-            - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
-            - IP Address: `10.0.67.4` (`natgw3` public subnet)
-          - Select `Run Route Analysis`
-            - Forward and Return Paths should both have a `Connected` status.
-        - Cross-Region Test 1 (app1 usw2a to general2 use1c)
-          - Source:
-            - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
-            - IP Address: `10.0.21.65` (`haproxy1` public subnet)
-          - Destination:
-            - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
-            - IP Address: `192.168.137.6` (`experiment14` private subnet)
-          - Select `Run Route Analysis`
-            - Forward and Return Paths should both have a `Connected` status.
-        - Cross-Region Test 2 (cicd2 use1a to infra1 usw2c)
-          - Source:
-            - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
-            - IP Address: `10.1.65.3` (`jenkins1` private subnet)
-          - Destination:
-            - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
-            - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
-            - IP Address: `10.2.5.6` (`jenkins3` private subnet)
-          - Select `Run Route Analysis`
-            - Forward and Return Paths should both have a `Connected` status.
+  - IPv4:
+    - Intra-Region Test 1 (general1 usw2c to thunderbird usw2a)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-random2-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - IP Address: `192.168.2.7` (`random2` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
+        - IP Address: `172.16.5.9` (`various1` public subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Intra-Region Test 2 (infra2 use1c to app2 use1c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
+        - IP Address: `192.168.67.8` (`jenkins3` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - IP Address: `10.0.67.4` (`natgw3` public subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 1 (app1 usw2a to general2 use1c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - IP Address: `10.0.21.65` (`haproxy1` public subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - IP Address: `192.168.137.6` (`experiment14` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 2 (cicd2 use1a to infra1 usw2c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
+        - IP Address: `10.1.65.3` (`jenkins1` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
+        - IP Address: `10.2.5.6` (`thing5` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+  - IPv6:
+    - Intra-Region Test 1 (general1 usw2c to thunderbird usw2a)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-random2-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - IP Address: `2600:1f24:66:c102:0000:0000:0000:0001` (`random2` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
+        - IP Address: `2600:1f24:66:c202:0000:0000:0000:0002` (`various1` public subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Intra-Region Test 2 (infra2 use1c to app2 use1c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
+        - IP Address: `2600:1f28:3d:c802:0000:0000:0000:0003` (`jenkins3` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - IP Address: `2600:1f28:3d:c00a:0000:0000:0000:0004` (`natgw3` public subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 1 (app1 usw2a to general2 use1c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-thunderbird-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-app1-usw2 <-> TEST-centralized-router-thunderbird-usw2` (VPC)
+        - IP Address: `2600:1f24:66:c001:0000:0000:0000:0002` (`haproxy1` public subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-wolverine-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-general2-use1 <-> TEST-centralized-router-wolverine-use1` (VPC)
+        - IP Address: `2600:1f28:3d:c40a:0000:0000:0000:0003` (`experiment14` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
+    - Cross-Region Test 2 (cicd2 use1a to infra1 usw2c)
+      - Source:
+        - Transit Gateway: Choose `TEST-centralized-router-bishop-use1`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-cicd2-use1 <-> TEST-centralized-router-bishop-use1` (VPC)
+        - IP Address: `2600:1f28:3d:c700:0000:0000:0000:0004` (`jenkins1` private subnet)
+      - Destination:
+        - Transit Gateway: Choose `TEST-centralized-router-storm-usw2`
+        - Transit Gateway Attachment: Choose `TEST-tiered-vpc-infra1-usw2 <-> TEST-centralized-router-storm-usw2` (VPC)
+        - IP Address: `2600:1f24:66:c604:0000:0000:0000:0005` (`thing5` private subnet)
+      - Select `Run Route Analysis`
+        - Forward and Return Paths should both have a `Connected` status.
 
 Several other routes can be validated, try them out!
 
