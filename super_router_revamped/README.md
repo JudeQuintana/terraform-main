@@ -15,6 +15,7 @@ TODO:
 - [x] Rename subnets
 - [x] Update route validation for ipv4
 - [x] Update route validation for ipv6
+- [x] Add s3 gateway toggle
 - [] Update Super Router diagram with vpcs configured for centralized
   egress.
 - [] Update centralized egress docs for readme
