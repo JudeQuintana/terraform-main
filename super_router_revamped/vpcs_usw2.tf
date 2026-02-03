@@ -26,7 +26,6 @@ data "aws_vpc_ipam_pool" "ipv6_usw2" {
   }
 }
 
-
 locals {
   ipv4_ipam_pool_usw2 = data.aws_vpc_ipam_pool.ipv4_usw2
   ipv6_ipam_pool_usw2 = data.aws_vpc_ipam_pool.ipv6_usw2
