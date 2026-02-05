@@ -34,13 +34,13 @@ For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose VPCs per Region.
 Choose Request increase at account-level.
 ```
-      - Need at least 6 or more Internet gateways (default is 5):
+      - Need at least 4 or more Internet gateways (default is 5 but it should suffice is starting with 0 IGWs)::
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose Internet gateways per Region.
 Choose Request increase at account-level.
 ```
-      - Need at least 6 or more Egress-only Internet gateways (default is 5):
+      - Need at least 4 or more Egress-only Internet gateways (default is 5 but it should suffice is starting with 0 IEGWs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose Egress-only internet gateways per Region.
