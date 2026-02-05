@@ -23,10 +23,44 @@ TODO:
 - [] publish and update modules on TF registry
 
 Pre-requisites:
-  - In your AWS account, you may need to increase your VPC and or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.
+  - In your AWS account, you may need to increase your VPC and/or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.
   - This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in each region (6 total)
   - Each Centralized Router is configured with centralzed egress for the attached VPCs.
-  - IPAM CIDR pools for IPv4 and IPv6 in us-west-2 and us-east-1
+    - That means there will be 4 VPCs per region 3 NATGWs/EIPs (per enabled AZ) for each Centralized Router's region (6 EIPs total).
+    - Increase the following quotas in each region for `us-east-1` and `us-west-2`:
+      - Need at least 4 or more VPCs (default is 5 but it should suffice is starting with 0 VPCs):
+```
+For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
+Choose VPCs per Region.
+Choose Request increase at account-level.
+```
+      - Need at least 6 or more Internet gateways (default is 5):
+```
+For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
+Choose Internet gateways per Region.
+Choose Request increase at account-level.
+```
+      - Need at least 6 or more Egress-only Internet gateways (default is 5):
+```
+For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
+Choose Egress-only internet gateways per Region.
+Choose Request increase at account-level.
+```
+      - Need at least 6 or more EIPs (default is 5):
+```
+For AWS Services, select Amazon Elastic Compute Cloud (Amazon EC2).
+Choose EC2-VPC Elastic IPs.
+Choose Request increase at account-level.
+```
+      - Need at least 3 TGWs per account (default is 5 but it should suffice is starting with 0 TGWs):
+```
+For AWS Services, select Amazon Elastic Compute Cloud (Amazon EC2).
+Choose Transit gateways per account.
+Choose Request increase at account-level.
+```
+    - Centralized Routers and VPCs dont have to be in a centralized
+      egress configuration but helps with scaling VPCs at cost (can also safely step down to non centralized egress config).
+  - Pre-existing IPAM CIDR pools for IPv4 and IPv6 in us-west-2 and us-east-1
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 The resulting architecture is a decentralized hub spoke topology:
@@ -54,7 +88,6 @@ The resulting architecture is a decentralized hub spoke topology:
     - IPv4 Secondaries: None
     - IPv6: `2600:1f24:66:c600::/56`
     - IPv6 Secondaries: None
-
 - `us-east-1`
   - app2 VPC Tier (`central = true`):
     - IPv4: `10.0.64.0/20`
