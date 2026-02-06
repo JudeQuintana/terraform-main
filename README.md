@@ -79,7 +79,8 @@
   - [Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules) (IPv4 only)
   - [Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-full-mesh-intra-vpc-security-group-rules) (IPv4 only)
   - [IPv6 Intra VPC Security Group Rule](https://github.com/JudeQuintana/terraform-aws-ipv6-intra-vpc-security-group-rule) (IPv6 only, for use with dual stack VPCs)
-  - New [IPv6 Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
+  - [IPv6 Full Mesh Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-full-mesh-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
+  - NEW [IPv6 Super Intra VPC Security Group Rules](https://github.com/JudeQuintana/terraform-aws-ipv6-super-intra-vpc-security-group-rules) (IPv6 only, for use with dual stack VPCs)
   - TODO: Mega Mesh Intra VPC Security Group Rules
 - Included S3 Gateway examples via VPC Endpoint.
 - The Centralized Router module is an implementation of both `AWS Centralized Router` and `Centralized outbound routing to the internet` [concepts](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-centralized-router.html) and but without VPN Gateway or Direct Connect, only VPCs.
