@@ -18,9 +18,9 @@ TODO:
 - [x] Add s3 gateway toggle
 - [x] Update Super Router diagram with vpcs configured for centralized
   egress.
-- [] Update centralized egress docs for readme
+- [x] publish and update modules on TF registry
 - [] Update readme prereqs
-- [] publish and update modules on TF registry
+- [] Update centralized egress docs for readme
 
 Pre-requisites:
   - In your AWS account, you may need to increase your VPC and/or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.

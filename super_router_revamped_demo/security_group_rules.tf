@@ -58,9 +58,8 @@ module "intra_vpc_security_group_rules_use1" {
 
 # allowing ssh and ping communication across regions
 module "super_intra_vpc_security_group_rules_usw2_to_use1" {
-  #source  = "JudeQuintana/super-intra-vpc-security-group-rules/aws"
-  #version = "1.0.0"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/super_intra_vpc_security_group_rules?ref=super-router-revamped"
+  source  = "JudeQuintana/super-intra-vpc-security-group-rules/aws"
+  version = "1.0.1"
 
   providers = {
     aws.local = aws.usw2
@@ -138,9 +137,8 @@ module "ipv6_intra_vpc_security_group_rules_usw2" {
 
 # allowing ssh and ping6 communication across regions
 module "ipv6_super_intra_vpc_security_group_rules_usw2_to_use1" {
-  #source  = "JudeQuintana/ipv6-super-intra-vpc-security-group-rules/aws"
-  #version = "1.0.0"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/ipv6_super_intra_vpc_security_group_rules?ref=super-router-revamped"
+  source  = "JudeQuintana/ipv6-super-intra-vpc-security-group-rules/aws"
+  version = "1.0.0"
 
   providers = {
     aws.local = aws.usw2
