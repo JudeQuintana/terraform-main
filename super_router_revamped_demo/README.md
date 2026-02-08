@@ -19,8 +19,8 @@ TODO:
 - [x] Update Super Router diagram with vpcs configured for centralized
   egress.
 - [x] publish and update modules on TF registry
-- [] Update readme prereqs
-- [] Update centralized egress docs for readme
+- [x] Update readme prereqs
+- [x] Update centralized egress docs for readme
 
 Pre-requisites:
   - In your AWS account, you may need to increase your VPC and/or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.
@@ -34,13 +34,13 @@ For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose VPCs per Region.
 Choose Request increase at account-level.
 ```
-      - Need at least 4 or more Internet gateways (default is 5 but it should suffice is starting with 0 IGWs)::
+      - Need at least 4 or more Internet gateways (default is 5 but it should suffice is starting with 0 IGWs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose Internet gateways per Region.
 Choose Request increase at account-level.
 ```
-      - Need at least 4 or more Egress-only Internet gateways (default is 5 but it should suffice is starting with 0 IEGWs):
+      - Need at least 4 or more Egress-only Internet gateways for IPv6 egress (default is 5 but it should suffice is starting with 0 IEGWs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose Egress-only internet gateways per Region.
@@ -58,15 +58,154 @@ For AWS Services, select Amazon Elastic Compute Cloud (Amazon EC2).
 Choose Transit gateways per account.
 Choose Request increase at account-level.
 ```
-    - Centralized Routers and VPCs dont have to be in a centralized
-      egress configuration but helps with scaling VPCs at cost (can also safely step down to non centralized egress config).
-  - Pre-existing IPAM CIDR pools for IPv4 and IPv6 in us-west-2 and us-east-1
+  - Centralized Routers and VPCs dont have to be in a centralized egress configuration but helps with scaling VPCs at cost (can also safely step down to non centralized egress config).
+  - Need Pre-existing IPAM CIDR pools for IPv4 and IPv6 in us-west-2 and us-east-1
 - [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 The resulting architecture is a decentralized hub spoke topology:
-![super-router-shokunin](https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png)
+- not shown but each ipv6 egress will go out its region's eigw if enabled.
+![super-router-revamped](https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png)
 
-### VPC CIDRs
+---
+
+### Centralized IPv4 Egress
+Egress VPC:
+
+There can only be one VPC with a `central = true` centralized egress
+confguration in a Centralized Router.
+```
+    {
+      name = "general1"
+      ipv4 = {
+        ...
+        centralized_egress = {
+          central   = true
+        }
+      }
+    ...
+```
+
+Validation will enforce:
+- the VPC must have a NATGW per AZ
+- the VPC must have a private subnet with `special = true` per AZ
+
+Centralized router will add the `0.0.0.0/0` -> `egress-vpc-attachment-id` route
+to it's transit gateway route table.
+
+Now each VPC with `private = true`, all private subnet egress traffic
+will route out of the relative AZ NATGW in egress VPC with `central = true`.
+
+---
+VPCs that opt-in to sending private AZ traffic out of the Egress VPC NATGWs:
+
+There can be many VPCs with `private = true` per Centralized Router regional mesh.
+
+Validation will enforce
+- the VPC cannot have a NATGW per AZ.
+```
+    {
+      name = "app1"
+      ipv4 = {
+        ...
+        centralized_egress = {
+          private = true
+        }
+      }
+    ...
+```
+
+Centralized Router will add the `0.0.0.0/0` -> `tgw-id` route to the private subnet route tables per AZ.
+
+However, if there is no relative AZ with a NATGW in the egress VPC, the private subnet
+traffic will route out of a cross AZ NATGW (if any) in the egress VPC.
+
+Or traffic is load balance between more than one cross AZ NATGW if there are many AZs but no relative AZ NATGW.
+
+Relative AZ example:
+```
+egress vpc (`central = true`)
+- AZ `a` NATGW
+- AZ `c` NATGW
+
+vpc A (`private = true`)
+- private subnets AZ `a` -> traffic routes out of egress VPC AZ `a` NATGW
+- private subnets AZ `c` -> traffic routes out of egress VPC AZ `c` NATGW
+```
+
+Non-relative AZ example (not as cost effective due to cross AZ traffic):
+```
+egress vpc (`central = true`)
+- AZ `a` NATGW
+- AZ `b` NATGW
+
+vpc B (opted into centralized egress with `private = true`)
+- private subnets AZ `a` -> traffic routes out of egress VPC AZ `a` NATGW
+- private subnets AZ `b` -> traffic routes out of egress VPC AZ `b` NATGW
+- private subnets AZ `c` -> traffic route is "load balanced" between egress VPC AZ `a` and `b` NATGWs
+```
+
+Important notes:
+- VPC subnet attribute `special` is synonymous with VPC attachment for the Centralized Router TGW.
+- Each VPC configured with centralized egress `central = true` or `private = true`, the private and
+  public subnets (if configured with `special = true`) will have access to VPC in the Centralized Router regional mesh.
+- Other VPCs can be added with out having to be configured for centralized egress but it makes sense that it probably should and can easily opt-in.
+- It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true` but it does matter for `central = true`.
+- Isolated subnets only have access to subnets within the VPC (across AZs) but no access to other VPC AZs in the mesh.
+
+### Decentralized IPv6 Egress
+If a VPC's AZ is configured with private subnet IPv6 cidrs then you can
+also add `eigw = true` per AZ to opt-into IPv6 traffic routing out of the
+VPC's EIGW.
+
+### Controlled Demolition
+Important to remember:
+- Always apply VPC configuration first, then Centralized Router, Super Router, and VPC Peering deluxe modules to keep state consistent.
+- It is no longer required for a VPC's AZ to have a private or public subnet with `special = true` but
+  if there are subnets with `special = true` then it must be either 1 private or 1 public subnet that has it
+  configured per AZ (validation enforced for Tiered VPC-NG `v1.0.5+`).
+- Any VPC that has a private or public subnet with `special = true`, that subnet will be used as
+  the VPC attachment for it's AZ when passed to Centralized Router.
+- If the VPC does not have any AZs with private or public subnet with `special = true` the AZs will be removed
+  from the Centralized Router (Regional IR) and subsequently Super Router (Domain IR) and vpc peering (vpc peering deluxe) when applied.
+
+AZ and VPC removal:
+- There are times where an AZ or a VPC will need to be decomissioned.
+- If an AZ is removed in the code that has a subnet with `special = true` then the subnet deletion will timeout.
+- In order to safely remove the AZ:
+  - `special = true` must be removed from the subnet and terraform apply the VPC(s) first
+    - Then apply Centralized Router to remove the sunbet from the VPC attachment.
+    - This will isolate the AZ from regional mesh even though the AZ has route tables still pointing to other VPCs.
+  - Remove AZ from the VPC and terraform apply VPCs again
+    - removing an AZ can also be an example egress VPC AZ fail over
+      depending on configuration.
+  - Can be done for any VPC except if the VPC has the centralized egress
+    `central = true` configuration.
+    - The egress VPC validation will block removing an AZ
+    - The validation can be bypassed with centralized egress `remove_az = true` then proceed with the AZ removal steps.
+```
+    {
+      name = "general1"
+      ipv4 = {
+        ...
+        centralized_egress = {
+          central   = true
+          remove_az = true
+        }
+      }
+    ...
+```
+
+- Safely remove a VPC:
+  - Remove `special = true` from all subnets that have it set per AZ and apply VPCs first.
+  - Apply Centralized Router and Super Router modules to remove the VPC routes from the Regional IR and Domain IR.
+    - When there are no vpc attachements (`special = true`) on a VPC when passed to Centralized Router,
+      the VPC and TGW routes will be removed from the Regional IR.
+  - Remove VPC from code and apply VPCs to delete.
+  - Apply VPC peering deluxe to update any subnet routing for the peering.
+
+---
+
+### VPC CIDRs Mappings
 - `us-west-2`
   - app1 VPC Tier (`central = true`):
     - IPv4: `10.0.0.0/18`
