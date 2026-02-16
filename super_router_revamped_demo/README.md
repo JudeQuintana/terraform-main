@@ -1,27 +1,30 @@
-# Super Router Revamped WIP
+# Super Router Revamped
 Build a decentralized hub and spoke topology both intra-region and cross-region.
 
-Refactor is a work in progress:
-- [x] Requires IPAM (done)
-- [x] Super router refactor for IPv4 network cidrs (works!)
-- [x] Added support for IPv4 secondaries (works!)
+Super Router now fully interprets AWS TGW network intent across address space, topology, and egress semantics, with no special cases.
 
-TODO:
-- [x] Support IPv6 and secondaries for super router revamped
-- [x] Enable centralized egress per centralized router
-- [x] Build IPv6 version of super intra vpc security group rules
-- [x] Update IPv6 blackhole cidrs
-- [x] Add intra and cross region vpc peering deluxe
-- [x] Rename subnets
-- [x] Update route validation for ipv4
-- [x] Update route validation for ipv6
-- [x] Add s3 gateway toggle
-- [x] Update Super Router diagram with vpcs configured for centralized
-  egress.
-- [x] publish and update SG rule modules on TF registry
-- [x] Update readme prereqs
-- [x] Update centralized egress docs for readme
-- [] publish new super router version on TF registry
+What's new:
+- Full support for IPv4 and IPv6, including primary and secondary CIDRs
+- Ability to define blackhole CIDRs on either side of Super Router
+- Operates on semantic facts (CIDRs × route table identities) rather than emitted route artifacts
+- Compatible with Centralized Router v1.0.6
+
+Semantic Coverage:
+Super Router now provides complete semantic coverage of the AWS TGW routing domain:
+- Expressive: handles all CIDR and address-family combinations
+- Compositional: hierarchical domains compose cleanly
+- Complete: covers the full AWS TGW routing semantic space
+
+Important Info:
+- Dual stack VPCs, Centralized Routers (Regional IR) with IPAM and Super Router (Domain IR)
+- This is the dual stack version of the IPv4 only [Super Router demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo).
+- Both IPv4 and IPv6 secondary CIDRs are supported.
+- Start with IPv4 only and add IPv6 at a later time or start with both.
+- Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
+  - The IPv6 address will be different for your account.
+  - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
+- Terraform state is local in this demo.
+  - Users should decide what they need for remote state.
 
 Pre-requisites:
   - In your AWS account, you may need to increase your VPC and/or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.
@@ -60,11 +63,11 @@ Choose Transit gateways per account.
 Choose Request increase at account-level.
 ```
   - Centralized Routers and VPCs dont have to be in a centralized egress configuration but helps with scaling VPCs at cost (can also safely step down to non centralized egress config).
-  - Need Pre-existing IPAM CIDR pools for IPv4 and IPv6 in us-west-2 and us-east-1
-- [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
+  - Need Pre-existing IPAM CIDR pools for IPv4 and IPv6 in `us-west-2`and `us-east-1`.
+- [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v1.0.1) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 The resulting architecture is a decentralized hub spoke topology:
-- not shown but each ipv6 egress will go out its region's eigw if enabled.
+- not shown but each IPv6 egress will go out its region's eigw if enabled.
 ![super-router-revamped](https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png)
 
 ---
@@ -99,7 +102,7 @@ will route out of the relative AZ NATGW in egress VPC with `central = true`.
 ---
 VPCs that opt-in to sending private AZ traffic out of the Egress VPC NATGWs:
 
-There can be many VPCs with `private = true` per Centralized Router regional mesh.
+There can be many VPCs with `private = true` per Centralized Router Regional IR.
 
 Validation will enforce
 - the VPC cannot have a NATGW per AZ.
@@ -148,7 +151,7 @@ vpc B (opted into centralized egress with `private = true`)
 Important notes:
 - VPC subnet attribute `special` is synonymous with VPC attachment for the Centralized Router TGW.
 - Each VPC configured with centralized egress `central = true` or `private = true`, the private and
-  public subnets (if configured with `special = true`) will have access to VPC in the Centralized Router regional mesh.
+  public subnets (if configured with `special = true`) will have access to VPC in the Centralized Router (Regional IR).
 - Other VPCs can be added with out having to be configured for centralized egress but it makes sense that it probably should and can easily opt-in.
 - It does not matter which subnet, private or public, has `special = true` set per AZ for VPC with `private = true` but it does matter for `central = true`.
 - Isolated subnets only have access to subnets within the VPC (across AZs) but no access to other VPC AZs in the mesh.
@@ -175,12 +178,10 @@ AZ and VPC removal:
 - In order to safely remove the AZ:
   - `special = true` must be removed from the subnet and terraform apply the VPC(s) first
     - Then apply Centralized Router to remove the sunbet from the VPC attachment.
-    - This will isolate the AZ from regional mesh even though the AZ has route tables still pointing to other VPCs.
+    - This will isolate the AZ from Centralized Router even though the AZ has route tables still pointing to other VPCs.
   - Remove AZ from the VPC and terraform apply VPCs again
-    - removing an AZ can also be an example egress VPC AZ fail over
-      depending on configuration.
-  - Can be done for any VPC except if the VPC has the centralized egress
-    `central = true` configuration.
+    - removing an AZ can also be an example egress VPC AZ fail over depending on configuration.
+  - Can be done for any VPC except if the VPC has the centralized egress `central = true` configuration.
     - The egress VPC validation will block removing an AZ
     - The validation can be bypassed with centralized egress `remove_az = true` then proceed with the AZ removal steps.
 ```
@@ -297,6 +298,8 @@ AZ and VPC removal:
             - `2600:1f28:3d:c700::/56`
             - `2600:1f28:3d:c800::/56`
 
+---
+
 ## Begin Demo
 It begins:
  - `terraform init`
@@ -304,13 +307,15 @@ It begins:
 Apply Tiered-VPCs (must exist before Centralized Routers) and S3 Gateways:
  - `terraform apply -target module.vpcs_usw2 -target module.vpcs_another_usw2 -target module.vpcs_use1 -target module.vpcs_another_use1`
 
-Apply Centralized Routers (must exist before Super Router), Intra VPC Security Group Rules and S3 Gateways:
+Apply Centralized Routers (must exist before Super Router), Intra VPC Security Group Rules and S3 Gateways (if enabled in variables.tf):
  - `terraform apply -target module.centralized_routers_usw2 -target module.centralized_routers_use1 -target module.intra_vpc_security_group_rules_usw2 -target module.intra_vpc_security_group_rules_use1 -target aws_vpc_endpoint.s3_use1 -target aws_vpc_endpoint.s3_usw2`
 
 Apply Super Router and Super Intra VPC Security Group Rules:
  - `terraform apply -target module.super_router_usw2_to_use1 -target module.super_intra_vpc_security_group_rules_usw2_to_use1`
 
 The Super Router is now complete!
+
+---
 
 Routing and peering Validation with AWS Route Analyzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
@@ -413,5 +418,5 @@ Routing and peering Validation with AWS Route Analyzer:
 Several other routes can be validated, try them out!
 
 Tear down:
- - `terraform destroy` (long delay to get to yes or no prompt, be patient)
+ - `terraform destroy` (long delay)
 
