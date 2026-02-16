@@ -32,35 +32,35 @@ Pre-requisites:
   - Each Centralized Router is configured with centralzed egress for the attached VPCs.
     - That means there will be 4 VPCs per region 3 NATGWs/EIPs (per enabled AZ) for each Centralized Router's region (6 EIPs total).
     - Increase the following quotas in each region for `us-east-1` and `us-west-2`:
-      - Need at least 4 or more VPCs (default is 5 but it should suffice is starting with 0 VPCs):
+Need at least 4 or more VPCs (default is 5 but it should suffice is starting with 0 VPCs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose VPCs per Region.
 Choose Request increase at account-level.
 ```
 
-      - Need at least 4 or more Internet gateways (default is 5 but it should suffice is starting with 0 IGWs):
+Need at least 4 or more Internet gateways (default is 5 but it should suffice is starting with 0 IGWs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose Internet gateways per Region.
 Choose Request increase at account-level.
 ```
 
-      - Need at least 4 or more Egress-only Internet gateways for IPv6 egress (default is 5 but it should suffice is starting with 0 IEGWs):
+Need at least 4 or more Egress-only Internet gateways for IPv6 egress (default is 5 but it should suffice is starting with 0 IEGWs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
 Choose Egress-only internet gateways per Region.
 Choose Request increase at account-level.
 ```
 
-      - Need at least 6 or more EIPs (default is 5):
+Need at least 6 or more EIPs (default is 5):
 ```
 For AWS Services, select Amazon Elastic Compute Cloud (Amazon EC2).
 Choose EC2-VPC Elastic IPs.
 Choose Request increase at account-level.
 ```
 
-      - Need at least 3 TGWs per account (default is 5 but it should suffice is starting with 0 TGWs):
+Need at least 3 TGWs per account (default is 5 but it should suffice is starting with 0 TGWs):
 ```
 For AWS Services, select Amazon Elastic Compute Cloud (Amazon EC2).
 Choose Transit gateways per account.
