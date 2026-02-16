@@ -10,7 +10,7 @@ Demo:
 - Pre-requisite: AWS account, may need to increase your VPC and or TGW quota for
   each us-east-1 and us-west-2 depending on how many you currently have.
 This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in each region (6 total)
-- [Super Router](https://github.com/JudeQuintana/terraform-modules/tree/master/networking/tgw_super_router_for_tgw_centralized_router) module provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
+- [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v1.0.0) module (at v1.0.0) which provides both intra-region and cross-region peering and routing for Centralized Routers and Tiered VPCs (same AWS account only, no cross account).
 
 The resulting architecture is a decentralized hub spoke topology:
 ![super-router-shokunin](https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png)
