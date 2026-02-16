@@ -32,6 +32,7 @@ Pre-requisites:
   - Each Centralized Router is configured with centralzed egress for the attached VPCs.
     - That means there will be 4 VPCs per region 3 NATGWs/EIPs (per enabled AZ) for each Centralized Router's region (6 EIPs total).
     - Increase the following quotas in each region for `us-east-1` and `us-west-2`:
+
 Need at least 4 or more VPCs (default is 5 but it should suffice is starting with 0 VPCs):
 ```
 For AWS Services, select Amazon Virtual Private Cloud (Amazon VPC).
