@@ -27,7 +27,7 @@ Important Info:
   - Users should decide what they need for remote state.
 
 Pre-requisites:
-  - In your AWS account, you may need to increase your VPC and/or TGW quota for each us-east-1 and us-west-2 depending on how many you currently have.
+  - In your AWS account, you may need to increase your VPC, TGW, (etc) service quotas for each `us-east-1` and `us-west-2` depending on how many you currently have.
   - This demo will be creating 4 more VPCs in each region (8 total) and 3 TGWs in each region (6 total)
   - Each Centralized Router is configured with centralzed egress for the attached VPCs.
     - That means there will be 4 VPCs per region 3 NATGWs/EIPs (per enabled AZ) for each Centralized Router's region (6 EIPs total).
