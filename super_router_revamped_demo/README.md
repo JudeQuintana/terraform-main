@@ -1,7 +1,7 @@
 # Super Router Revamped
 Build a decentralized hub and spoke topology both intra-region and cross-region.
 
-Super Router now fully interprets AWS TGW network intent across address space, topology, and egress semantics, with no special cases.
+Super Router now fully interprets AWS TGW network intent across address space, topology, and boundary semantics, with no special cases.
 
 What's new:
 - Full support for IPv4 and IPv6, including primary and secondary CIDRs
