@@ -1,5 +1,5 @@
 # Super Router Revamped
-Build a decentralized hub and spoke topology both intra-region and cross-region.
+Build a decentralized hub and spoke dual stack topology both intra-region and cross-region.
 
 Super Router now fully interprets AWS TGW network intent across address space, topology, and boundary semantics, with no special cases.
 
@@ -15,8 +15,8 @@ Super Router now provides complete semantic coverage of the AWS TGW routing doma
 - Compositional: hierarchical domains compose cleanly
 - Complete: covers the full AWS TGW routing semantic space
 
-Important Info:
-- Dual stack VPCs, Centralized Routers (Regional IR) with IPAM and Super Router (Domain IR)
+Important Demo Info:
+- Composing dual stack VPCs, Centralized Routers (Regional IR) with IPAM and Super Router (Domain IR)
 - This is the dual stack version of the IPv4 only [Super Router demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo).
 - Both IPv4 and IPv6 secondary CIDRs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
