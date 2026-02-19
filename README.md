@@ -20,9 +20,9 @@
 
 ## NEW Super Router Revamped!
 [Super Router Revamped Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo)
- - Compose a decentralized hub and spoke Transit Gateway with full dual stack routing semantic coverage using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.6) (at `v1.0.6`), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v1.0.1) (at `v1.0.1`) modules.
+ - Compose a decentralized hub and spoke Transit Gateway with full routing semantic coverage using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.6) (at `v1.0.6`), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v1.0.1) (at `v1.0.1`) modules.
  - Includes VPC peering examples within a full mesh configuration used for high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
- - Requires IPAM Pools for IPv4 and IPv6 cidrs.
+ - Requires IPAM Pools for IPv4 and IPv6 cidrs (dual stack).
  - Validate connectivity with AWS Route Analyzer.
  - Super Router now provides complete semantic coverage of the AWS TGW routing domain:
    - Expressive: handles all CIDR and address-family combinations
