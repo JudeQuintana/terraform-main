@@ -520,16 +520,16 @@ This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same 
 **Super Router (Multi-Hub Architecture Validation)**
 
 Super Router Revamped Demo:
-https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo
+- Github: https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo
 
 Super Router:
-https://github.com/JudeQuintana/terraform-aws-super-router
+- Github: https://github.com/JudeQuintana/terraform-aws-super-router
 
 Super Intra-VPC SG Rules:
-https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
+- Github: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
 
 IPv6 Super Intra-VPC SG Rules:
-https://github.com/JudeQuintana/terraform-aws-ipv6-super-intra-vpc-security-group-rules
+- Github: https://github.com/JudeQuintana/terraform-aws-ipv6-super-intra-vpc-security-group-rules
 
 Diagram:
 https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png
