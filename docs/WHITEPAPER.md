@@ -263,7 +263,16 @@ Verified IR Transformation:
 
 Beyond the three-region (N=3) evaluation topology, the TGW adjacency synthesis logic has been validated on a 10-TGW full mesh (N=10, 45 adjacencies) in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
 
-The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces: analogous to nested scopes and function calls in programming language compilers.
+Compositional Validation:
+
+The compositional nature of the IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked via well-defined interfaces.
+
+The refactored Super Router confirms that the compiler's IR transforms preserve semantic completeness across:
+- Dual-stack (IPv4 + IPv6)
+- Primary and secondary CIDRs
+- Boundary-scoped propagation scenarios
+
+This is achieved without introducing special-case logic.
 
 ⸻
 
@@ -513,35 +522,46 @@ Mega Mesh:
 
 Diagram: https://jq1-io.s3.amazonaws.com/mega-mesh/ten-full-mesh-tgw.png
 
-This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same IR  transform, confirming that the routing logic scales to larger meshes without modification. (IPv4-only; no secondary CIDRs; no IPAM.)
+This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same IR transform, confirming that the routing logic scales to larger meshes without modification. (IPv4-only; no secondary CIDRs; no IPAM.)
 
 ⸻
 
 **Super Router (Multi-Hub Architecture Validation)**
 
-A further evaluation validated the routing transform in a decentralized, hierarchical topology:
+Super Router Revamped Demo:
+- Github: https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo
 
-Super Router Demo: https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo
+Core Modules:
+- Super Router: https://github.com/JudeQuintana/terraform-aws-super-router
+- Super Intra-VPC SG Rules: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
+- IPv6 Super Intra-VPC SG Rules: https://github.com/JudeQuintana/terraform-aws-ipv6-super-intra-vpc-security-group-rules
 
-Super Router:
-- Github: https://github.com/JudeQuintana/terraform-aws-super-router
+The Super Router Intra-VPC Security Group Rule modules further validate hierarchical security propagation.
 
-Super Intra-VPC SG Rules:
-- Github: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
+Security rules mirror the routing hierarchy: they are synthesized per hub domain and selectively propagated across inter-hub boundaries.
 
-Diagram: https://jq1-io.s3.amazonaws.com/super-router/super-router-shokunin.png
+This demonstrates that security semantics can be compiled from the same topology structure as routing semantics.
 
-This topology composes two independent hub-and-spoke routing domains and connects them through a logical Super Router, implemented as two Transit Gateways that collectively act as a single inter-hub routing unit. At the IR level, these TGWs are modeled as a unified propagation domain rather than as independent peers.
+Diagram:
+https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png
 
-Super Router design demonstrates:
-- decentralized adjacency domains, where routing relationships are scoped locally rather than globally,
-- selective propagation sets, enabling controlled prefix visibility across domain boundaries,
-- a hierarchical multi-hub routing structure, separating intra-domain and inter-domain connectivity,
-- and compositional semantics beyond symmetric full-mesh topologies.
 
-Collectively, this confirms that the IR transform generalizes beyond flat full meshes to asymmetric, hierarchical, and multi-hub routing graphs. In compiler terms, Super Router represents the "nested scope + function call" inflection point: it shows that topology domains can be composed hierarchically through well-defined interfaces, establishing the system as a general topology compiler rather than a fixed mesh generator. (IPv4-only; no secondary CIDRs; no IPAM.)
+Architecture Overview:
 
-The Super Router evaluation also validates hierarchical security propagation. The Super Intra-VPC SG Rules module mirrors the routing hierarchy: security rules are synthesized per hub domain and selectively propagated across the inter-hub boundary, with the paired Transit Gateways treated as a single logical security domain at the IR level. This demonstrates that security semantics can be compiled from the same topology structure as routing.
+This topology composes two independent hub-and-spoke routing domains and connects them through a logical Super Router, implemented as paired Transit Gateways functioning as a unified inter-hub routing unit.
+
+Unlike the [earlier prototype](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo), the refactored Super Router provides full semantic coverage of AWS TGW routing behavior, including:
+- IPv4 and IPv6 support with secondary CIDRs
+- Deterministic propagation control across domain boundaries
+- Blackhole CIDR insertion at hub interfaces
+- Address-family complete routing expansion
+- Compatibility with Centralized Router v1.0.6
+
+The introduction of Super Router marked the nested-scope inflection point, enabling domain composition analogous to function invocation in compiler design.
+
+Super Router operates on semantic topology facts (CIDR sets × route table identities × propagation scopes) rather than pre-generated route artifacts. This preserves referential transparency, eliminates special-case logic, and enables hierarchical domain composition.
+
+The evaluation confirms that the AST → Regional IR → Domain IR compiler model generalizes beyond flat meshes to asymmetric, hierarchical, and multi-hub routing graphs without altering the underlying complexity transformation.
 
 ⸻
 
