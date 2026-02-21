@@ -263,7 +263,16 @@ Verified IR Transformation:
 
 Beyond the three-region (N=3) evaluation topology, the TGW adjacency synthesis logic has been validated on a 10-TGW full mesh (N=10, 45 adjacencies) in a separate Mega Mesh demonstration (see Artifact Availability: Mega Mesh), confirming identical asymptotic scaling behavior.
 
-The compositional nature of this IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked through well-defined interfaces. The refactored Super Router validates that the compiler's IR transforms maintain semantic completeness across dual-stack, secondary-CIDR, and boundary-scoped propagation scenarios without introducing special-case logic.
+Compositional Validation:
+
+The compositional nature of the IR model is further demonstrated through hierarchical multi-hub architectures (see Artifact Availability: Super Router), where independent routing domains are linked via well-defined interfaces.
+
+The refactored Super Router confirms that the compiler's IR transforms preserve semantic completeness across:
+- Dual-stack (IPv4 + IPv6)
+- Primary and secondary CIDRs
+- Boundary-scoped propagation scenarios
+
+This is achieved without introducing special-case logic.
 
 ⸻
 
@@ -522,17 +531,22 @@ This topology synthesizes all 45 pairwise TGW adjacencies (N=10) using the same 
 Super Router Revamped Demo:
 - Github: https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo
 
-Super Router:
-- Github: https://github.com/JudeQuintana/terraform-aws-super-router
+Core Modules:
+- Super Router: https://github.com/JudeQuintana/terraform-aws-super-router
+- Super Intra-VPC SG Rules: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
+- IPv6 Super Intra-VPC SG Rules: https://github.com/JudeQuintana/terraform-aws-ipv6-super-intra-vpc-security-group-rules
 
-Super Intra-VPC SG Rules:
-- Github: https://github.com/JudeQuintana/terraform-aws-super-intra-vpc-security-group-rules
+The Super Router Intra-VPC Security Group Rule modules further validate hierarchical security propagation.
 
-IPv6 Super Intra-VPC SG Rules:
-- Github: https://github.com/JudeQuintana/terraform-aws-ipv6-super-intra-vpc-security-group-rules
+Security rules mirror the routing hierarchy: they are synthesized per hub domain and selectively propagated across inter-hub boundaries.
+
+This demonstrates that security semantics can be compiled from the same topology structure as routing semantics.
 
 Diagram:
 https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png
+
+
+Architecture Overview:
 
 This topology composes two independent hub-and-spoke routing domains and connects them through a logical Super Router, implemented as paired Transit Gateways acting as a unified inter-hub routing unit.
 
@@ -543,11 +557,11 @@ Unlike the [earlier prototype](https://github.com/JudeQuintana/terraform-main/tr
 - Address-family complete routing expansion
 - Compatibility with Centralized Router v1.0.6
 
-Super Router operates on semantic topology facts (CIDR sets × route table identities × propagation scopes) rather than on pre-generated route artifacts.
+Super Router operates on semantic topology facts (CIDR sets × route table identities × propagation scopes) rather than pre-generated route artifacts.
 
-This preserves referential transparency and avoids special-case logic while enabling hierarchical domain composition.
+This preserves referential transparency, eliminates special-case logic, and enables hierarchical domain composition.
 
-The Super Router evaluation confirms that the AST → Regional IR → Global IR compiler model generalizes beyond flat full meshes to asymmetric, hierarchical, and multi-hub routing graphs without altering the underlying complexity transformation.
+The evaluation confirms that the AST → Regional IR → Domain IR compiler model generalizes beyond flat meshes to asymmetric, hierarchical, and multi-hub routing graphs without altering the underlying complexity transformation.
 
 ⸻
 
