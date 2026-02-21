@@ -548,7 +548,7 @@ https://jq1-io.s3.amazonaws.com/super-router/super-router-revamped.png
 
 Architecture Overview:
 
-This topology composes two independent hub-and-spoke routing domains and connects them through a logical Super Router, implemented as paired Transit Gateways acting as a unified inter-hub routing unit.
+This topology composes two independent hub-and-spoke routing domains and connects them through a logical Super Router, implemented as paired Transit Gateways functioning as a unified inter-hub routing unit.
 
 Unlike the [earlier prototype](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo), the refactored Super Router provides full semantic coverage of AWS TGW routing behavior, including:
 - IPv4 and IPv6 support with secondary CIDRs
@@ -557,9 +557,9 @@ Unlike the [earlier prototype](https://github.com/JudeQuintana/terraform-main/tr
 - Address-family complete routing expansion
 - Compatibility with Centralized Router v1.0.6
 
-Super Router operates on semantic topology facts (CIDR sets × route table identities × propagation scopes) rather than pre-generated route artifacts.
+The introduction of Super Router marked the nested-scope inflection point, enabling domain composition analogous to function invocation in compiler design.
 
-This preserves referential transparency, eliminates special-case logic, and enables hierarchical domain composition.
+Super Router operates on semantic topology facts (CIDR sets × route table identities × propagation scopes) rather than pre-generated route artifacts. This preserves referential transparency, eliminates special-case logic, and enables hierarchical domain composition.
 
 The evaluation confirms that the AST → Regional IR → Domain IR compiler model generalizes beyond flat meshes to asymmetric, hierarchical, and multi-hub routing graphs without altering the underlying complexity transformation.
 
