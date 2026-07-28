@@ -16,7 +16,14 @@ module "centralized_router_use1" {
     blackhole       = local.blackhole
     policy = {
       deny = [
-        { from = lookup(module.vpcs_use1, "app3"), to = lookup(module.vpcs_use1, "infra3") }
+        { from_vpc = lookup(module.vpcs_use1, "app3"), to_vpc = lookup(module.vpcs_use1, "general3") }
+      ]
+
+      segments = [
+        {
+          name = "trusted"
+          vpcs = [for name, this in module.vpcs_use1 : this if contains(["app3", "general3"], name)]
+        }
       ]
     }
   }
