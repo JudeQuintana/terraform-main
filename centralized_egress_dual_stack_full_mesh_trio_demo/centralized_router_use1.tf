@@ -14,18 +14,7 @@ module "centralized_router_use1" {
     amazon_side_asn = 64519
     vpcs            = module.vpcs_use1
     blackhole       = local.blackhole
-    policy = {
-      deny = [
-        { from_vpc = lookup(module.vpcs_use1, "app3"), to_vpc = lookup(module.vpcs_use1, "general3") }
-      ]
-
-      segments = [
-        {
-          name = "trusted"
-          vpcs = [for name, this in module.vpcs_use1 : this if contains(["app3", "general3"], name)]
-        }
-      ]
-    }
+    policy          = local.policy
   }
 }
 
