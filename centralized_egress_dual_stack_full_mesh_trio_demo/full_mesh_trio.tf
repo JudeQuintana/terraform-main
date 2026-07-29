@@ -1,6 +1,8 @@
 module "full_mesh_trio" {
-  source  = "JudeQuintana/full-mesh-trio/aws"
-  version = "1.0.1"
+  #source  = "JudeQuintana/full-mesh-trio/aws"
+  #version = "1.0.1"
+  #source   = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_trio?ref=init-deny-policy"
+  source = "/Users/jude/projects/terraform-modules/networking/full_mesh_trio"
 
   providers = {
     aws.one   = aws.use1
@@ -9,6 +11,7 @@ module "full_mesh_trio" {
   }
 
   env_prefix = var.env_prefix
+  policy     = local.policy
   full_mesh_trio = {
     one = {
       centralized_router = module.centralized_router_use1
