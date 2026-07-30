@@ -14,6 +14,6 @@ module "centralized_router_usw2" {
     amazon_side_asn = 64521
     vpcs            = module.vpcs_usw2
     blackhole       = local.blackhole
-    policy          = local.policy
+    policy          = local.policy_usw2
   }
 }

@@ -10,7 +10,7 @@ module "full_mesh_trio" {
   }
 
   env_prefix = var.env_prefix
-  policy     = local.policy
+  policy     = local.policy_use1_use2_usw2
   full_mesh_trio = {
     one = {
       centralized_router = module.centralized_router_use1

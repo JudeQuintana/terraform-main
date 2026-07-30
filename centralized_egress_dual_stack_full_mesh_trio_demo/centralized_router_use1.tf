@@ -14,7 +14,7 @@ module "centralized_router_use1" {
     amazon_side_asn = 64519
     vpcs            = module.vpcs_use1
     blackhole       = local.blackhole
-    policy          = local.policy
+    policy          = local.policy_use1
   }
 }
 
