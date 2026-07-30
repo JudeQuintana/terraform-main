@@ -1,8 +1,7 @@
 module "full_mesh_trio" {
   #source  = "JudeQuintana/full-mesh-trio/aws"
   #version = "1.0.1"
-  #source   = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_trio?ref=init-deny-policy"
-  source = "/Users/jude/projects/terraform-modules/networking/full_mesh_trio"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_trio?ref=init-deny-policy"
 
   providers = {
     aws.one   = aws.use1
