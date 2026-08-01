@@ -1,8 +1,8 @@
 locals {
   policy_use1 = {
-    default = "allow"
-    deny = [
-      { from_vpc = module.vpcs_use1["app3"], to_vpc = module.vpcs_use1["general3"] },
+    default = "deny"
+    allow = [
+      { from_vpc = module.vpcs_use1["app3"], to_vpc = module.vpcs_use1["infra3"] },
     ]
 
     segments = {
@@ -10,7 +10,7 @@ locals {
         module.vpcs_use1["app3"],
         module.vpcs_use1["general3"],
       ]
-      single_isolation = [
+      other = [
         module.vpcs_use1["infra3"],
       ]
     }
@@ -34,11 +34,9 @@ locals {
       cross-region = [
         module.vpcs_use1["infra3"],
         module.vpcs_usw2["app2"],
-        module.vpcs_usw2["general2"]
       ]
       cross-region2 = [
         module.vpcs_use2["app1"],
-        module.vpcs_usw2["general2"]
       ]
     }
   }
