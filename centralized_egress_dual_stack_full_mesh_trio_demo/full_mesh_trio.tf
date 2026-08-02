@@ -10,8 +10,8 @@ module "full_mesh_trio" {
     aws.three = aws.usw2
   }
 
-  env_prefix = var.env_prefix
-  policy     = local.policy_use1_use2_usw2
+  env_prefix     = var.env_prefix
+  routing_policy = local.routing_policy_use1_use2_usw2
   full_mesh_trio = {
     one = {
       centralized_router = module.centralized_router_use1

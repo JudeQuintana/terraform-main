@@ -10,7 +10,7 @@ module "centralized_router_use1" {
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  policy           = local.policy_use1
+  routing_policy   = local.routing_policy_use1
   centralized_router = {
     name            = "mystique"
     amazon_side_asn = 64519
