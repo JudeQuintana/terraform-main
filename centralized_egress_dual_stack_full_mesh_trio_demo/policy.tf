@@ -1,8 +1,8 @@
 locals {
-  routing_policy_use1 = {
+  routing_policy_intra_use1 = {
     default = "deny"
     allow = [
-      { from_vpc = module.vpcs_use1["app3"], to_vpc = module.vpcs_use1["infra3"] },
+      { from = module.vpcs_use1["app3"], to = module.vpcs_use1["infra3"] },
     ]
 
     segments = {
@@ -16,18 +16,20 @@ locals {
     }
   }
 
-  routing_policy_use2 = {
+  # full mesh
+  routing_policy_intra_use2 = {
     default = "allow"
   }
 
-  routing_policy_usw2 = {
+  # full mesh
+  routing_policy_intra_usw2 = {
     default = "allow"
   }
 
-  routing_policy_use1_use2_usw2 = {
+  routing_policy_cross_region_use1_use2_usw2 = {
     default = "deny"
     allow = [
-      { from_vpc = module.vpcs_use2["infra1"], to_vpc = module.vpcs_usw2["infra2"] },
+      { from = module.vpcs_use2["infra1"], to = module.vpcs_usw2["infra2"] },
     ]
 
     segments = {
