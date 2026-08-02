@@ -1,5 +1,5 @@
 locals {
-  routing_policy_intra_use1 = {
+  routing_policy_intra_region_use1 = {
     default = "deny"
     allow = [
       { from = module.vpcs_use1["app3"], to = module.vpcs_use1["infra3"] },
@@ -17,12 +17,12 @@ locals {
   }
 
   # full mesh
-  routing_policy_intra_use2 = {
+  routing_policy_intra_region_use2 = {
     default = "allow"
   }
 
   # full mesh
-  routing_policy_intra_usw2 = {
+  routing_policy_intra_region_usw2 = {
     default = "allow"
   }
 

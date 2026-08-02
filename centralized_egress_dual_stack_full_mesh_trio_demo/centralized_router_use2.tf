@@ -10,7 +10,7 @@ module "centralized_router_use2" {
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  routing_policy   = local.routing_policy_intra_use2
+  routing_policy   = local.routing_policy_intra_region_use2
   centralized_router = {
     name            = "magneto"
     amazon_side_asn = 64520
