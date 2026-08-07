@@ -383,62 +383,6 @@ mesh, not a permission system for point-to-point links. Where connectivity
 requires explicit construction (peering), policy is redundant. Where
 connectivity is implicit (transit routing), policy is essential.
 
-## Comparison: TGW Policy Tables and Cloud WAN
-
-### TGW Policy Tables
-
-TGW policy tables are an AWS primitive that associates a route table per
-attachment and selectively propagates routes between them. Policy is encoded as
-propagation/association rules at the forwarding plane.
-
-| | TGW Policy Tables | Routing Policy Language |
-|---|---|---|
-| Policy location | Forwarding plane (TGW) | Edge (VPC route tables) |
-| Evaluation | Runtime (AWS control plane) | Compile time (`terraform plan`) |
-| Visibility | Routes visible after propagation | Routes visible before apply |
-| Primitives | Propagation, association, static routes | deny, allow, segments, default |
-| Topology coupling | Adding a VPC requires updating table associations | Adding a VPC is independent of policy |
-| Scale | 20 route tables per TGW (soft limit) | Bounded by route table entry limits (50 per table default) |
-| Defense in depth | Forwarding plane blocks at TGW | Edge blocks at VPC route table |
-| Operational model | Manage N tables and propagation rules | Manage one policy declaration |
-
-TGW policy tables encode reachability at the forwarding plane. The routing
-policy language encodes reachability at the edge. Both achieve segmentation.
-They differ in where the enforcement boundary sits, how changes propagate, and
-what the operator manages day-to-day. TGW policy tables provide an additional
-enforcement layer at the transit level. The routing policy language provides
-compile-time visibility of the complete route set before any changes are applied.
-
-### AWS Cloud WAN
-
-Cloud WAN provides a managed core network with a policy document evaluated by
-AWS's control plane. Operators submit a JSON policy, and AWS manages route
-propagation, segment isolation, and cross-region connectivity.
-
-| | Cloud WAN | Routing Policy Language |
-|---|---|---|
-| Evaluation | Runtime (AWS control plane) | Compile time (`terraform plan`) |
-| Convergence | Minutes (control plane propagation) | Immediate (API calls to route tables) |
-| Dry run | Change set preview (limited detail) | Full route enumeration before apply |
-| Segmentation | Segments with attachment-level membership | Segments with CIDR-level membership |
-| Cross-segment | Segment actions (sharing and routing rules) | `allow` rules (per-VPC-pair granularity) |
-| Precedence | Implicit (segment membership determines routing) | Explicit algebra (deny > allow > segments > default) |
-| Infrastructure | Managed core network (per-attachment + per-GB fees) | Standard TGW (attachment pricing only) |
-| Operational model | AWS manages the routing loop | Operator manages the compiler input |
-| Multi-region | Built-in (core network spans regions) | Topology modules compose regions explicitly |
-| Dual-stack | Supported within segment policy | Single declaration covers both stacks |
-
-Cloud WAN and the routing policy language address the same problem: expressing
-network segmentation intent without manually configuring individual routes. They
-differ architecturally. Cloud WAN evaluates policy at runtime inside a managed
-control plane -- the operator delegates route computation to AWS. The routing
-policy language evaluates at compile time inside the operator's pipeline -- the
-operator sees the full route set in `terraform plan` output before applying.
-Cloud WAN provides managed infrastructure and operational simplicity at the cost
-of runtime opacity and per-GB processing fees. The routing policy language
-provides compile-time determinism and standard TGW infrastructure at the cost of
-the operator owning the compilation step.
-
 ## Enterprise Routing: Single Table with Policy vs. Per-Attachment Tables
 
 Enterprise AWS environments typically use one TGW route table per VPC attachment
@@ -527,6 +471,62 @@ document describing what the network *should* look like, but the actual
 declaration that *compiles to* the network. The gap between documentation and
 implementation that auditors typically probe does not exist. The documentation
 *is* the implementation.
+
+## Comparison: TGW Policy Tables and Cloud WAN
+
+### TGW Policy Tables
+
+TGW policy tables are an AWS primitive that associates a route table per
+attachment and selectively propagates routes between them. Policy is encoded as
+propagation/association rules at the forwarding plane.
+
+| | TGW Policy Tables | Routing Policy Language |
+|---|---|---|
+| Policy location | Forwarding plane (TGW) | Edge (VPC route tables) |
+| Evaluation | Runtime (AWS control plane) | Compile time (`terraform plan`) |
+| Visibility | Routes visible after propagation | Routes visible before apply |
+| Primitives | Propagation, association, static routes | deny, allow, segments, default |
+| Topology coupling | Adding a VPC requires updating table associations | Adding a VPC is independent of policy |
+| Scale | 20 route tables per TGW (soft limit) | Bounded by route table entry limits (50 per table default) |
+| Defense in depth | Forwarding plane blocks at TGW | Edge blocks at VPC route table |
+| Operational model | Manage N tables and propagation rules | Manage one policy declaration |
+
+TGW policy tables encode reachability at the forwarding plane. The routing
+policy language encodes reachability at the edge. Both achieve segmentation.
+They differ in where the enforcement boundary sits, how changes propagate, and
+what the operator manages day-to-day. TGW policy tables provide an additional
+enforcement layer at the transit level. The routing policy language provides
+compile-time visibility of the complete route set before any changes are applied.
+
+### AWS Cloud WAN
+
+Cloud WAN provides a managed core network with a policy document evaluated by
+AWS's control plane. Operators submit a JSON policy, and AWS manages route
+propagation, segment isolation, and cross-region connectivity.
+
+| | Cloud WAN | Routing Policy Language |
+|---|---|---|
+| Evaluation | Runtime (AWS control plane) | Compile time (`terraform plan`) |
+| Convergence | Minutes (control plane propagation) | Immediate (API calls to route tables) |
+| Dry run | Change set preview (limited detail) | Full route enumeration before apply |
+| Segmentation | Segments with attachment-level membership | Segments with CIDR-level membership |
+| Cross-segment | Segment actions (sharing and routing rules) | `allow` rules (per-VPC-pair granularity) |
+| Precedence | Implicit (segment membership determines routing) | Explicit algebra (deny > allow > segments > default) |
+| Infrastructure | Managed core network (per-attachment + per-GB fees) | Standard TGW (attachment pricing only) |
+| Operational model | AWS manages the routing loop | Operator manages the compiler input |
+| Multi-region | Built-in (core network spans regions) | Topology modules compose regions explicitly |
+| Dual-stack | Supported within segment policy | Single declaration covers both stacks |
+
+Cloud WAN and the routing policy language address the same problem: expressing
+network segmentation intent without manually configuring individual routes. They
+differ architecturally. Cloud WAN evaluates policy at runtime inside a managed
+control plane -- the operator delegates route computation to AWS. The routing
+policy language evaluates at compile time inside the operator's pipeline -- the
+operator sees the full route set in `terraform plan` output before applying.
+Cloud WAN provides managed infrastructure and operational simplicity at the cost
+of runtime opacity and per-GB processing fees. The routing policy language
+provides compile-time determinism and standard TGW infrastructure at the cost of
+the operator owning the compilation step.
 
 ## Test Coverage
 
