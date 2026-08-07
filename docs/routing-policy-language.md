@@ -151,7 +151,63 @@ In this example:
 - `web` and `api` can reach each other (same segment)
 - `db` and `cache` can reach each other (same segment)
 - `web` cannot reach `db` (cross-segment, denied)
-- Unsegmented VPCs follow the `default` rule
+
+### Unsegmented VPCs
+
+VPCs not assigned to any segment are "unsegmented." Their routing behavior
+depends on the `default` value and whether multiple segments exist.
+
+**With `default = "allow"` and multiple segments:**
+```hcl
+routing_policy = {
+  default  = "allow"
+  segments = {
+    frontend = [module.vpcs["web"], module.vpcs["api"]]
+    backend  = [module.vpcs["db"], module.vpcs["cache"]]
+  }
+  # module.vpcs["monitoring"] is unsegmented
+}
+```
+
+- `monitoring` can reach `web`, `api`, `db`, and `cache` (default allows)
+- `web` cannot reach `db` (cross-segment, denied)
+- `monitoring` is outside the partition -- cross-segment deny rules are generated
+  only between segments, not between a segment and an unsegmented VPC
+
+An unsegmented VPC under `default = "allow"` routes to everything that isn't
+explicitly denied. Segment boundaries don't restrict it because it has no
+segment membership. It sits outside the partition entirely, so the cross-segment
+deny graph doesn't include it.
+
+**With `default = "deny"` and multiple segments:**
+```hcl
+routing_policy = {
+  default  = "deny"
+  segments = {
+    frontend = [module.vpcs["web"], module.vpcs["api"]]
+    backend  = [module.vpcs["db"], module.vpcs["cache"]]
+  }
+  # module.vpcs["monitoring"] is unsegmented
+}
+```
+
+- `monitoring` cannot reach anything (default denies, no segment permits it)
+- `web` and `api` can still reach each other (same segment)
+- `db` and `cache` can still reach each other (same segment)
+
+An unsegmented VPC under `default = "deny"` has zero connectivity. It's neither
+permitted by segment membership nor by the default fallthrough. The only way to
+grant it reachability is through an explicit `allow` rule:
+
+```hcl
+allow = [
+  { from = module.vpcs["monitoring"], to = module.vpcs["web"] }
+]
+```
+
+This makes unsegmented VPCs under `default = "deny"` useful for special-purpose
+nodes (monitoring, bastion, logging) that need surgical connectivity to specific
+targets without belonging to any isolation group.
 
 ### A VPC cannot span multiple segments
 
@@ -326,6 +382,95 @@ This distinction reinforces the language's design: policy is a filter over a
 mesh, not a permission system for point-to-point links. Where connectivity
 requires explicit construction (peering), policy is redundant. Where
 connectivity is implicit (transit routing), policy is essential.
+
+## Enterprise Routing: Single Table with Policy vs. Per-Attachment Tables
+
+Enterprise AWS environments typically use one TGW route table per VPC attachment
+to enforce isolation. Each VPC gets its own route table, and reachability is
+controlled by selectively propagating routes between tables. This is the pattern
+AWS recommends in its reference architectures and what most consulting firms
+implement.
+
+### How the per-attachment model works in practice
+
+With 20 VPCs, you manage 20 TGW route tables. Each table must be configured
+with the correct propagation and association rules to express which VPCs can
+reach which. Adding a new VPC means:
+
+1. Create a new TGW route table
+2. Associate the new attachment to it
+3. Decide which existing tables should propagate to the new one (and vice versa)
+4. Update potentially many tables when reachability requirements change
+
+This is O(N) operational complexity per VPC addition, and O(N^2) reasoning about
+the full reachability matrix. At 50+ VPCs across multiple regions, the
+propagation rules become difficult to audit and easy to misconfigure. There is no
+single place that answers "can VPC A reach VPC B?" -- you must trace propagation
+chains across tables.
+
+### How single table with policy works
+
+One TGW route table. Every VPC attachment is associated and propagated to it.
+The TGW forwards everything -- full mesh at the transit layer. Reachability is
+controlled exclusively at VPC route tables via compiled policy.
+
+Adding a new VPC means:
+1. Create the TGW attachment (topology)
+2. The TGW route is generated automatically (forwarding plane)
+3. Policy evaluation determines which VPC routes are emitted (edge)
+
+The reachability question is answered in one place: the `routing_policy` block.
+`terraform plan` shows exactly which routes exist. No propagation chains to
+trace, no tables to cross-reference.
+
+### Why policy at the edge is sufficient
+
+The enterprise concern with a single TGW route table is: "if someone adds a
+route manually, traffic can flow anywhere." This is a valid operational risk but
+not an architectural one. The correct mitigation is:
+
+- **Drift detection** -- `terraform plan` shows unauthorized routes immediately
+- **Preventive controls** -- IAM policies restricting who can modify route tables
+- **The policy declaration itself** -- version-controlled, PR-reviewed, auditable
+
+Per-attachment TGW tables provide defense-in-depth at the forwarding plane, but
+at the cost of operational complexity that grows quadratically. The routing
+policy language provides equivalent segmentation guarantees at the edge with
+linear operational complexity and compile-time auditability.
+
+### Compliance frameworks
+
+The routing policy language maps directly to compliance requirements because
+policy declarations are auditable artifacts:
+
+**PCI-DSS (network segmentation):** Requires demonstrable isolation between
+cardholder data environments and other networks. A `segments` declaration with
+payment workloads in one segment and non-payment in another is the proof.
+`terraform plan` output showing zero routes between segments is the audit
+evidence. No runtime testing required -- the compiler guarantees it.
+
+**HIPAA (access controls):** Requires that electronic protected health
+information (ePHI) is accessible only to authorized systems. `default = "deny"`
+with explicit `allow` rules to ePHI-hosting VPCs produces a minimal
+connectivity set. The policy declaration documents the access control. The plan
+output proves enforcement.
+
+**FedRAMP / NIST 800-53 (boundary protection):** Requires managed interfaces at
+system boundaries with deny-all, permit-by-exception posture. This is literally
+`default = "deny"` with `allow` rules. The policy language's precedence algebra
+(deny > allow > segments > default) maps to the control hierarchy these
+frameworks expect.
+
+**SOC 2 (logical access):** Requires evidence that logical access to systems is
+restricted and monitored. The policy declaration is the restriction. Git history
+on the policy file is the change log. Plan output diffed between commits is the
+access change audit trail.
+
+In each case, the compliance artifact is the policy itself -- not a separate
+document describing what the network *should* look like, but the actual
+declaration that *compiles to* the network. The gap between documentation and
+implementation that auditors typically probe does not exist. The documentation
+*is* the implementation.
 
 ## Test Coverage
 
