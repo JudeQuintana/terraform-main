@@ -16,34 +16,34 @@ reachability state before any infrastructure changes.
 
 ### Why this is a strong model
 
-1. **Correctness by construction** -- The compiler generates routes from a
-   closed algebra. There is no configuration state where an unintended route can
-   appear. Every VPC pair resolves to a deterministic reachable/unreachable
-   answer at compile time.
+1. **Correctness by construction.** The compiler generates routes from a closed
+   algebra. There is no configuration state where an unintended route can appear.
+   Every VPC pair resolves to a deterministic reachable/unreachable answer at
+   compile time.
 
-2. **You don't need to know routing** -- Operators declare *intent* ("these VPCs
+2. **You don't need to know routing.** Operators declare *intent* ("these VPCs
    can reach each other, those cannot"). The compiler handles the cartesian
    product, self-route exclusion, CIDR expansion, and route table distribution.
    The output is auditable in `terraform plan` before anything is applied.
 
-3. **Dual-stack from a single declaration** -- One policy controls both IPv4 and
+3. **Dual-stack from a single declaration.** One policy controls both IPv4 and
    IPv6 routing. The IPv6 engine mirrors the IPv4 engine exactly, with null
    checks for VPCs that don't have IPv6 assigned. No separate policy required.
 
-4. **Scope-invariant** -- The same policy language and evaluation works
-   identically at every IR level:
-   - **Regional IR** (Centralized Router) -- intra-region VPC routing
-   - **Global IR** (Full Mesh Trio) -- cross-region VPC routing
-   - **Domain IR** (Super Router) -- cross-region and intra-region VPC routing
+4. **Scope-invariant.** The same policy language and evaluation works identically
+   at every IR level:
+   - **Regional IR** (Centralized Router): intra-region VPC routing
+   - **Global IR** (Full Mesh Trio): cross-region VPC routing
+   - **Domain IR** (Super Router): cross-region and intra-region VPC routing
      across peered routers
 
 ## Forwarding Plane vs. Policy Edge
 
 The architecture uses a single TGW route table per TGW. This is a
 deliberate design choice: the TGW is treated as a pure forwarding plane. It
-knows how to reach every VPC attachment -- full mesh at the transit layer,
-unconditionally. TGW routes are generated directly from topology (L0 -> L4) and
-are never subject to policy filtering.
+knows how to reach every VPC attachment, providing full mesh at the transit
+layer unconditionally. TGW routes are generated directly from topology
+(L0 -> L4) and are never subject to policy filtering.
 
 Policy exists exclusively at the edge: VPC route tables. A VPC either has a
 route to a destination or it doesn't. If the route is absent, the packet never
@@ -66,12 +66,12 @@ This separation gives us two properties:
    one forwarding plane, policy at the edge. The compiler focuses entirely on
    which edges to emit.
 
-The alternative model -- one TGW route table per VPC attachment (enterprise
-isolation) -- encodes policy at the forwarding plane. This entangles topology
-and constraint: adding a VPC means deciding which other TGW tables should
-receive its route. With the single-table model, adding a VPC is a topology
-operation (TGW attachment + TGW route). Policy evaluation happens independently
-at the edge, where it belongs.
+The alternative model (one TGW route table per VPC attachment for enterprise
+isolation) encodes policy at the forwarding plane. This entangles topology and
+constraint: adding a VPC means deciding which other TGW tables should receive
+its route. With the single-table model, adding a VPC is a topology operation
+(TGW attachment + TGW route). Policy evaluation happens independently at the
+edge, where it belongs.
 
 This mirrors how the internet works: BGP policy is applied at the border (edge),
 forwarding in the core is policy-unaware. The TGW is the core. VPC route tables
@@ -93,10 +93,10 @@ deny > allow > segments > default
 | `default`  | Fallthrough for anything unmatched. Either `"allow"` (full mesh) or `"deny"` (zero trust). |
 
 Properties of the algebra:
-- **Total** -- every VPC pair resolves to reachable or unreachable. No ambiguity.
-- **Monotonic** -- deny only subtracts edges, allow only adds (within deny bounds).
-- **Commutative** -- `{ from = A, to = B }` blocks/permits both directions.
-- **Deterministic** -- same inputs always produce the same route set.
+- **Total:** every VPC pair resolves to reachable or unreachable. No ambiguity.
+- **Monotonic:** deny only subtracts edges, allow only adds (within deny bounds).
+- **Commutative:** `{ from = A, to = B }` blocks/permits both directions.
+- **Deterministic:** same inputs always produce the same route set.
 
 ## Default Policy: Full Mesh
 
@@ -134,8 +134,8 @@ These are algebraically identical because:
 ## Segments
 
 Segments partition VPCs into isolation groups. VPCs in the same segment can
-reach each other. VPCs in different segments cannot -- unless explicitly
-permitted by an `allow` rule.
+reach each other. VPCs in different segments cannot, unless explicitly permitted
+by an `allow` rule.
 
 ```hcl
 routing_policy = {
@@ -171,8 +171,8 @@ routing_policy = {
 
 - `monitoring` can reach `web`, `api`, `db`, and `cache` (default allows)
 - `web` cannot reach `db` (cross-segment, denied)
-- `monitoring` is outside the partition -- cross-segment deny rules are generated
-  only between segments, not between a segment and an unsegmented VPC
+- `monitoring` is outside the partition. Cross-segment deny rules are generated
+  only between segments, not between a segment and an unsegmented VPC.
 
 An unsegmented VPC under `default = "allow"` routes to everything that isn't
 explicitly denied. Segment boundaries don't restrict it because it has no
@@ -221,17 +221,17 @@ in only one segment or use allow = [] to create explicit allows across segments.
 This constraint exists to preserve the mental model: segments are hard
 boundaries. There is no segment-to-segment routing by design. If a VPC could
 appear in two segments, the partition property breaks and the reachability
-answer becomes ambiguous. The algebra requires totality -- every pair must
+answer becomes ambiguous. The algebra requires totality, so every pair must
 resolve cleanly.
 
 Notably, the underlying algebra *can* support a VPC appearing in multiple
-segments -- if the validation were removed, the compiler would still produce a
+segments. If the validation were removed, the compiler would still produce a
 route set (the VPC would gain reachability to members of all segments it belongs
 to). The math doesn't break. But the mental model does: "segments are isolation
 groups" becomes incoherent when a single VPC bridges them implicitly. The
 validation exists to keep the language's semantics legible, not because the
 engine can't handle the case. If you need a VPC to reach members of multiple
-segments, the correct expression is `allow` -- it makes the cross-segment
+segments, the correct expression is `allow`. It makes the cross-segment
 connectivity explicit and auditable rather than hidden in overlapping membership.
 
 ### Punching through segment boundaries
@@ -252,7 +252,7 @@ routing_policy = {
 ```
 
 Here, `api` can reach `db` (allow overrides segment isolation) but `web` still
-cannot reach `db`. The allow rule is surgical -- it permits exactly the pair
+cannot reach `db`. The allow rule is surgical, permitting exactly the pair
 specified without weakening the segment boundary for other members.
 
 ## Deny Rules
@@ -302,7 +302,7 @@ Previous versions of Full Mesh Trio and Super Router used a brute-force VPC
 aggregate approach to generate cross-region and cross-domain meshes. Each module
 would collect all VPCs across regions into a flat aggregate, then use
 `setproduct` to compute every possible route table + destination CIDR pair.
-The result was always a full mesh -- every VPC could reach every other VPC, with
+The result was always a full mesh. Every VPC could reach every other VPC, with
 no ability to selectively control reachability.
 
 This worked for topology generation but left no room for policy. The aggregate
@@ -313,14 +313,14 @@ With routing policy, the architecture changes. The `generate_routes_to_other_vpc
 function is now a shared compilation unit referenced by all three topology
 modules:
 
-- **Centralized Router** -- passes its intra-region VPCs + policy (Regional IR)
-- **Full Mesh Trio** -- passes VPCs from all three regions + policy (Global IR)
-- **Super Router** -- passes VPCs from local and peer routers + policy (Domain IR)
+- **Centralized Router** passes its intra-region VPCs + policy (Regional IR)
+- **Full Mesh Trio** passes VPCs from all three regions + policy (Global IR)
+- **Super Router** passes VPCs from local and peer routers + policy (Domain IR)
 
 Each topology module merges its VPCs into a single map, passes it alongside a
 `routing_policy` to the shared function, and receives back the policy-filtered
 route set. The brute-force aggregate is replaced by a compilation step that can
-dynamically shape the mesh based on declared constraints -- for both IPv4 and
+dynamically shape the mesh based on declared constraints, for both IPv4 and
 IPv6 (single stack and dual stack).
 
 This means policy is no longer a centralized-router-only concept. The same
@@ -336,21 +336,21 @@ The same `routing_policy` block works at every IR level. The compilation unit
 topology scope invokes it:
 
 ```hcl
-# Regional IR -- Centralized Router (intra-region)
+# Regional IR: Centralized Router (intra-region)
 module "centralized_router" {
   source         = "..."
   routing_policy = local.regional_policy
   # ...
 }
 
-# Global IR -- Full Mesh Trio (cross-region, 3 regions)
+# Global IR: Full Mesh Trio (cross-region, 3 regions)
 module "full_mesh_trio" {
   source         = "..."
   routing_policy = local.global_policy
   # ...
 }
 
-# Domain IR -- Super Router (cross-region + intra-region, peered routers)
+# Domain IR: Super Router (cross-region + intra-region, peered routers)
 module "super_router" {
   source         = "..."
   routing_policy = local.domain_policy
@@ -367,7 +367,7 @@ scope-agnostic middle layer.
 ## VPC Peering Deluxe Exclusion
 
 VPC Peering Deluxe is intentionally excluded from routing policy. Peering is a
-direct point-to-point connection between two VPCs -- by its nature, the act of
+direct point-to-point connection between two VPCs. By its nature, the act of
 creating a peering relationship is itself an explicit allow. There is no
 ambiguity about intent: if you peer two VPCs, you want them to reach each other.
 
@@ -376,7 +376,7 @@ Super Router) where a shared forwarding plane connects many VPCs and the
 reachability question is non-trivial. In those topologies, full mesh is the
 default and policy *constrains* it. VPC Peering Deluxe is the inverse: no
 connectivity exists until you explicitly create it. The peering declaration *is*
-the policy -- there is nothing to constrain.
+the policy. There is nothing to constrain.
 
 This distinction reinforces the language's design: policy is a filter over a
 mesh, not a permission system for point-to-point links. Where connectivity
@@ -405,13 +405,13 @@ reach which. Adding a new VPC means:
 This is O(N) operational complexity per VPC addition, and O(N^2) reasoning about
 the full reachability matrix. At 50+ VPCs across multiple regions, the
 propagation rules become difficult to audit and easy to misconfigure. There is no
-single place that answers "can VPC A reach VPC B?" -- you must trace propagation
+single place that answers "can VPC A reach VPC B?" without tracing propagation
 chains across tables.
 
 ### How single table with policy works
 
 One TGW route table. Every VPC attachment is associated and propagated to it.
-The TGW forwards everything -- full mesh at the transit layer. Reachability is
+The TGW forwards everything (full mesh at the transit layer). Reachability is
 controlled exclusively at VPC route tables via compiled policy.
 
 Adding a new VPC means:
@@ -429,9 +429,9 @@ The enterprise concern with a single TGW route table is: "if someone adds a
 route manually, traffic can flow anywhere." This is a valid operational risk but
 not an architectural one. The correct mitigation is:
 
-- **Drift detection** -- `terraform plan` shows unauthorized routes immediately
-- **Preventive controls** -- IAM policies restricting who can modify route tables
-- **The policy declaration itself** -- version-controlled, PR-reviewed, auditable
+- **Drift detection.** `terraform plan` shows unauthorized routes immediately.
+- **Preventive controls.** IAM policies restricting who can modify route tables.
+- **The policy declaration itself.** Version-controlled, PR-reviewed, auditable.
 
 Per-attachment TGW tables provide defense-in-depth at the forwarding plane, but
 at the cost of operational complexity that grows quadratically. The routing
@@ -447,7 +447,7 @@ policy declarations are auditable artifacts:
 cardholder data environments and other networks. A `segments` declaration with
 payment workloads in one segment and non-payment in another is the proof.
 `terraform plan` output showing zero routes between segments is the audit
-evidence. No runtime testing required -- the compiler guarantees it.
+evidence. No runtime testing required because the compiler guarantees it.
 
 **HIPAA (access controls):** Requires that electronic protected health
 information (ePHI) is accessible only to authorized systems. `default = "deny"`
@@ -466,7 +466,7 @@ restricted and monitored. The policy declaration is the restriction. Git history
 on the policy file is the change log. Plan output diffed between commits is the
 access change audit trail.
 
-In each case, the compliance artifact is the policy itself -- not a separate
+In each case, the compliance artifact is the policy itself, not a separate
 document describing what the network *should* look like, but the actual
 declaration that *compiles to* the network. The gap between documentation and
 implementation that auditors typically probe does not exist. The documentation
@@ -520,9 +520,9 @@ propagation, segment isolation, and cross-region connectivity.
 Cloud WAN and the routing policy language address the same problem: expressing
 network segmentation intent without manually configuring individual routes. They
 differ architecturally. Cloud WAN evaluates policy at runtime inside a managed
-control plane -- the operator delegates route computation to AWS. The routing
-policy language evaluates at compile time inside the operator's pipeline -- the
-operator sees the full route set in `terraform plan` output before applying.
+control plane, where the operator delegates route computation to AWS. The routing
+policy language evaluates at compile time inside the operator's pipeline, where
+the operator sees the full route set in `terraform plan` output before applying.
 Cloud WAN provides managed infrastructure and operational simplicity at the cost
 of runtime opacity and per-GB processing fees. The routing policy language
 provides compile-time determinism and standard TGW infrastructure at the cost of
@@ -533,14 +533,14 @@ the operator owning the compilation step.
 The routing policy integration in the `generate_routes_to_other_vpcs` function
 is validated by 66 passing tests via `terraform test`. These cover:
 
-- Deny rules (IPv4 and IPv6) -- explicit pair blocking, bidirectional enforcement
-- Segments (IPv4 and IPv6) -- isolation between groups, same-segment permitting
-- Precedence (IPv4 and IPv6) -- deny overriding allow, allow overriding segments,
+- Deny rules (IPv4 and IPv6): explicit pair blocking, bidirectional enforcement
+- Segments (IPv4 and IPv6): isolation between groups, same-segment permitting
+- Precedence (IPv4 and IPv6): deny overriding allow, allow overriding segments,
   segments overriding default, full interaction matrix
-- Default behavior -- `default = "allow"` full mesh, `default = "deny"` zero trust
-- Edge cases -- empty policy, single segment (equivalent to full mesh), deny with
+- Default behavior: `default = "allow"` full mesh, `default = "deny"` zero trust
+- Edge cases: empty policy, single segment (equivalent to full mesh), deny with
   no matching VPCs, allow across segment boundaries
 
-Each test asserts on the exact route set the compiler emits -- not just that
+Each test asserts on the exact route set the compiler emits, not just that
 routes exist, but that the correct routes exist and no others. This validates
 the totality property: every VPC pair is accounted for in every test scenario.
