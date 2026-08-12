@@ -4,15 +4,15 @@ locals {
       name            = "thunderbird"
       amazon_side_asn = 64520
       blackhole       = local.blackhole
-      #vpcs            = module.vpcs_usw2
-      routing_policy = local.routing_policy
+      vpcs            = module.vpcs_usw2
+      routing_policy  = local.routing_policy
     },
     {
       name            = "storm"
       amazon_side_asn = 64525
       blackhole       = local.blackhole
-      #vpcs            = module.vpcs_another_usw2
-      routing_policy = local.routing_policy
+      vpcs            = module.vpcs_another_usw2
+      routing_policy  = local.routing_policy
     }
   ]
 }

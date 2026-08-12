@@ -4,15 +4,15 @@ locals {
       name            = "wolverine"
       amazon_side_asn = 64519
       blackhole       = local.blackhole
-      #vpcs            = module.vpcs_use1
-      routing_policy = local.routing_policy
+      vpcs            = module.vpcs_use1
+      routing_policy  = local.routing_policy
     },
     {
       name            = "bishop"
       amazon_side_asn = 64524
       blackhole       = local.blackhole
-      #vpcs            = module.vpcs_another_use1
-      routing_policy = local.routing_policy
+      vpcs            = module.vpcs_another_use1
+      routing_policy  = local.routing_policy
     }
   ]
 }
