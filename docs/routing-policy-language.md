@@ -626,6 +626,18 @@ The algebra is intentionally static because compile-time guarantees require
 knowing the full input set at plan time. Dynamic membership would require a
 runtime evaluator, which is a fundamentally different architecture.
 
+### Route optimization
+
+The compiler emits the canonical route set with no optimization pass. Each
+permitted VPC pair produces one route per route table per CIDR (including
+secondary CIDRs). Routes are not aggregated, deduplicated across scopes, or
+minimized. If two adjacent CIDRs (e.g., `10.0.0.0/18` and `10.0.64.0/18`) are
+both permitted to the same destination, they are emitted as two separate routes
+rather than a single `10.0.0.0/17`. A future optimization pass could reduce
+route table consumption by aggregating routes where the reachability semantics
+are preserved, which matters as VPC count grows toward the 50-route-per-table
+default limit.
+
 ### Cross-account policy composition
 
 The current model assumes a single policy author. There is no mechanism for
