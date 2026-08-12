@@ -528,6 +528,112 @@ of runtime opacity and per-GB processing fees. The routing policy language
 provides compile-time determinism and standard TGW infrastructure at the cost of
 the operator owning the compilation step.
 
+## Reshaping Topology on Demand
+
+One of the most powerful properties of compile-time policy is that the network
+topology becomes mutable through language alone. Changing a single line in the
+`routing_policy` block reshapes which VPCs can communicate, and `terraform plan`
+shows the exact route additions and removals before anything is applied.
+
+This is fundamentally different from traditional network change management where
+reshaping connectivity means modifying infrastructure (adding/removing route
+tables, changing propagation rules, updating attachments). Here, the
+infrastructure stays constant. The TGW, the attachments, the forwarding plane
+are all unchanged. Only the compiled edges (VPC route table entries) shift.
+
+```hcl
+# Before: app and db can communicate freely within the trusted segment
+routing_policy = {
+  default  = "deny"
+  segments = {
+    trusted = [module.vpcs["app"], module.vpcs["db"], module.vpcs["cache"]]
+  }
+}
+
+# After: isolate db from app during an incident, one line change
+routing_policy = {
+  default  = "deny"
+  segments = {
+    trusted = [module.vpcs["app"], module.vpcs["db"], module.vpcs["cache"]]
+  }
+  deny = [
+    { from = module.vpcs["app"], to = module.vpcs["db"] }
+  ]
+}
+```
+
+The `terraform plan` output shows routes being removed between `app` and `db`.
+No TGW changes. No attachment changes. No propagation changes. The forwarding
+plane still knows how to reach `db`, but the VPC route tables no longer point
+traffic there. The topology reshaped through a policy edit, not an
+infrastructure operation.
+
+This makes network changes:
+- **Reviewable:** the diff is a policy declaration, not a list of route resources
+- **Reversible:** remove the deny line, `terraform apply`, routes return
+- **Auditable:** git history shows exactly when and why topology changed
+- **Safe:** `terraform plan` proves the blast radius before apply
+
+The topology is not a fixed artifact you build once. It's a living expression
+you reshape as requirements change, with the compiler guaranteeing that every
+reshape produces a valid, total, deterministic route set.
+
+## What's Missing
+
+The routing policy language covers route generation (the data plane edges) but
+does not yet address several adjacent concerns that a full network policy system
+would include:
+
+### Inspection and logging
+
+There is no built-in mechanism for traffic inspection (AWS Network Firewall,
+Gateway Load Balancer) as part of the policy declaration. Today, if you need
+inspection between two VPCs, you configure it separately and route through the
+inspection appliance manually. A future extension could express inspection as a
+policy primitive: "traffic between segment A and segment B must traverse
+firewall F." The compiler would then emit routes through the inspection
+attachment rather than directly to the destination VPC.
+
+### Stateful awareness
+
+The algebra is purely topological. It doesn't know about security groups, NACLs,
+or connection state. It controls where packets *can* go (route existence), not
+what happens when they arrive (stateful filtering). These remain separate
+concerns managed by their respective resources. Unifying them under a single
+policy declaration is architecturally possible but significantly expands the
+compilation target surface.
+
+### Asymmetric routing
+
+Allow and deny are commutative by design (A->B implies B->A). There is no way
+to express "A can initiate to B but B cannot initiate to A" at the routing layer.
+This is intentional: asymmetric routes at L3 create operational hazards (return
+traffic drops, PMTU issues). Directional control belongs at L4+ (security
+groups, NACLs) where connection state is tracked.
+
+### Route prioritization and weighting
+
+The algebra emits a binary reachable/unreachable decision. There is no concept of
+preferred paths, failover routes, or traffic engineering. All emitted routes have
+equal weight. Active-passive or weighted routing patterns require separate
+mechanisms (TGW route table priorities, BGP AS-path manipulation in VPN overlays).
+
+### Dynamic membership
+
+Segments are statically declared. There is no mechanism for a VPC to join or
+leave a segment based on runtime conditions (tags, time-of-day, incident state).
+The algebra is intentionally static because compile-time guarantees require
+knowing the full input set at plan time. Dynamic membership would require a
+runtime evaluator, which is a fundamentally different architecture.
+
+### Cross-account policy composition
+
+The current model assumes a single policy author. There is no mechanism for
+hierarchical policy (organization-level constraints composed with team-level
+declarations) where a parent policy can bound what child policies are allowed
+to express. This is a tractable extension of the algebra (a parent deny cannot
+be overridden by a child allow) but is not yet implemented.
+
 ## Test Coverage
 
 The routing policy integration in the `generate_routes_to_other_vpcs` function
