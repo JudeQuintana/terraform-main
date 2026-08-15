@@ -131,84 +131,6 @@ These are algebraically identical because:
   no second segment to deny against). The segment membership permits the same
   VPCs that `default = "allow"` already permits. The result is full mesh.
 
-## Algebraic Equivalence Under Default Deny
-
-Under `default = "deny"`, a segment containing a single VPC is a no-op. The
-following two policies produce identical route sets:
-
-```hcl
-# Policy A: infra in a solo segment
-routing_policy = {
-  default = "deny"
-  allow = [
-    { from = module.vpcs["app"], to = module.vpcs["infra"] }
-  ]
-  segments = {
-    workloads  = [module.vpcs["app"], module.vpcs["general"]]
-    management = [module.vpcs["infra"]]
-  }
-}
-
-# Policy B: infra unsegmented (no "management" segment)
-routing_policy = {
-  default = "deny"
-  allow = [
-    { from = module.vpcs["app"], to = module.vpcs["infra"] }
-  ]
-  segments = {
-    workloads = [module.vpcs["app"], module.vpcs["general"]]
-  }
-}
-```
-
-These are algebraically equivalent because:
-
-1. **A solo segment grants nothing.** Segment membership permits same-segment
-   reachability. A segment with one member has no other member to reach. The
-   same-segment permit set is empty.
-
-2. **Cross-segment deny is redundant under default deny.** Policy A generates
-   cross-segment deny rules between "workloads" and "management" (e.g.,
-   `general` -> `infra` is denied). But under `default = "deny"`, that pair
-   would be denied anyway by the fallthrough. The cross-segment deny rule
-   produces the same verdict as the default.
-
-3. **The allow rule is unaffected.** `allow` has higher precedence than
-   `segments`. Whether infra is segmented or unsegmented, `app` -> `infra`
-   is permitted by the explicit allow rule in both policies.
-
-Resolution table for both policies (`app`, `general`, `infra`):
-
-| Pair | Policy A | Policy B | Verdict |
-|------|----------|----------|---------|
-| `app` -> `general` | same segment (workloads) | same segment (workloads) | PERMITTED |
-| `app` -> `infra` | allow rule | allow rule | PERMITTED |
-| `general` -> `infra` | cross-segment deny | default deny | DENIED |
-
-Different resolution paths, identical reachability set.
-
-### When the equivalence breaks
-
-The equivalence holds only when the segment being removed has a **single
-member**. If another VPC shares the segment, removing a member changes
-reachability:
-
-```hcl
-# NOT equivalent: "management" has two members
-segments = {
-  workloads  = [module.vpcs["app"], module.vpcs["general"]]
-  management = [module.vpcs["infra"], module.vpcs["db"]]
-}
-```
-
-Removing `infra` from "management" breaks `db` -> `infra` same-segment
-connectivity. The solo-member condition is what makes removal safe.
-
-The equivalence also breaks under `default = "allow"`. A solo segment under
-default allow generates cross-segment deny rules that *override* the permissive
-default. Removing the segment would let the default allow through, changing the
-reachability set.
-
 ## Segments
 
 Segments partition VPCs into isolation groups. VPCs in the same segment can
@@ -373,6 +295,84 @@ Evaluation:
 2. `app` -> `api`: **PERMITTED** (same segment, no deny)
 3. `monitoring` -> `app`: **PERMITTED** (explicit allow, overrides default deny)
 4. `monitoring` -> `api`: **DENIED** (no allow, not in a segment, default deny)
+
+## Algebraic Equivalence Under Default Deny
+
+Under `default = "deny"`, a segment containing a single VPC is a no-op. The
+following two policies produce identical route sets:
+
+```hcl
+# Policy A: infra in a solo segment
+routing_policy = {
+  default = "deny"
+  allow = [
+    { from = module.vpcs["app"], to = module.vpcs["infra"] }
+  ]
+  segments = {
+    workloads  = [module.vpcs["app"], module.vpcs["general"]]
+    management = [module.vpcs["infra"]]
+  }
+}
+
+# Policy B: infra unsegmented (no "management" segment)
+routing_policy = {
+  default = "deny"
+  allow = [
+    { from = module.vpcs["app"], to = module.vpcs["infra"] }
+  ]
+  segments = {
+    workloads = [module.vpcs["app"], module.vpcs["general"]]
+  }
+}
+```
+
+These are algebraically equivalent because:
+
+1. **A solo segment grants nothing.** Segment membership permits same-segment
+   reachability. A segment with one member has no other member to reach. The
+   same-segment permit set is empty.
+
+2. **Cross-segment deny is redundant under default deny.** Policy A generates
+   cross-segment deny rules between "workloads" and "management" (e.g.,
+   `general` -> `infra` is denied). But under `default = "deny"`, that pair
+   would be denied anyway by the fallthrough. The cross-segment deny rule
+   produces the same verdict as the default.
+
+3. **The allow rule is unaffected.** `allow` has higher precedence than
+   `segments`. Whether infra is segmented or unsegmented, `app` -> `infra`
+   is permitted by the explicit allow rule in both policies.
+
+Resolution table for both policies (`app`, `general`, `infra`):
+
+| Pair | Policy A | Policy B | Verdict |
+|------|----------|----------|---------|
+| `app` -> `general` | same segment (workloads) | same segment (workloads) | PERMITTED |
+| `app` -> `infra` | allow rule | allow rule | PERMITTED |
+| `general` -> `infra` | cross-segment deny | default deny | DENIED |
+
+Different resolution paths, identical reachability set.
+
+### When the equivalence breaks
+
+The equivalence holds only when the segment being removed has a **single
+member**. If another VPC shares the segment, removing a member changes
+reachability:
+
+```hcl
+# NOT equivalent: "management" has two members
+segments = {
+  workloads  = [module.vpcs["app"], module.vpcs["general"]]
+  management = [module.vpcs["infra"], module.vpcs["db"]]
+}
+```
+
+Removing `infra` from "management" breaks `db` -> `infra` same-segment
+connectivity. The solo-member condition is what makes removal safe.
+
+The equivalence also breaks under `default = "allow"`. A solo segment under
+default allow generates cross-segment deny rules that *override* the permissive
+default. Removing the segment would let the default allow through, changing the
+reachability set.
 
 ## From VPC Aggregates to Policy Compilation
 
