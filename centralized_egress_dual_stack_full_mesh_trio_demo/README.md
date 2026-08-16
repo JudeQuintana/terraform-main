@@ -8,6 +8,7 @@
   - Should also work with OpenTofu.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
   - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
+- There's now a routing policy language for building out topology shape with instructions below.
 - AWS general reference: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
 - Example single region potential [cost breakdown](https://awstip.com/centralized-egress-traffic-via-the-shared-nat-gateway-in-a-multi-account-aws-environment-3b682d8737ca) under pricing.
 
@@ -277,6 +278,56 @@ VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs)
             - `2600:1f28:3d:c700::/56`
             - `2600:1f28:3d:c800::/56`
 
+### Routing Policy
+
+This demo includes routing policies that shape intra-region and cross-region
+reachability at compile time. Policies are declared in `routing_policy.tf` and
+evaluated by the compiler during `terraform plan` — the route set in the plan
+output is the complete proof of what can and cannot communicate.
+
+See [docs/routing-policy-language.md](../docs/routing-policy-language.md) for
+a full specification of the policy language.
+
+Intra-region policy for `us-east-1` (zero trust with surgical allows):
+```hcl
+routing_policy_intra_region_use1 = {
+  default = "deny"
+  allow = [
+    { from = module.vpcs_use1["app3"], to = module.vpcs_use1["infra3"] }
+  ]
+  segments = {
+    workloads  = [module.vpcs_use1["app3"], module.vpcs_use1["general3"]]
+    management = [module.vpcs_use1["infra3"]]
+  }
+}
+```
+
+This produces:
+- `app3` <-> `general3`: permitted (same segment, workloads)
+- `app3` <-> `infra3`: permitted (explicit allow overrides cross-segment)
+- `general3` <-> `infra3`: denied (cross-segment, default deny)
+
+Intra-region policy for `us-east-2` and `us-west-2` (full mesh):
+```hcl
+routing_policy_intra_region_use2 = {
+  default = "allow"
+}
+```
+
+Cross-region policy across all three regions:
+```hcl
+routing_policy_cross_region_use1_use2_usw2 = {
+  default = "deny"
+  allow = [
+    { from = module.vpcs_use2["infra1"], to = module.vpcs_usw2["infra2"] }
+  ]
+  segments = {
+    shared     = [module.vpcs_use1["infra3"], module.vpcs_usw2["app2"]]
+    restricted = [module.vpcs_use2["app1"]]
+  }
+}
+```
+
 ### Build Demo
 1. It begins:
   - `terraform init`
@@ -296,6 +347,20 @@ VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs)
 Note: combine steps 3 through 5 with: `terraform apply`
 
 ### Routing and peering validation with AWS Route Analyzer
+
+Route Analyzer validates the **TGW forwarding plane only** — it confirms that
+TGW route tables can forward traffic between attachments. It does not validate
+end-to-end VPC connectivity (VPC route tables, security groups, NACLs).
+
+For validating the **policy edge** (VPC route table entries compiled by the
+routing policy):
+- **Intra-region:** Use [VPC Reachability Analyzer](https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html)
+  to test paths between ENIs within a single region (IPv4 only).
+- **Cross-region end-to-end:** Requires EC2 instances. Neither Route Analyzer
+  nor Reachability Analyzer validates cross-region VPC-to-VPC paths. Deploy EC2s
+  and test connectivity directly (ping, curl, etc.) to confirm the compiled
+  policy produces the expected reachability.
+
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`

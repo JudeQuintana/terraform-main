@@ -18,10 +18,8 @@ locals {
 }
 
 module "centralized_routers_use1" {
-  #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.0.6"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=init-deny-policy"
-  #source = "/Users/jude/projects/terraform-modules/networking/transit_gateway_centralized_router_for_tiered_vpc_ng"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.1.0"
 
   providers = {
     aws = aws.use1

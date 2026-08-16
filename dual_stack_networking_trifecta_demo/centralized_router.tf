@@ -3,10 +3,11 @@
 # hub and spoke
 module "centralized_router" {
   source  = "JudeQuintana/centralized-router/aws"
-  version = "1.0.6"
+  version = "1.1.0"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
+  routing_policy   = local.routing_policy_intra_region
   centralized_router = {
     name            = "gambit"
     amazon_side_asn = 64512

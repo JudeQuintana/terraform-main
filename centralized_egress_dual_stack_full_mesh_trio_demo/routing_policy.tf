@@ -6,11 +6,11 @@ locals {
     ]
 
     segments = {
-      trusted = [
+      workloads = [
         module.vpcs_use1["app3"],
         module.vpcs_use1["general3"],
       ]
-      other = [
+      management = [
         module.vpcs_use1["infra3"],
       ]
     }
@@ -33,11 +33,13 @@ locals {
     ]
 
     segments = {
-      cross-region = [
+      shared = [
         module.vpcs_use1["infra3"],
         module.vpcs_usw2["app2"],
       ]
-      cross-region2 = [
+      # Solo-member segment: algebraically equivalent to unsegmented under default="deny".
+      # Kept to document intent — app1 is deliberately isolated from the shared group.
+      restricted = [
         module.vpcs_use2["app1"],
       ]
     }
