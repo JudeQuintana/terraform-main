@@ -4,6 +4,7 @@
 - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
 - Both IPv4 and IPv6 secondary cidrs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
+- There's now a routing policy language for building out topology shape with instructions below.
 
 ## Goal
 Using the latest Terraform (v1.9.0+) and AWS Provider (v5.61.0+)
@@ -103,6 +104,31 @@ variable "base_ec2_instance_attributes" {
   }
 }
 ```
+
+### Routing Policy
+
+This demo uses `default = "allow"` (full mesh) for the Super Router's routing
+policy, meaning all VPCs across both Centralized Routers have full cross-region
+and intra-region reachability through the Domain IR.
+
+```hcl
+routing_policy = {
+  default = "allow"
+}
+```
+
+The routing policy language supports `deny`, `allow`, `segments`, and `default`
+primitives with fixed precedence (`deny > allow > segments > default`) to shape
+reachability at compile time. Super Router evaluates the same policy language as
+Centralized Router and Full Mesh Trio — the compilation unit is scope-invariant.
+
+For examples using segmentation, deny rules, and zero-trust policies, see the
+[Centralized Egress Dual Stack Full Mesh Trio Demo](../centralized_egress_dual_stack_full_mesh_trio_demo).
+
+For the full policy language specification, see
+[docs/routing-policy-language.md](../docs/routing-policy-language.md).
+
+---
 
 It begins:
 ```

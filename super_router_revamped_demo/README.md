@@ -305,6 +305,31 @@ AZ and VPC removal:
 
 ---
 
+### Routing Policy
+
+This demo uses `default = "allow"` (full mesh) for the Super Router's routing
+policy, meaning all VPCs across both Centralized Routers have full cross-region
+and intra-region reachability through the Domain IR.
+
+```hcl
+routing_policy = {
+  default = "allow"
+}
+```
+
+The routing policy language supports `deny`, `allow`, `segments`, and `default`
+primitives with fixed precedence (`deny > allow > segments > default`) to shape
+reachability at compile time. Super Router evaluates the same policy language as
+Centralized Router and Full Mesh Trio — the compilation unit is scope-invariant.
+
+For examples using segmentation, deny rules, and zero-trust policies, see the
+[Centralized Egress Dual Stack Full Mesh Trio Demo](../centralized_egress_dual_stack_full_mesh_trio_demo).
+
+For the full policy language specification, see
+[docs/routing-policy-language.md](../docs/routing-policy-language.md).
+
+---
+
 ## Begin Demo
 It begins:
  - `terraform init`
@@ -322,7 +347,21 @@ The Super Router is now complete!
 
 ---
 
-Routing and peering Validation with AWS Route Analyzer:
+### Routing and peering validation with AWS Route Analyzer
+
+Route Analyzer validates the **TGW forwarding plane only** — it confirms that
+TGW route tables can forward traffic between attachments. It does not validate
+end-to-end VPC connectivity (VPC route tables, security groups, NACLs).
+
+For validating the **policy edge** (VPC route table entries compiled by the
+routing policy):
+- **Intra-region:** Use [VPC Reachability Analyzer](https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html)
+  to test paths between ENIs within a single region (IPv4 only).
+- **Cross-region end-to-end:** Requires EC2 instances. Neither Route Analyzer
+  nor Reachability Analyzer validates cross-region VPC-to-VPC paths. Deploy EC2s
+  and test connectivity directly (ping, curl, etc.) to confirm the compiled
+  policy produces the expected reachability.
+
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network (or select existing global network)-> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`

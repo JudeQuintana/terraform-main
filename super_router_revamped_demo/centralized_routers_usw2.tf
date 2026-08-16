@@ -5,19 +5,21 @@ locals {
       amazon_side_asn = 64520
       blackhole       = local.blackhole
       vpcs            = module.vpcs_usw2
+      routing_policy  = local.routing_policy
     },
     {
       name            = "storm"
       amazon_side_asn = 64525
       blackhole       = local.blackhole
       vpcs            = module.vpcs_another_usw2
+      routing_policy  = local.routing_policy
     }
   ]
 }
 
 module "centralized_routers_usw2" {
   source  = "JudeQuintana/centralized-router/aws"
-  version = "1.0.6"
+  version = "1.1.0"
 
   providers = {
     aws = aws.usw2
@@ -27,5 +29,6 @@ module "centralized_routers_usw2" {
 
   env_prefix         = var.env_prefix
   region_az_labels   = var.region_az_labels
+  routing_policy     = each.value.routing_policy
   centralized_router = each.value
 }

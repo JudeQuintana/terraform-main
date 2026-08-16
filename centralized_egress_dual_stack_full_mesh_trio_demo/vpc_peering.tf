@@ -1,3 +1,5 @@
+# vpc peering modules dont participate in policy because they are explicit/intended allow when used.
+#
 # cross region peering, only route specific subnets across peering connection
 # more cost effective vs using transit gateway for cross region traffic
 module "vpc_peering_deluxe_use1_general3_to_use2_app1" {

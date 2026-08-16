@@ -1,7 +1,7 @@
 # Super Router is composed of two TGWs, one in each region.
 module "super_router_usw2_to_use1" {
   source  = "JudeQuintana/super-router/aws"
-  version = "1.0.1"
+  version = "2.0.0"
 
   providers = {
     aws.local = aws.usw2 # local super router tgw will be built in the aws.local provider region
@@ -10,6 +10,7 @@ module "super_router_usw2_to_use1" {
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
+  routing_policy   = local.routing_policy
   super_router = {
     name = "professor-x"
     local = {

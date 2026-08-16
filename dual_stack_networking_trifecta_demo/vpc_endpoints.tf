@@ -1,6 +1,6 @@
 # at scale we're saving money right here
 locals {
-  vpcs_with_private_route_table_ids = { for this in module.vpcs : this.name => this if length(this.private_route_table_ids) > 0 }
+  vpcs_with_private_route_table_ids = { for this in module.vpcs : this.name => this if var.enable_s3_gateways && length(this.private_route_table_ids) > 0 }
 }
 
 resource "aws_vpc_endpoint" "s3" {

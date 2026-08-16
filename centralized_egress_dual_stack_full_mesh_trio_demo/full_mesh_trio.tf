@@ -1,6 +1,6 @@
 module "full_mesh_trio" {
   source  = "JudeQuintana/full-mesh-trio/aws"
-  version = "1.0.1"
+  version = "2.0.0"
 
   providers = {
     aws.one   = aws.use1
@@ -8,7 +8,8 @@ module "full_mesh_trio" {
     aws.three = aws.usw2
   }
 
-  env_prefix = var.env_prefix
+  env_prefix     = var.env_prefix
+  routing_policy = local.routing_policy_cross_region_use1_use2_usw2
   full_mesh_trio = {
     one = {
       centralized_router = module.centralized_router_use1
