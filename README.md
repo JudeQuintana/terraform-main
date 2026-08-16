@@ -16,9 +16,11 @@
 ```
 ## NEW Routing Policy Language
 - The topology compiler now includes a [routing policy language](https://github.com/JudeQuintana/terraform-main/tree/main/docs/routing-policy-language.md) that shapes VPC reachability at compile time through four primitives with fixed precedence: `deny > allow > segments > default`.
-- A single policy declaration controls both IPv4 and IPv6 route generation. The language is scope-invariant — the same evaluation works across Centralized Router (Regional IR), Full Mesh Trio (Global IR), and Super Router (Domain IR).
+- A single policy declaration controls both IPv4 and IPv6 route generation. The language is scope-invariant, the same evaluation works across Centralized Router (Regional IR), Full Mesh Trio (Global IR), and Super Router (Domain IR).
 - Policy compiles to VPC route table entries (the policy edge). The TGW forwarding plane stays untouched. `terraform plan` shows the complete reachability proof before apply.
 - See the [Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo) for working examples with segmentation and deny rules.
+- The generate routes function with the new policy routing has been moved out of Centralized Router into its own module [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/).
+  - Now referencd from Centralized Router (Regional IR), Full Mesh Trio (Global IR) and Super Router (Domain IR)
 
 ## NEW White Paper (WIP)
 - What began as a modular Terraform experiment evolved into a full compiler-style architecture for AWS networking. The system transforms a declarative map of VPCs into complete multi-region Transit Gateway mesh configurations, performing automatic adjacency synthesis, route expansion, and deterministic cross-region propagation.
@@ -26,7 +28,7 @@
 
 ## NEW Super Router Revamped!
 [Super Router Revamped Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo)
- - Compose a decentralized hub and spoke Transit Gateway with full routing semantic coverage using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.1.0) (at `v1.1.0`), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v2.0.0) (at `v2.0.0`) modules.
+ - Compose a decentralized hub and spoke Transit Gateway with full routing semantic coverage using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.1.0) (at `v1.1.0`), [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v2.0.0) (at `v2.0.0`), and [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/tree/v1.1.0) (at `v1.1.0`) modules.
  - Includes VPC peering examples within a full mesh configuration used for high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs (dual stack).
  - Incudes routing policy.
@@ -38,7 +40,7 @@
 
 ## NEW Centralized Egress Dual Stack Full Mesh Trio!
 [Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo)
- - Compose a Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v2.0.0) (at `v1.1.0`)  and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v2.0.0) (at `v2.0.0`) modules.
+ - Compose a Centralized IPv4 Egress and Decentralized IPv6 Egress within a Dual Stack Full Mesh Topology across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v2.0.0) (at `v1.1.0`), [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v2.0.0) (at `v2.0.0`), and [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/tree/v1.1.0) (at `v1.1.0`) modules.
  - Includes VPC peering examples within a full mesh configuration used for high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Incudes routing policy.
@@ -46,7 +48,7 @@
 
 ## Dual Stack Full Mesh Trio!
 [Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_full_mesh_trio_demo)
- - Compose a dual stack Full Mesh Transit Gateway across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.1.0) (at `v1.1.0`)  and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v2.0.0) (at `v2.0.0`) modules.
+ - Compose a dual stack Full Mesh Transit Gateway across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.1.0) (at `v1.1.0`), [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v2.0.0) (at `v2.0.0`), and [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/tree/v1.1.0) (at `v1.1.0`) modules.
  - Includes VPC peering examples within a full mesh configuration used for high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Incudes routing policy.
@@ -54,7 +56,7 @@
 
 ## Dual Stack TNT Architecture!
 [Dual Stack Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_networking_trifecta_demo)
- - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.1.0) (at `v1.1.0`) modules.
+ - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.1.0) (at `v1.1.0`), and [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/tree/v1.1.0) (at `v1.1.0`) modules.
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Validate intra VPC connectivity with EC2 instances.
  - Incudes routing policy.
