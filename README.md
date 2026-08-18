@@ -18,9 +18,9 @@
 - The topology compiler now includes a [routing policy language](https://github.com/JudeQuintana/terraform-main/tree/main/docs/routing-policy-language.md) that shapes VPC reachability at compile time through four primitives with fixed precedence: `deny > allow > segments > default`.
 - A single policy declaration controls both IPv4 and IPv6 route generation. The language is scope-invariant, the same evaluation works across Centralized Router (Regional IR), Full Mesh Trio (Global IR), and Super Router (Domain IR).
 - Policy compiles to VPC route table entries (the policy edge). The TGW forwarding plane stays untouched. `terraform plan` shows the complete reachability proof before apply.
+- Here's the related [blog post](https://jq1.io/posts/routing_policy_language/).
 - See the [Centralized Egress Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/centralized_egress_dual_stack_full_mesh_trio_demo) for working examples with segmentation and deny rules.
 - The generate routes function with the new policy routing has been moved out of Centralized Router into its own module [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/).
-  - Now referencd from Centralized Router (Regional IR), Full Mesh Trio (Global IR) and Super Router (Domain IR)
 
 ## NEW White Paper (WIP)
 - What began as a modular Terraform experiment evolved into a full compiler-style architecture for AWS networking. The system transforms a declarative map of VPCs into complete multi-region Transit Gateway mesh configurations, performing automatic adjacency synthesis, route expansion, and deterministic cross-region propagation.
