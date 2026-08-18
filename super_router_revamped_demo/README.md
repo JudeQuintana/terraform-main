@@ -320,7 +320,7 @@ routing_policy = {
 The routing policy language supports `deny`, `allow`, `segments`, and `default`
 primitives with fixed precedence (`deny > allow > segments > default`) to shape
 reachability at compile time. Super Router evaluates the same policy language as
-Centralized Router and Full Mesh Trio — the compilation unit is scope-invariant.
+Centralized Router and Full Mesh Trio, the compilation unit is scope-invariant.
 
 For examples using segmentation, deny rules, and zero-trust policies, see the
 [Centralized Egress Dual Stack Full Mesh Trio Demo](../centralized_egress_dual_stack_full_mesh_trio_demo).
@@ -349,7 +349,7 @@ The Super Router is now complete!
 
 ### Routing and peering validation with AWS Route Analyzer
 
-Route Analyzer validates the **TGW forwarding plane only** — it confirms that
+Route Analyzer validates the **TGW forwarding plane only**, it confirms that
 TGW route tables can forward traffic between attachments. It does not validate
 end-to-end VPC connectivity (VPC route tables, security groups, NACLs).
 

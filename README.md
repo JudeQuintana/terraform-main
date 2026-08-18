@@ -65,14 +65,14 @@
 [Super Router Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo)
  - Compose a decentralized hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.1) (at `v1.0.1`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.1) (at `v1.0.1`), and [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v1.0.0) (at `v1.0.0`) modules.
  - IPv4 only (no IPAM).
- - No routing policy.
+ - No routing policy (default full mesh).
  - Validate TGW connectivity with AWS Route Analyzer.
 
 ## Mega Mesh!
 [Mega Mesh Demo](https://github.com/JudeQuintana/terraform-main/tree/main/mega_mesh_demo)
  - Compose a Full Mesh Transit Gateway across 10 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.1) (at `v1.0.1`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.1) (at `v1.0.1`) and [Mega Mesh](https://github.com/JudeQuintana/terraform-aws-mega-mesh/tree/v1.0.0) (at `v1.0.0`) modules.
  - IPv4 only (no IPAM).
- - No routing policy.
+ - No routing policy (default full mesh).
  - Validate connectivity with AWS Route Analyzer.
 
 ## Full Mesh Trio!
@@ -80,14 +80,14 @@
  - Compose a Full Mesh Transit Gateway across 3 regions using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/v1.0.1) (at `v1.0.1`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/v1.0.1) (at `v1.0.1`) and [Full Mesh Trio](https://github.com/JudeQuintana/terraform-aws-full-mesh-trio/tree/v1.0.0) (at `v1.0.0`) modules.
  - Includes VPC peering examples within a full mesh configuration for high traffic workloads to save on cost for intra-region using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.0) module (at `v1.0.0`).
  - IPv4 only (no IPAM).
- - No routing policy.
+ - No routing policy (default full mesh).
  - Validate TGW connectivity with AWS Route Analyzer.
 
 ## TNT Architecture!
 [Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/networking_trifecta_demo)
  - Compose a hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.1) (at `v1.0.1`) and [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.0.1) (at `v1.0.1`) modules.
  - IPv4 only (no IPAM).
- - No routing policy.
+ - No routing policy (default full mesh).
  - Validate intra VPC connectivity with EC2 instances.
 
 ---

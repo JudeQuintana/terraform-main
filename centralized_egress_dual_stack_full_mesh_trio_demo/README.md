@@ -282,7 +282,7 @@ VPCs with an IPv4 network cidr /18 provides /20 subnet for each AZ (up to 4 AZs)
 
 This demo includes routing policies that shape intra-region and cross-region
 reachability at compile time. Policies are declared in `routing_policy.tf` and
-evaluated by the compiler during `terraform plan` — the route set in the plan
+evaluated by the compiler during `terraform plan`, the route set in the plan
 output is the complete proof of what can and cannot communicate.
 
 See [docs/routing-policy-language.md](../docs/routing-policy-language.md) for
@@ -348,7 +348,7 @@ Note: combine steps 3 through 5 with: `terraform apply`
 
 ### Routing and peering validation with AWS Route Analyzer
 
-Route Analyzer validates the **TGW forwarding plane only** — it confirms that
+Route Analyzer validates the **TGW forwarding plane only**, it confirms that
 TGW route tables can forward traffic between attachments. It does not validate
 end-to-end VPC connectivity (VPC route tables, security groups, NACLs).
 

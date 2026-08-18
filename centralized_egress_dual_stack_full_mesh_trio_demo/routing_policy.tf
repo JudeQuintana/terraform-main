@@ -38,7 +38,7 @@ locals {
         module.vpcs_usw2["app2"],
       ]
       # Solo-member segment: algebraically equivalent to unsegmented under default="deny".
-      # Kept to document intent — app1 is deliberately isolated from the shared group.
+      # Kept to document intent, app1 is deliberately isolated from the shared group.
       restricted = [
         module.vpcs_use2["app1"],
       ]
