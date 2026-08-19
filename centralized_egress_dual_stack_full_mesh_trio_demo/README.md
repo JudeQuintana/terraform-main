@@ -361,6 +361,7 @@ routing policy):
   and test connectivity directly (ping, curl, etc.) to confirm the compiled
   policy produces the expected reachability.
 
+Route Analayzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`

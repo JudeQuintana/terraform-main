@@ -125,6 +125,20 @@ The resulting architecture is a ipv4 only or a dual stack full mesh topology acr
 Note: combine steps 3 through 5 with: `terraform apply`
 
 ### Routing and peering validation with AWS Route Analyzer
+Route Analyzer validates the **TGW forwarding plane only**, it confirms that
+TGW route tables can forward traffic between attachments. It does not validate
+end-to-end VPC connectivity (VPC route tables, security groups, NACLs).
+
+For validating the **policy edge** (VPC route table entries compiled by the
+routing policy):
+- **Intra-region:** Use [VPC Reachability Analyzer](https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html)
+  to test paths between ENIs within a single region (IPv4 only).
+- **Cross-region end-to-end:** Requires EC2 instances. Neither Route Analyzer
+  nor Reachability Analyzer validates cross-region VPC-to-VPC paths. Deploy EC2s
+  and test connectivity directly (ping, curl, etc.) to confirm the compiled
+  policy produces the expected reachability.
+
+Route Analayzer:
 - Go to [AWS Network Manager](https://us-west-2.console.aws.amazon.com/networkmanager/home?region=us-east-1#/networks) (free to use)
   - Create global network -> `next`
     - UNCHECK `Add core network in your global network` or you will be billed extra -> `next`
