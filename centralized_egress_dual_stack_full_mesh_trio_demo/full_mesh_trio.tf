@@ -11,6 +11,7 @@ module "full_mesh_trio" {
   full_mesh_trio = {
     name           = "omega-red"
     routing_policy = local.routing_policy_use1_use2_usw2
+    inpect         = local.inspect_use1_use2_usw2
     one = {
       centralized_router = module.centralized_router_use1
     }

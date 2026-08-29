@@ -22,11 +22,13 @@ locals {
             module.vpcs_use1["app3"],
             module.vpcs_use1["general3"],
           ]
-          #management = [
-          #module.vpcs_use1["infra3"],
-          #]
         }
       }
     }
+  }
+
+  inspect_use1_use2_usw2 = {
+    reachability = true
+    diagnostics  = true
   }
 }
