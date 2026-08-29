@@ -1,6 +1,5 @@
 module "full_mesh_trio" {
-  source  = "JudeQuintana/full-mesh-trio/aws"
-  version = "2.0.0"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_trio?ref=reachability-provenance"
 
   providers = {
     aws.one   = aws.use1
@@ -8,9 +7,9 @@ module "full_mesh_trio" {
     aws.three = aws.usw2
   }
 
-  env_prefix     = var.env_prefix
-  routing_policy = local.routing_policy_cross_region_use1_use2_usw2
+  env_prefix = var.env_prefix
   full_mesh_trio = {
+    routing_policy = local.routing_policy_cross_region_use1_use2_usw2
     one = {
       centralized_router = module.centralized_router_use1
     }

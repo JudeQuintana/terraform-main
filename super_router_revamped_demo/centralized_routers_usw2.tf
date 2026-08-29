@@ -18,8 +18,9 @@ locals {
 }
 
 module "centralized_routers_usw2" {
-  source  = "JudeQuintana/centralized-router/aws"
-  version = "1.1.0"
+  #source  = "JudeQuintana/centralized-router/aws"
+  #version = "1.1.0"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=reachability-provenance"
 
   providers = {
     aws = aws.usw2
@@ -29,6 +30,5 @@ module "centralized_routers_usw2" {
 
   env_prefix         = var.env_prefix
   region_az_labels   = var.region_az_labels
-  routing_policy     = each.value.routing_policy
   centralized_router = each.value
 }

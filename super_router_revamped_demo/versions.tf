@@ -4,7 +4,11 @@ terraform {
     aws = {
       source = "hashicorp/aws"
       # will display minor deprecation messages for the provider until the modules are updated
-      version = "~>6.58"
+      version = "~>6.62"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "~>2.9"
     }
   }
 }

@@ -2,15 +2,16 @@
 # and route to each other for the VPC IPv4 network cidrs, IPv4 secondary cidrs and IPv6 cidrs.
 # hub and spoke
 module "centralized_router" {
-  source  = "JudeQuintana/centralized-router/aws"
-  version = "1.1.0"
+  #source  = "JudeQuintana/centralized-router/aws"
+  #version = "1.1.0"
+  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=reachability-provenance"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
-  routing_policy   = local.routing_policy_intra_region
   centralized_router = {
     name            = "gambit"
     amazon_side_asn = 64512
+    routing_policy  = local.routing_policy_intra_region
     vpcs            = module.vpcs
     blackhole = {
       cidrs      = ["172.16.8.0/24"]
