@@ -12,7 +12,7 @@ module "centralized_router_usw2" {
   centralized_router = {
     name            = "arch-angel"
     amazon_side_asn = 64521
-    routing_policy  = local.routing_policy_intra_region_usw2
+    routing_policy  = local.routing_policy_usw2
     vpcs            = module.vpcs_usw2
     blackhole       = local.blackhole
   }

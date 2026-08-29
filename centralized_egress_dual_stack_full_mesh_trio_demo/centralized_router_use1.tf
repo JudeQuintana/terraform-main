@@ -2,7 +2,6 @@ module "centralized_router_use1" {
   #source  = "JudeQuintana/centralized-router/aws"
   #version = "1.1.0"
   source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=reachability-provenance"
-  #source = "/Users/jude/projects/terraform-modules/networking/transit_gateway_centralized_router_for_tiered_vpc_ng"
 
   providers = {
     aws = aws.use1
@@ -13,7 +12,8 @@ module "centralized_router_use1" {
   centralized_router = {
     name            = "mystique"
     amazon_side_asn = 64519
-    routing_policy  = local.routing_policy_intra_region_use1
+    routing_policy  = local.routing_policy_use1
+    inspect         = local.inspect_use1
     vpcs            = module.vpcs_use1
     blackhole       = local.blackhole
   }

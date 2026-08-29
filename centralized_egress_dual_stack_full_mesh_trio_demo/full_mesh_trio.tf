@@ -9,7 +9,8 @@ module "full_mesh_trio" {
 
   env_prefix = var.env_prefix
   full_mesh_trio = {
-    routing_policy = local.routing_policy_cross_region_use1_use2_usw2
+    name           = "omega-red"
+    routing_policy = local.routing_policy_use1_use2_usw2
     one = {
       centralized_router = module.centralized_router_use1
     }

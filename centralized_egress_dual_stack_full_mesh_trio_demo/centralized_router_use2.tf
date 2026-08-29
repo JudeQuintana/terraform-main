@@ -12,7 +12,7 @@ module "centralized_router_use2" {
   centralized_router = {
     name            = "magneto"
     amazon_side_asn = 64520
-    routing_policy  = local.routing_policy_intra_region_use2
+    routing_policy  = local.routing_policy_use2
     vpcs            = module.vpcs_use2
     blackhole       = local.blackhole
   }
