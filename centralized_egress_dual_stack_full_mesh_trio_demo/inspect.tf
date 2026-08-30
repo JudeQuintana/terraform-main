@@ -7,6 +7,7 @@ locals {
     policy_diff = {
       # usually the reachability is generated already so you can just do:
       # previous_reachability = jsondecode(file("inspect/myrouter-reachability.json"))
+      # and change the local.routing_policy_use1 to see what's changed.
       previous_reachability = {
         "app3:general3"   = "permitted:segment"
         "app3:infra3"     = "permitted:allow"
