@@ -16,6 +16,7 @@ locals {
     }
 
     equivalence = {
+      # use this to test against routing_policy to verify equivalent policies algebraically
       equivalent_routing_policy = {
         default = "deny"
 
