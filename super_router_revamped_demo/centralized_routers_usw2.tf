@@ -21,8 +21,9 @@ locals {
 
 module "centralized_routers_usw2" {
   #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.1.0"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=reachability-provenance"
+  #version = "1.2.0"
+  #source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=reachability-provenance"
+  source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=compiler-semantic-toolchain"
 
   providers = {
     aws = aws.usw2

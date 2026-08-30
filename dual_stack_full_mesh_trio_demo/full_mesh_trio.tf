@@ -1,7 +1,7 @@
 module "full_mesh_trio" {
   #source  = "JudeQuintana/full-mesh-trio/aws"
-  #version = "1.0.1"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_trio?ref=reachability-provenance"
+  #version = "2.1.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-full-mesh-trio.git?ref=compiler-semantic-toolchain"
 
   providers = {
     aws.one   = aws.use1

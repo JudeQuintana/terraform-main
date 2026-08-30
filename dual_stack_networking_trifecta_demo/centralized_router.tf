@@ -3,8 +3,8 @@
 # hub and spoke
 module "centralized_router" {
   #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.1.0"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=reachability-provenance"
+  #version = "1.2.0"
+  source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=compiler-semantic-toolchain"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
