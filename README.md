@@ -22,7 +22,7 @@
   - **Policy Diff**: incremental compilation preview, computing what changed in connectivity at the semantic level given a previous reachability matrix.
   - **Equivalence**: proves two different policy declarations produce identical reachability, the network policy equivalent of "these two programs compute the same function."
 - [Blog post](https://jq1.io/posts/topology_compiler_semantic_toolchain/)
-- See the [compiler semantic toolchain docs](https://github.com/JudeQuintana/terraform-modules/tree/main/networking/generate_routes_to_other_vpcs/docs/compiler-semantic-toolchain.md) for the full interface.
+- See the [compiler semantic toolchain docs](https://github.com/JudeQuintana/terraform-main/tree/main/docs/compiler-semantic-toolchain.md) for the full interface.
 
 ## NEW Routing Policy Language
 - The topology compiler now includes a [routing policy language](https://github.com/JudeQuintana/terraform-main/tree/main/docs/routing-policy-language.md) that shapes VPC reachability at compile time through four primitives with fixed precedence: `deny > allow > segments > default`.
