@@ -328,6 +328,19 @@ For examples using segmentation, deny rules, and zero-trust policies, see the
 For the full policy language specification, see
 [docs/routing-policy-language.md](../docs/routing-policy-language.md).
 
+### Compiler Semantic Toolchain
+
+The semantic toolchain will help engineers navigate the routing policy algebra and refactor routing topology with confidence.
+
+The compiler's decisions are inspectable via five semantic outputs, enabled
+through the `inspect` field on each IR module. These operate on reachability
+meaning rather than route resources.
+
+See [docs/compiler-semantic-toolchain.md](../docs/compiler-semantic-toolchain.md) for the full interface.
+
+For examples using inspect options, see the
+[Centralized Egress Dual Stack Full Mesh Trio Demo](../centralized_egress_dual_stack_full_mesh_trio_demo).
+
 ---
 
 ## Begin Demo
