@@ -5,6 +5,8 @@ locals {
     provenance   = true
 
     policy_diff = {
+      # usually the reachability is generated already so you can just do:
+      # previous_reachability = jsondecode(file("inspect/myrouter-reachability.json"))
       previous_reachability = {
         "app3:general3"   = "permitted:segment"
         "app3:infra3"     = "permitted:allow"
