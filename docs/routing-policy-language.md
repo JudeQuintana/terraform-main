@@ -100,15 +100,11 @@ Properties of the algebra:
 
 ## Default Policy: Full Mesh
 
-The default routing policy is `default = "allow"` which means all VPCs can
-reach all other VPCs (full mesh). The following are all equivalent
-representations of full mesh:
+When `default = "allow"`, all VPCs can reach all other VPCs (full mesh). The
+following are equivalent representations of full mesh:
 
 ```hcl
-# implicit default (no policy argument)
-routing_policy = {}
-
-# explicit allow
+# explicit allow, no constraints
 routing_policy = {
   default = "allow"
 }
@@ -123,13 +119,15 @@ routing_policy = {
 ```
 
 These are algebraically identical because:
-- An empty policy defaults to `{ default = "allow" }` via the type system's
-  optional defaults.
 - When `default = "allow"` and no deny rules exist, every VPC pair passes the
   fallthrough check.
 - A single segment with all VPCs produces no cross-segment deny rules (there is
   no second segment to deny against). The segment membership permits the same
   VPCs that `default = "allow"` already permits. The result is full mesh.
+
+The `default` field is always explicitly declared. This forces the operator to
+choose a posture (`"allow"` or `"deny"`) rather than relying on an implicit
+fallthrough, making the policy's security posture visible at a glance.
 
 ## Segments
 
@@ -416,23 +414,29 @@ topology scope invokes it:
 ```hcl
 # Regional IR: Centralized Router (intra-region)
 module "centralized_router" {
-  source         = "..."
-  routing_policy = local.regional_policy
-  # ...
+  source = "..."
+  centralized_router = {
+    # ...
+    routing_policy = local.regional_policy
+  }
 }
 
 # Global IR: Full Mesh Trio (cross-region, 3 regions)
 module "full_mesh_trio" {
-  source         = "..."
-  routing_policy = local.global_policy
-  # ...
+  source = "..."
+  full_mesh_trio = {
+    # ...
+    routing_policy = local.global_policy
+  }
 }
 
 # Domain IR: Super Router (cross-region + intra-region, peered routers)
 module "super_router" {
-  source         = "..."
-  routing_policy = local.domain_policy
-  # ...
+  source = "..."
+  super_router = {
+    # ...
+    routing_policy = local.domain_policy
+  }
 }
 ```
 
@@ -727,7 +731,7 @@ be overridden by a child allow) but is not yet implemented.
 ## Test Coverage
 
 The routing policy integration in the `generate_routes_to_other_vpcs` function
-is validated by 66 passing tests via `terraform test`. These cover:
+is validated by 103 passing tests via `terraform test`. These cover:
 
 - Deny rules (IPv4 and IPv6): explicit pair blocking, bidirectional enforcement
 - Segments (IPv4 and IPv6): isolation between groups, same-segment permitting

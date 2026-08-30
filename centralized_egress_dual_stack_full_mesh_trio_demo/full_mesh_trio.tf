@@ -1,6 +1,6 @@
 module "full_mesh_trio" {
   source  = "JudeQuintana/full-mesh-trio/aws"
-  version = "2.0.0"
+  version = "2.1.0"
 
   providers = {
     aws.one   = aws.use1
@@ -8,9 +8,11 @@ module "full_mesh_trio" {
     aws.three = aws.usw2
   }
 
-  env_prefix     = var.env_prefix
-  routing_policy = local.routing_policy_cross_region_use1_use2_usw2
+  env_prefix = var.env_prefix
   full_mesh_trio = {
+    name           = "omega-red"
+    routing_policy = local.routing_policy_use1_use2_usw2
+    inspect        = local.inspect_use1_use2_usw2
     one = {
       centralized_router = module.centralized_router_use1
     }

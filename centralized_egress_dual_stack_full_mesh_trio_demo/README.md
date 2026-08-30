@@ -8,7 +8,7 @@
   - Should also work with OpenTofu.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
   - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
-- There's now a routing policy language for building out topology shape with instructions below.
+- There's now a routing policy language and semantic toolchain for building out topology shape with instructions below.
 - AWS general reference: [Centralized Egress](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/using-nat-gateway-for-centralized-egress.html)
 - Example single region potential [cost breakdown](https://awstip.com/centralized-egress-traffic-via-the-shared-nat-gateway-in-a-multi-account-aws-environment-3b682d8737ca) under pricing.
 
@@ -327,6 +327,99 @@ routing_policy_cross_region_use1_use2_usw2 = {
   }
 }
 ```
+
+### Compiler Semantic Toolchain
+
+The semantic toolchain will help engineers navigate the routing policy algebra and refactor routing topology with confidence.
+
+The compiler's decisions are inspectable via five semantic outputs, enabled
+through the `inspect` field on each IR module. These operate on reachability
+meaning rather than route resources.
+
+See [docs/compiler-semantic-toolchain.md](../docs/compiler-semantic-toolchain.md) for the full interface.
+
+Inspect configurations are defined in `inspect.tf` and passed into each module:
+
+```hcl
+# inspect.tf — Centralized Router us-east-1 (Regional IR)
+locals {
+  inspect_use1 = {
+    reachability = true   # reachability matrix: per-pair verdict
+    diagnostics  = true   # compiler warnings for likely-unintentional policy states
+    provenance   = true   # debug symbols: each route traced to its authorizing policy primitive
+
+    # policy diff: semantic diff against a previous reachability matrix
+    policy_diff = {
+      previous_reachability = {
+        "app3:general3"   = "permitted:segment"
+        "app3:infra3"     = "permitted:allow"
+        "general3:infra3" = "denied:default"
+      }
+    }
+
+    # equivalence: prove two policies produce identical reachability
+    equivalence = {
+      equivalent_routing_policy = {
+        default = "deny"
+        allow = [
+          { from = module.vpcs_use1["app3"], to = module.vpcs_use1["infra3"] },
+        ]
+        segments = {
+          workloads = [
+            module.vpcs_use1["app3"],
+            module.vpcs_use1["general3"],
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+The inspect config is passed inside the module's config object:
+```hcl
+# centralized_router_use1.tf
+module "centralized_router_use1" {
+  source = "..."
+  centralized_router = {
+    name            = "mystique"
+    amazon_side_asn = 64519
+    routing_policy  = local.routing_policy_use1
+    vpcs            = module.vpcs_use1
+    inspect         = local.inspect_use1
+  }
+}
+```
+
+The same pattern applies at Global IR (Full Mesh Trio):
+```hcl
+# inspect.tf — Full Mesh Trio (Global IR)
+locals {
+  inspect_use1_use2_usw2 = {
+    reachability = true
+    diagnostics  = true
+  }
+}
+
+# full_mesh_trio.tf
+module "full_mesh_trio" {
+  source = "..."
+  full_mesh_trio = {
+    name           = "omega-red"
+    routing_policy = local.routing_policy_use1_use2_usw2
+    inspect        = local.inspect_use1_use2_usw2
+    one   = { centralized_router = module.centralized_router_use1 }
+    two   = { centralized_router = module.centralized_router_use2 }
+    three = { centralized_router = module.centralized_router_usw2 }
+  }
+}
+```
+
+Outputs are written to JSON files (e.g. `inspect/TEST-centralized-router-mystique-use1-reachability.json`)
+when `terraform apply` runs. The `policy_diff.previous_reachability` field
+accepts a prior reachability JSON for incremental semantic diffing, and
+`equivalence.equivalent_routing_policy` accepts a second policy to prove
+algebraic equivalence against the active `routing_policy`.
 
 ### Build Demo
 1. It begins:
