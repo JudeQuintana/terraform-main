@@ -20,6 +20,7 @@ Important Demo Info:
 - This is the dual stack version of the IPv4 only [Super Router demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_demo).
 - Both IPv4 and IPv6 secondary CIDRs are supported.
 - Start with IPv4 only and add IPv6 at a later time or start with both.
+- There's now a routing policy language and semantic toolchain for building out topology shape with instructions below.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
   - The IPv6 address will be different for your account.
   - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.

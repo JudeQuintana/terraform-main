@@ -2,9 +2,8 @@
 # and route to each other for the VPC IPv4 network cidrs, IPv4 secondary cidrs and IPv6 cidrs.
 # hub and spoke
 module "centralized_router" {
-  #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.2.0"
-  source = "git@github.com:JudeQuintana/terraform-aws-centralized-router.git?ref=compiler-semantic-toolchain"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.2.0"
 
   env_prefix       = var.env_prefix
   region_az_labels = var.region_az_labels
