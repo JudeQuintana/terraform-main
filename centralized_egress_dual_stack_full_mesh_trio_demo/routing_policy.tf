@@ -1,6 +1,7 @@
 locals {
   routing_policy_use1 = {
     default = "deny"
+
     allow = [
       { from = module.vpcs_use1["app3"], to = module.vpcs_use1["infra3"] },
     ]
@@ -28,6 +29,7 @@ locals {
 
   routing_policy_use1_use2_usw2 = {
     default = "deny"
+
     allow = [
       { from = module.vpcs_use2["infra1"], to = module.vpcs_usw2["infra2"] },
     ]

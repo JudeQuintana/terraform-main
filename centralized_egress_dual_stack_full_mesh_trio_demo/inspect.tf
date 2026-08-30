@@ -3,6 +3,7 @@ locals {
     reachability = true
     diagnostics  = true
     provenance   = true
+
     policy_diff = {
       previous_reachability = {
         "app3:general3"   = "permitted:segment"
@@ -10,9 +11,11 @@ locals {
         "general3:infra3" = "denied:default"
       }
     }
+
     equivalence = {
       equivalent_routing_policy = {
         default = "deny"
+
         allow = [
           { from = module.vpcs_use1["app3"], to = module.vpcs_use1["infra3"] },
         ]

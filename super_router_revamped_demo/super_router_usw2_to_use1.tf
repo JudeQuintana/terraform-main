@@ -14,6 +14,7 @@ module "super_router_usw2_to_use1" {
   super_router = {
     name           = "professor-x"
     routing_policy = local.routing_policy
+    inspect        = local.inspect
     local = {
       amazon_side_asn     = 64521
       blackhole           = local.blackhole

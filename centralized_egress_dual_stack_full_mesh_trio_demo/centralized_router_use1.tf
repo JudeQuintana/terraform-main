@@ -13,9 +13,9 @@ module "centralized_router_use1" {
     name            = "mystique"
     amazon_side_asn = 64519
     routing_policy  = local.routing_policy_use1
-    inspect         = local.inspect_use1
     vpcs            = module.vpcs_use1
     blackhole       = local.blackhole
+    inspect         = local.inspect_use1
   }
 }
 

@@ -6,6 +6,7 @@ locals {
       routing_policy  = local.routing_policy
       vpcs            = module.vpcs_use1
       blackhole       = local.blackhole
+      inspect         = local.inspect
     },
     {
       name            = "bishop"
@@ -13,6 +14,7 @@ locals {
       routing_policy  = local.routing_policy
       vpcs            = module.vpcs_another_use1
       blackhole       = local.blackhole
+      inspect         = local.inspect
     }
   ]
 }
