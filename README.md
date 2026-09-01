@@ -14,6 +14,7 @@
 
 --=[ #StayUp ]=--
 ```
+# Docs
 ## NEW Compiler Semantic Toolchain
 - Five semantic outputs that make the compiler's decisions inspectable, enabled via the `inspect` field on each IR module.
   - **Reachability Matrix**: the algebra's per-pair verdict as structured data, showing permitted/denied and which precedence level decided it.
@@ -36,6 +37,7 @@
 - What began as a modular Terraform experiment evolved into a full compiler-style architecture for AWS networking. The system transforms a declarative map of VPCs into complete multi-region Transit Gateway mesh configurations, performing automatic adjacency synthesis, route expansion, and deterministic cross-region propagation.
 - The [white paper](https://github.com/JudeQuintana/terraform-main/tree/main/docs/WHITEPAPER.md) documents the underlying model, a provable O(N² + V²) → O(N + V) reduction alongside empirical validation across multi-region deployments and is currently a work in progress.
 
+# Demos
 ## NEW Super Router Revamped!
 [Super Router Revamped Demo](https://github.com/JudeQuintana/terraform-main/tree/main/super_router_revamped_demo)
  - Compose a decentralized hub and spoke Transit Gateway with full routing semantic coverage using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.2.0) (at `v1.2.0`), [Super Router](https://github.com/JudeQuintana/terraform-aws-super-router/tree/v2.1.0) (at `v2.1.0`), and [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/tree/v1.2.0) (at `v1.2.0`) modules.
