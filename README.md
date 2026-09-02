@@ -56,7 +56,7 @@
  - Includes VPC peering examples within a full mesh configuration used for high traffic workloads to save on cost using the [VPC Peering Deluxe](https://github.com/JudeQuintana/terraform-aws-vpc-peering-deluxe/tree/v1.0.1) module (at `v1.0.1`).
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
  - Incudes routing policy and semantic toolchain.
- - Validate connectivity with Route Analyzer.
+ - Validate TGW connectivity with Route Analyzer.
 
 ## Dual Stack Full Mesh Trio!
 [Dual Stack Full Mesh Trio Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_full_mesh_trio_demo)
