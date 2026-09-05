@@ -16,13 +16,18 @@
 ```
 # Docs
 ## NEW Compiler Semantic Toolchain
-- Five semantic outputs that make the compiler's decisions inspectable, enabled via the `inspect` field on each IR module.
+- Ten semantic outputs that make the compiler's decisions inspectable, enabled via the `inspect` field on each IR module.
   - **Reachability Matrix**: the algebra's per-pair verdict as structured data, showing permitted/denied and which precedence level decided it.
   - **Diagnostics**: compiler warnings for policy states that are valid but likely unintentional.
   - **Provenance**: debug symbols for emitted routes, tracing each route back to the source VPC pair and the policy primitive that authorized it.
   - **Policy Diff**: incremental compilation preview, computing what changed in connectivity at the semantic level given a previous reachability matrix.
   - **Equivalence**: proves two different policy declarations produce identical reachability, the network policy equivalent of "these two programs compute the same function."
-- [Blog post](https://jq1.io/posts/topology_compiler_semantic_toolchain/)
+  - **Assertions**: postcondition checks (`must_deny`, `must_permit`) verified against the reachability matrix at plan time, with out-of-scope CIDR validation.
+  - **Blast Radius**: operational impact of a policy change, reporting affected VPCs, route counts, and route tables touched.
+  - **Segment Report**: per-VPC view of segment membership, reachability, and denied peers.
+  - **Policy Normalization**: inverse compilation via reachability fingerprinting, reconstructing the minimal equivalent policy from an existing reachability matrix.
+  - **Connectivity Graph**: DOT format export of the reachability matrix with colored edges (allow, segment, default) and segment subgraph clusters.
+- First 5 semantic outputs: [Blog post](https://jq1.io/posts/topology_compiler_semantic_toolchain/)
 - See the [compiler semantic toolchain docs](https://github.com/JudeQuintana/terraform-main/tree/main/docs/compiler-semantic-toolchain.md) for the full interface.
 
 ## NEW Routing Policy Language
