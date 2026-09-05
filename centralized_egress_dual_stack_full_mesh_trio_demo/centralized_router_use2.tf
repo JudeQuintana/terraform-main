@@ -1,6 +1,6 @@
 module "centralized_router_use2" {
   source  = "JudeQuintana/centralized-router/aws"
-  version = "1.2.0"
+  version = "1.2.1"
 
   providers = {
     aws = aws.use2
@@ -14,6 +14,7 @@ module "centralized_router_use2" {
     routing_policy  = local.routing_policy_use2
     vpcs            = module.vpcs_use2
     blackhole       = local.blackhole
+    inspect         = local.inspect_use2
   }
 }
 

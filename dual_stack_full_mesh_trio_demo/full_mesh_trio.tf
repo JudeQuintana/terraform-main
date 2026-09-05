@@ -1,6 +1,6 @@
 module "full_mesh_trio" {
   source  = "JudeQuintana/full-mesh-trio/aws"
-  version = "2.1.0"
+  version = "2.1.1"
 
   providers = {
     aws.one   = aws.use1
