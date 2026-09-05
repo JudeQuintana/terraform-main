@@ -1,8 +1,7 @@
 # Super Router is composed of two TGWs, one in each region.
 module "super_router_usw2_to_use1" {
-  #source  = "JudeQuintana/super-router/aws"
-  #version = "2.1.0"
-  source = "git@github.com:JudeQuintana/terraform-aws-super-router.git?ref=moar-semantic-toolchain"
+  source  = "JudeQuintana/super-router/aws"
+  version = "2.1.1"
 
   providers = {
     aws.local = aws.usw2 # local super router tgw will be built in the aws.local provider region

@@ -1,8 +1,6 @@
 module "full_mesh_trio" {
-  #source  = "JudeQuintana/full-mesh-trio/aws"
-  #version = "2.1.0"
-  #source = "git@github.com:JudeQuintana/terraform-modules.git//networking/full_mesh_trio?ref=moar-semantic-toolchain"
-  source = "git@github.com:JudeQuintana/terraform-aws-full-mesh-trio.git?ref=moar-semantic-toolchain"
+  source  = "JudeQuintana/full-mesh-trio/aws"
+  version = "2.1.1"
 
   providers = {
     aws.one   = aws.use1
