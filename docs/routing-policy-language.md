@@ -666,7 +666,7 @@ The routing policy language covers route generation (the data plane edges) but
 does not yet address several adjacent concerns that a full network policy system
 would include:
 
-### Inspection and logging
+### Traffic inspection and logging
 
 There is no built-in mechanism for traffic inspection (AWS Network Firewall,
 Gateway Load Balancer) as part of the policy declaration. Today, if you need
