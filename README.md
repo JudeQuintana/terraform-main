@@ -76,7 +76,7 @@
 [Dual Stack Terraform Networking Trifecta Demo](https://github.com/JudeQuintana/terraform-main/tree/main/dual_stack_networking_trifecta_demo)
  - Compose a dual stack hub and spoke Transit Gateway using [Tiered VPC-NG](https://github.com/JudeQuintana/terraform-aws-tiered-vpc-ng/tree/v1.0.7) (at `v1.0.7`), [Centralized Router](https://github.com/JudeQuintana/terraform-aws-centralized-router/tree/v1.2.2) (at `v1.2.2`), and [Generate Routes to Other VPCs](https://github.com/JudeQuintana/terraform-aws-generate-routes-to-other-vpcs/tree/v1.2.2) (at `v1.2.2`) modules.
  - Requires IPAM Pools for IPv4 and IPv6 cidrs.
- - Incudes routing policy.
+ - Incudes routing policy and semantic toolchain.
  - Validate intra VPC connectivity with EC2 instances.
 
 ## Super Router!
