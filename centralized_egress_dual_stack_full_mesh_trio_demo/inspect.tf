@@ -13,9 +13,12 @@ locals {
       # and change the local.routing_policy_use1 to see what's changed.
       # blash radius will also show as part of the ouput
       previous_reachability = {
-        "app3:general3"   = "permitted:segment"
-        "app3:infra3"     = "permitted:allow"
-        "general3:infra3" = "denied:default"
+        schema_version = 1
+        entries = [
+          { from = "app3", to = "general3", verdict = "permitted", reason = "segment" },
+          { from = "app3", to = "infra3", verdict = "permitted", reason = "allow" },
+          { from = "general3", to = "infra3", verdict = "denied", reason = "default" },
+        ]
       }
     }
 

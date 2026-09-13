@@ -1,0 +1,1 @@
+{"entries":[{"from":"app3","reason":"segment","to":"general3","verdict":"permitted"},{"from":"app3","reason":"allow","to":"infra3","verdict":"permitted"},{"from":"general3","reason":"default","to":"infra3","verdict":"denied"}],"schema_version":1}

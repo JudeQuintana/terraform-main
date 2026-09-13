@@ -1,0 +1,22 @@
+graph connectivity {
+  graph [rankdir=LR]
+  node [shape=box, style=filled, fillcolor="#f0f0f0"]
+  edge [fontsize=10]
+
+  subgraph cluster_management {
+    label="management"
+    style=dashed
+    color="#95a5a6"
+    "infra3"
+  }
+  subgraph cluster_workloads {
+    label="workloads"
+    style=dashed
+    color="#95a5a6"
+    "app3"
+    "general3"
+  }
+
+  "app3" -- "general3" [color="#2ecc71", label="segment"]
+  "app3" -- "infra3" [color="#3498db", label="allow"]
+}

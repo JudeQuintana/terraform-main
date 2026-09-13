@@ -1,0 +1,1 @@
+{"app3":{"denied":[],"reaches":["general3","infra3"],"segment":"workloads"},"general3":{"denied":["infra3"],"reaches":["app3"],"segment":"workloads"},"infra3":{"denied":["general3"],"reaches":["app3"],"segment":"management"}}
