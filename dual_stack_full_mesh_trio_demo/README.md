@@ -5,7 +5,7 @@
 - Start with IPv4 only and add IPv6 at a later time or start with both.
 - Demo does not work as-is because these Amazon owned IPv6 CIDRs have been allocated to my AWS account.
 - You'll need to configure your own IPv4 and IPv6 cidr pools/subpools and there is IPAM instructions below.
-- There's now a routing policy language for building out topology shape with instructions below.
+- There's now a routing policy language and semantic toolchain for building out topology shape with instructions below.
 
 ### VPC CIDRs
 - `us-east-2`
@@ -105,6 +105,40 @@ The resulting architecture is a ipv4 only or a dual stack full mesh topology acr
           - Provisioned CIDRs:
             - `2600:1f28:3d:c000::/56`
             - `2600:1f28:3d:c400::/56`
+
+### Routing Policy
+
+This demo uses `default = "allow"` (full mesh) for the Super Router's routing
+policy, meaning all VPCs across both Centralized Routers have full cross-region
+and intra-region reachability through the Domain IR.
+
+```hcl
+routing_policy = {
+  default = "allow"
+}
+```
+
+The routing policy language supports `deny`, `allow`, `segments`, and `default`
+primitives with fixed precedence (`deny > allow > segments > default`) to shape
+reachability at compile time. Super Router evaluates the same policy language as
+Centralized Router and Full Mesh Trio, the compilation unit is scope-invariant.
+
+For examples using segmentation, deny rules, and zero-trust policies, see the
+[Centralized Egress Dual Stack Full Mesh Trio Demo](../centralized_egress_dual_stack_full_mesh_trio_demo).
+
+For the full policy language specification, see
+[docs/routing-policy-language.md](../docs/routing-policy-language.md).
+
+### Compiler Semantic Toolchain
+
+The semantic toolchain will help engineers navigate the routing policy algebra and refactor routing topology with confidence.
+
+The compiler's decisions are inspectable via five semantic outputs, enabled
+through the `inspect` field on each IR module. These operate on reachability
+meaning rather than route resources.
+
+See [docs/compiler-semantic-toolchain.md](../docs/compiler-semantic-toolchain.md) for the full interface.
+
 
 ### Build Dual Stack Full Mesh Trio
 1. It begins:

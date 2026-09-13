@@ -32,24 +32,52 @@ The algebra's per-pair verdict as structured data. For every VPC pair, shows whe
 
 ```json
 {
-  "app:db": "permitted:segment",
-  "app:cache": "permitted:allow",
-  "web:db": "denied:cross-segment",
-  "monitor:db": "denied:default"
+  "schema_version": 1,
+  "entries": [
+    { "from": "app", "to": "cache", "verdict": "permitted", "reason": "allow" },
+    { "from": "app", "to": "db", "verdict": "permitted", "reason": "segment" },
+    { "from": "db", "to": "web", "verdict": "denied", "reason": "cross-segment" },
+    { "from": "db", "to": "monitor", "verdict": "denied", "reason": "default" }
+  ]
 }
 ```
 
-Pairs are deduplicated since rules are bidirectional. `"app:db"` implicitly covers `"db:app"`. Only the lexicographically-first key is shown.
+The output is a versioned envelope with two fields:
+- **schema_version** - integer version of the reachability schema (currently `1`). Validated on round-trip: passing a reachability JSON with a different schema version as `previous_reachability` fails at plan time.
+- **entries** - list of structured objects, one per deduplicated VPC pair
 
-Six possible verdicts mapping directly to the precedence chain:
-- `permitted:allow` - explicit allow rule fired
-- `permitted:segment` - same-segment membership
-- `permitted:default` - default="allow" fallthrough
-- `denied:deny` - explicit deny rule (highest precedence)
-- `denied:cross-segment` - different segments under default="allow"
-- `denied:default` - default="deny" fallthrough
+Each entry has four fields:
+- **from** - first VPC name in the pair (lexicographically ordered)
+- **to** - second VPC name in the pair (lexicographically ordered)
+- **verdict** - `"permitted"` or `"denied"`
+- **reason** - which precedence level determined the outcome
+
+Pairs are deduplicated since rules are bidirectional. `from: "app", to: "db"` implicitly covers the reverse direction. Only the lexicographically-ordered pair is included.
+
+Six possible verdict/reason combinations mapping directly to the precedence chain:
+- `permitted` / `allow` - explicit allow rule fired
+- `permitted` / `segment` - same-segment membership
+- `permitted` / `default` - default="allow" fallthrough
+- `denied` / `deny` - explicit deny rule (highest precedence)
+- `denied` / `cross-segment` - different segments under default="allow"
+- `denied` / `default` - default="deny" fallthrough
 
 Separates "what the policy decided" from "what routes were emitted," making the algebra's output auditable without understanding route tables. All other toolchain outputs read from or operate on this matrix.
+
+### Simplified Reachability
+
+A flat map projection of the reachability matrix for quick lookups and compact display. Same data as the structured list, collapsed to `"from:to" => "verdict:reason"` string pairs.
+
+```json
+{
+  "app:cache": "permitted:allow",
+  "app:db": "permitted:segment",
+  "db:monitor": "denied:default",
+  "db:web": "denied:cross-segment"
+}
+```
+
+Available as the `reachability_simplified` output. When `inspect.reachability = true`, the simplified map is also written to `inspect/<router-name>-reachability-simplified.json` alongside the main reachability file. Useful when piping to `jq` or other tools that work more naturally with key-value maps than lists of objects.
 
 ## Diagnostics
 
@@ -150,7 +178,7 @@ The reachability matrix is pair-oriented. The segment report is VPC-oriented. Sa
 
 ## Policy Normalization
 
-Optimizer and decompiler. Given any policy, emit the minimal equivalent policy. The normalizer walks the compiled reachability matrix and reconstructs the shortest policy that produces the same connectivity.
+Sound simplifier. Given any policy, attempt to find a shorter equivalent policy. The normalizer walks the compiled reachability matrix and reconstructs a policy that produces the same connectivity using fewer primitives when it can. The algorithm is sound (whatever it emits is equivalent) but not a complete minimizer: it uses reachability fingerprinting to detect segments, which is polynomial but may miss segments whose members differ in external connectivity. If the normalizer cannot improve on the current policy, it reports the current rule count unchanged.
 
 ```json
 {
@@ -180,14 +208,15 @@ centralized_router = {
 
 Three output fields:
 - **current_rule_count** - total primitives in the current policy (deny rules + allow rules + segments)
-- **normalized_rule_count** - total primitives in the normalized policy
-- **normalized_policy** - the reconstructed minimal policy with default, segments, allow, and deny
+- **normalized_rule_count** - total primitives in the normalizer's suggestion, clamped to never exceed `current_rule_count`
+- **normalized_policy** - a reconstructed equivalent policy with default, segments, allow, and deny
 
 The normalizer:
 1. Tries both `default="deny"` and `default="allow"`
 2. Under `default="deny"`, detects segment candidates via reachability fingerprinting (VPCs with identical connectivity profiles are natural segment candidates)
 3. Each detected segment replaces multiple allow rules with one segment declaration
 4. Compares the total primitive count under each default and picks the shorter form
+5. Clamps the result: if the normalizer's best candidate isn't shorter than the current policy, reports the current rule count (the normalizer's heuristic can miss optimal forms that use segments with externally-differing members)
 
 Examples of what the normalizer detects:
 - 3 explicit allow rules forming a full mesh -> `default="allow"` with 0 rules
@@ -198,15 +227,19 @@ Surfaces when a default switch or segment reorganization would simplify the poli
 
 ### Interpreting the output
 
-Compare `current_rule_count` to `normalized_rule_count`. If they are equal, your policy is already minimal for the reachability it produces. If the normalized count is lower, the `normalized_policy` shows a shorter form that produces identical connectivity.
+Compare `current_rule_count` to `normalized_rule_count`. If they are equal, the normalizer cannot find a shorter equivalent form - your policy is at or below the normalizer's detection limit. If the normalized count is lower, the `normalized_policy` shows a shorter form that produces identical connectivity.
 
 The normalizer may suggest a different `default` than the one you wrote. A policy with `default="deny"`, 2 segments, and 1 allow rule might normalize to `default="allow"` with 1 deny rule. Both produce the same reachability. The normalizer picks whichever form uses fewer primitives.
 
 A lower normalized count does not mean you should switch. The current policy may encode structural intent (segment names, explicit groupings) that the normalizer cannot see. The output tells you the reachability cost of that intent: "you wrote 3 rules but 1 would produce the same connectivity." Whether the extra structure is worth keeping is a judgment call.
 
+### Limitations
+
+The normalizer uses reachability fingerprinting: VPCs with identical connectivity profiles are grouped as segment candidates. This is polynomial (avoids the NP-hard minimum clique cover problem) but incomplete. It cannot detect segments whose members have different external connectivity. For example, a segment `{A, B, C}` with an additional `allow {A, D}` gives A a different fingerprint than B and C. The normalizer finds only `{B, C}` as a segment candidate, missing the full `{A, B, C}` group. The `normalized_rule_count` is clamped to never exceed `current_rule_count` so that an already-optimal policy is never reported as improvable.
+
 ## Policy Diff
 
-Incremental compilation. Given the previous reachability matrix (from a prior run), computes what changed in connectivity at the semantic level.
+Incremental compilation. Given the previous reachability (from a prior run), computes what changed in connectivity at the semantic level.
 
 ```json
 {
@@ -218,7 +251,7 @@ Incremental compilation. Given the previous reachability matrix (from a prior ru
 
 Pairs follow the same deduplication as the reachability matrix.
 
-Pass the previous reachability via `inspect.policy_diff.previous_reachability` nested inside the IR module's config object:
+Pass the previous reachability via `inspect.policy_diff.previous_reachability` nested inside the IR module's config object. The input accepts the same `{ schema_version, entries }` envelope as the reachability output, so the JSON file from a prior run passes straight through:
 
 ```hcl
 centralized_router = {
@@ -231,17 +264,26 @@ centralized_router = {
 }
 ```
 
+The `previous_reachability` input accepts `object({ schema_version = number, entries = list(object({ from, to, verdict, reason })) })`. It defaults to `null` (no previous reachability), in which case policy diff and blast radius are not computed. When provided, three validations run at plan time:
+- `schema_version` must equal `1` (catches format changes across versions)
+- each entry's `verdict` must be `"permitted"` or `"denied"`
+- each entry's `reason` must be one of `"deny"`, `"allow"`, `"segment"`, `"default"`, `"cross-segment"`
+
+A mismatch fails with a clear error rather than silently producing wrong diffs.
+
 The workflow:
 1. Enable `inspect.reachability = true` to dump the reachability matrix to a JSON file
 2. Change the routing policy
 3. Pass the previous JSON file via `inspect.policy_diff.previous_reachability`
 4. The diff output shows added/removed/unchanged pairs
 
+No transformation needed between output and input - the reachability output is the `previous_reachability` input.
+
 This answers "what did this policy change actually do?" at the semantic level. `terraform plan` shows route additions/removals (assembly diff). Policy diff shows reachability changes (source-level diff).
 
 ## Blast Radius
 
-Impact analysis. Operational impact of a policy change. Given the previous reachability (same input as policy diff), computes which VPCs are affected and how many routes will be added or removed.
+Impact analysis. Operational impact of a policy change. Given the previous reachability list (same input as policy diff), computes which VPCs are affected and how many routes will be added or removed.
 
 ```json
 {
@@ -265,7 +307,7 @@ When nothing changed:
 }
 ```
 
-Blast radius is automatically computed whenever `inspect.policy_diff.previous_reachability` is provided. No separate input is needed.
+Blast radius is automatically computed whenever `previous_reachability` is provided. No separate input is needed.
 
 Five metrics:
 - **affected_vpcs** - VPC names that appear in any added or removed pair
@@ -444,11 +486,12 @@ dot -Tpng inspect/myrouter-connectivity-graph.dot -o connectivity.png
 dot -Tsvg inspect/myrouter-connectivity-graph.dot -o connectivity.svg
 ```
 
-Edge colors encode the verdict reason:
-- **Blue (#3498db)** - `allow` rule
-- **Green (#2ecc71)** - `segment` membership
-- **Gray (#95a5a6)** - `default` fallthrough
+Edge colors and styles encode the verdict reason:
+- **Blue (#3498db)** solid - `allow` rule
+- **Green (#2ecc71)** solid - `segment` membership
+- **Gray (#95a5a6)** solid - `default` fallthrough
+- **Red (#e74c3c)** dashed - explicit `deny` rule
 
-Denied pairs produce no edges. A fully denied graph renders all nodes with no connections. Segment clusters appear as dashed boxes grouping their member VPCs. Unsegmented VPCs appear as standalone nodes.
+Default-denied pairs (denied by fallthrough, not by an explicit deny rule) produce no edges. A `default="deny"` graph with no explicit deny rules shows only permitted edges. This is intentional: drawing V^2 default-denied non-edges would be noise. Explicit deny rules appear as dashed red edges because they represent intentional policy boundaries - the constraints an auditor looks for. Segment clusters appear as dashed boxes grouping their member VPCs. Unsegmented VPCs appear as standalone nodes.
 
-This is the reachability matrix rendered spatially. Engineers scan a DOT graph faster than they read a JSON matrix, especially as VPC count grows. Segment clusters make isolation boundaries visible at a glance, and edge colors distinguish why connectivity exists without reading verdict strings.
+This is the reachability matrix rendered spatially. Engineers scan a DOT graph faster than they read a JSON matrix, especially as VPC count grows. Segment clusters make isolation boundaries visible at a glance, edge colors distinguish why connectivity exists, and dashed red edges highlight where the policy author deliberately blocked traffic.

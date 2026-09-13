@@ -341,7 +341,7 @@ See [docs/compiler-semantic-toolchain.md](../docs/compiler-semantic-toolchain.md
 Inspect configurations are defined in `inspect.tf` and passed into each module:
 
 ```hcl
-# inspect.tf — Centralized Router us-east-1 (Regional IR)
+# inspect.tf - Centralized Router us-east-1 (Regional IR)
 locals {
   inspect_use1 = {
     reachability = true   # reachability matrix: per-pair verdict
@@ -393,7 +393,7 @@ module "centralized_router_use1" {
 
 The same pattern applies at Global IR (Full Mesh Trio):
 ```hcl
-# inspect.tf — Full Mesh Trio (Global IR)
+# inspect.tf - Full Mesh Trio (Global IR)
 locals {
   inspect_use1_use2_usw2 = {
     reachability = true
