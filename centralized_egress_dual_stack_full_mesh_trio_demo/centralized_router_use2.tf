@@ -1,7 +1,6 @@
 module "centralized_router_use2" {
-  #source  = "JudeQuintana/centralized-router/aws"
-  #version = "1.2.1"
-  source = "git@github.com:JudeQuintana/terraform-modules.git//networking/transit_gateway_centralized_router_for_tiered_vpc_ng?ref=semantic-toolchain-fixes-and-updates"
+  source  = "JudeQuintana/centralized-router/aws"
+  version = "1.2.2"
 
   providers = {
     aws = aws.use2

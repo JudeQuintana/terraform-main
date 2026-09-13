@@ -1,0 +1,5 @@
+locals {
+  inspect = {
+    diagnostics = true
+  }
+}
