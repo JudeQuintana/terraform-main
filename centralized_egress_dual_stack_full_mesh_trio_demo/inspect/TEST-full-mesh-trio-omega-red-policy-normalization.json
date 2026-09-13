@@ -1,1 +1,0 @@
-{"current_rule_count":3,"normalized_policy":{"allow":[],"default":"deny","deny":[],"segments":{"group_0":["app2","infra3"],"group_1":["infra1","infra2"]}},"normalized_rule_count":2,"roundtrip":{"consistent":true,"mismatches":{}}}

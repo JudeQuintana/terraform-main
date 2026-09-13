@@ -1,1 +1,0 @@
-{"app1":{"denied":[],"reaches":["general1","infra1"],"segment":"unsegmented"},"general1":{"denied":[],"reaches":["app1","infra1"],"segment":"unsegmented"},"infra1":{"denied":[],"reaches":["app1","general1"],"segment":"unsegmented"}}
