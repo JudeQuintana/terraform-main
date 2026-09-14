@@ -26,7 +26,7 @@
   - **Blast Radius**: operational impact of a policy change, reporting affected VPCs, route counts, and route tables touched.
   - **Segment Report**: per-VPC view of segment membership, reachability, and denied peers.
   - **Policy Normalization**: inverse compilation via reachability fingerprinting, reconstructing the minimal equivalent policy from an existing reachability matrix.
-  - **Connectivity Graph**: DOT format export of the reachability matrix with colored edges (allow, segment, default) and segment subgraph clusters.
+  - **Connectivity Graph**: DOT format export of the reachability matrix with colored edges (deny, allow, segment, default) and segment subgraph clusters.
 - First 5 semantic outputs: [Blog post](https://jq1.io/posts/topology_compiler_semantic_toolchain/)
 - Latest 5 semantic outputs: [Blog post](https://jq1.io/posts/moar_semantic_toolchain/)
 - See the [compiler semantic toolchain docs](https://github.com/JudeQuintana/terraform-main/tree/main/docs/compiler-semantic-toolchain.md) for the full interface.
