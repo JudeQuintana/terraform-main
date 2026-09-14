@@ -1,6 +1,6 @@
 locals {
   # full mesh
-  routing_policy_intra_region = {
+  routing_policy = {
     default = "allow"
   }
 }

@@ -14,6 +14,7 @@ module "centralized_router_use2" {
     routing_policy  = local.routing_policy
     vpcs            = module.vpcs_use2
     blackhole       = local.blackhole
+    inspect         = local.inspect
   }
 }
 

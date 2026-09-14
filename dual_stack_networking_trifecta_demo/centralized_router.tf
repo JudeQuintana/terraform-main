@@ -10,7 +10,7 @@ module "centralized_router" {
   centralized_router = {
     name            = "gambit"
     amazon_side_asn = 64512
-    routing_policy  = local.routing_policy_intra_region
+    routing_policy  = local.routing_policy
     vpcs            = module.vpcs
     blackhole       = local.blackhole
     inspect         = local.inspect
